@@ -8,3 +8,9 @@
 -The data at time t will be transmitted to models and will take on a shape and color depending on the data and time collected, which will animate the audio.
 -The user will be able to interact with the UI to play, pause, or import a new file. (Maybe a timeline will be implemented to allow the user to go back or ahead on the track)
 -The user's audio file will play alongside the visualization.
+
+Version W2
+To use:
+-Place .mp3 files into the /src/media directory of this project
+-Run the compile and run the project.
+-Type "help" for a list of instructions
