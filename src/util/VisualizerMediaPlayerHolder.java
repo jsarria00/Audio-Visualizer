@@ -7,9 +7,14 @@ import javafx.scene.media.MediaPlayer;
 import java.io.File;
 import java.util.Scanner;
 
+/**
+ * A class that manages a MediaPlayer object, while this class is run through the Java.Application thread
+ * @author Javier Sarria Bastidas
+ * @version W2
+ */
 public class VisualizerMediaPlayerHolder implements Runnable
 {
-    //These Will be implemented in an interface
+    //These will be implemented in an interface
     private static final String HELP = "help";
     private static final String LOAD = "load";
     private static final String PLAY = "play";
@@ -27,7 +32,9 @@ public class VisualizerMediaPlayerHolder implements Runnable
     private String inputStr;
     private Scanner input;
 
-
+    /**
+     * Constructor that sets up a scanner for use, initial bool values, and a non-null string.
+     */
     public VisualizerMediaPlayerHolder() {
         songStr = "";
         input = new Scanner(System.in);
@@ -38,6 +45,12 @@ public class VisualizerMediaPlayerHolder implements Runnable
         hasInitialized = false;
     }
 
+    /**
+     * Trims all the spaces before and after the the first and last characters respectively, limits the spaces between characters to 1,
+     * sets it to lower case to make commands non-case sensitive
+     * @param a String command via user input
+     * @return String with extra whitespace removed, and set to lower
+     */
     private static String normalize(String a) {
         //Create a new string to hold a String without leading, extra() and trailing blanks
         String normalized = a.trim();
@@ -47,6 +60,9 @@ public class VisualizerMediaPlayerHolder implements Runnable
         return  normalized;
     }
 
+    /**
+     * pauses and discards the current MediaPlayer object in this class
+     */
     private void deInitialize() {
         if(isPlaying&&hasInitialized){
             mediaPlayer.pause();
@@ -56,6 +72,9 @@ public class VisualizerMediaPlayerHolder implements Runnable
         hasInitialized = false;
     }
 
+    /**
+     * Requests one additional step of user input, this input will vary on the files located in the media package
+     */
     private void load() {
         //future specification, custom exception to prevent unloading the current song if it is not found or is the same song.
         System.out.println("Type the name of the song file with it's extension. Note this is case sensitive!");
@@ -81,6 +100,9 @@ public class VisualizerMediaPlayerHolder implements Runnable
         }
     }
 
+    /**
+     * sets the MediaPlayer class to PLAYING state.
+     */
     private void play() {
         if (!hasInitialized) {
             System.err.println("There is no song loaded; please load a song before playing."); //Exception throw idea
@@ -93,6 +115,9 @@ public class VisualizerMediaPlayerHolder implements Runnable
         }
     }
 
+    /**
+     * Sets the media player class to a PAUSED state
+     */
     private void pause() {
         if(!hasInitialized) {
             System.err.println("There is no song loaded; please load a song before attempting to pause"); //Exception throw idea
@@ -107,6 +132,9 @@ public class VisualizerMediaPlayerHolder implements Runnable
         }
     }
 
+    /**
+     * a method that calls a set of operations depending on user input. This input is not case sensitive
+     */
     private void start()
     {
         if(firstStart) {
@@ -115,36 +143,44 @@ public class VisualizerMediaPlayerHolder implements Runnable
         }
             inputStr = input.nextLine();
 
-            if(normalize(inputStr).equals(HELP)) {
+        switch (normalize(inputStr)) {
+            case HELP:
                 System.out.println("help - Prints a list of commands. \n" +
                         "load - prepares the program to load a song, then requests file name located in the media folder.\n" +
                         "play - starts playing the audio of loaded media.\n" +
                         "pause - pauses the audio of the loaded media.\n" +
-                        "quit - De-initializes the program, and exits." );
-            }
-            else if(normalize(inputStr).equals(LOAD)) {
+                        "quit - De-initializes the program, and exits.");
+                break;
+            case LOAD:
                 load();
-            }
-            else if(normalize(inputStr).equals(PLAY)) {
+                break;
+            case PLAY:
                 play();
-            }
-            else if(normalize(inputStr).equals(PAUSE)) {
+                break;
+            case PAUSE:
                 pause();
-            }
-            else if(normalize(inputStr).equals(QUIT)) {
+                break;
+            case QUIT:
                 deInitialize();
                 System.exit(0);
-            }
-            else {
-                System.out.println("Unrecognized command \"" + inputStr +"\". Type \"help\" for a list of commands");
-            }
+            default:
+                System.out.println("Unrecognized command \"" + inputStr + "\". Type \"help\" for a list of commands");
+                break;
+        }
     }
+
+    /**
+     * Shows if the VisualizerMediaPlayerHolder
+     * @return a Boolean which shows if the class is currently being threaded.
+     */
     public static boolean inUse()
     {
         return isActive;
     }
 
-
+    /**
+     * The start point of VisualizerMediaPlayerHolder Runnable when threaded.
+     */
     @Override
     public void run() {
         isActive = true;

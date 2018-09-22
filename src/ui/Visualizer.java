@@ -5,7 +5,6 @@ import javax.swing.JFrame;
 //To play an audio file
 //CustomClasses
 
-import org.junit.jupiter.api.Test;
 import util.VisualizerMediaPlayerHolder;
 
 
@@ -18,7 +17,6 @@ import static java.lang.Thread.sleep;
  */
 public class Visualizer
 {
-
     /**
      * constructs a new JFrame and sets up additional settings
      * @return Returns a JFrame with a set title "Audio Visualizer" with a starting size of 640x400 pixels.
@@ -59,10 +57,7 @@ public class Visualizer
         JFrame fr = createFrame();
         visualize(fr);
 
-
         while(true) {
-
-
             startup(player);
 
             //Wait for player to change to inUse
@@ -71,7 +66,6 @@ public class Visualizer
             } catch(InterruptedException e) {
                 System.out.println("Main thread sleep was interrupted");
             }
-
             while(VisualizerMediaPlayerHolder.inUse()) {
 
                 try {
@@ -81,7 +75,6 @@ public class Visualizer
                     System.out.println("Main thread sleep was interrupted");
                 }
             }
-
         }
     }
 }
