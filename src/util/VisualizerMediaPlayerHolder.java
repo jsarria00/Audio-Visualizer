@@ -8,7 +8,7 @@ import java.io.File;
 import java.util.Scanner;
 
 /**
- * A class that manages a MediaPlayer object, while this class is run through the Java.Application thread
+ * A class that manages a MediaPlayer object, while this class is run through the Java.VisualizerApplication thread
  * @author Javier Sarria Bastidas
  * @version W2
  */
