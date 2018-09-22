@@ -25,6 +25,7 @@ public class VisualizerMediaPlayerHolder implements Runnable
     private static boolean isActive;
     private static boolean firstStart;
     private static boolean isPlaying;
+    private static boolean isLoading;
     private static boolean hasInitialized;
     private static MediaPlayer mediaPlayer;
     private static Media song;
@@ -42,6 +43,7 @@ public class VisualizerMediaPlayerHolder implements Runnable
         isActive = false;
         firstStart = true;
         isPlaying = false;
+        isLoading = false;
         hasInitialized = false;
     }
 
@@ -91,7 +93,11 @@ public class VisualizerMediaPlayerHolder implements Runnable
             mediaPlayer = new MediaPlayer(song);
             hasInitialized = true;
             //Waiting done through a listener.
-            mediaPlayer.setOnReady(() -> System.out.println("File loaded!"));
+            isLoading = true;
+            mediaPlayer.setOnReady(() -> {
+                System.out.println("File loaded!");
+                isLoading = false;
+            });
             //For now
             mediaPlayer.setOnEndOfMedia(() -> deInitialize());
         }
@@ -176,6 +182,11 @@ public class VisualizerMediaPlayerHolder implements Runnable
     public static boolean inUse()
     {
         return isActive;
+    }
+
+    public static boolean isLoading()
+    {
+        return isLoading;
     }
 
     /**

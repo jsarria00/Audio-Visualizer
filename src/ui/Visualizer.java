@@ -66,10 +66,10 @@ public class Visualizer
             } catch(InterruptedException e) {
                 System.out.println("Main thread sleep was interrupted");
             }
-            while(VisualizerMediaPlayerHolder.inUse()) {
+            while(VisualizerMediaPlayerHolder.inUse() || VisualizerMediaPlayerHolder.isLoading()) {
 
                 try {
-                    sleep(1000);
+                    sleep(200);
                     //System.out.println("Waiting till free");
                 } catch (InterruptedException e) {
                     System.out.println("Main thread sleep was interrupted");
