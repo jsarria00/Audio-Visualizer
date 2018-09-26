@@ -4,6 +4,7 @@ import static java.lang.Thread.sleep;
 
 public class VisualizerApplication implements Runnable {
     private VisualizerMediaPlayerHolder player;
+    private boolean isPlaying = false;
 
     public VisualizerApplication()
     {
@@ -30,12 +31,18 @@ public class VisualizerApplication implements Runnable {
 
                 try {
                     sleep(200);
+                    isPlaying = player.isPlaying();
                     //System.out.println("Waiting till free");
                 } catch (InterruptedException e) {
                     System.out.println("Main thread sleep was interrupted");
                 }
             }
         }
+    }
+
+    public boolean isPlaying()
+    {
+        return isPlaying;
     }
 
     @Override

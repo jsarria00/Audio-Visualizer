@@ -4,7 +4,9 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaException;
 import javafx.scene.media.MediaPlayer;
 
+import javax.imageio.IIOException;
 import java.io.File;
+import java.io.IOException;
 import java.util.Scanner;
 
 /**
@@ -20,7 +22,7 @@ public class VisualizerMediaPlayerHolder implements Runnable
     private static final String PLAY = "play";
     private static final String PAUSE = "pause";
     private static final String QUIT = "quit";
-    private static final String DIRECTORY = "src/media/";
+    private static final String DIRECTORY = "src/main/media/";
 
     private static boolean isActive;
     private static boolean firstStart;
@@ -32,6 +34,7 @@ public class VisualizerMediaPlayerHolder implements Runnable
     private String songStr;
     private String inputStr;
     private Scanner input;
+
 
     /**
      * Constructor that sets up a scanner for use, initial bool values, and a non-null string.
@@ -81,6 +84,7 @@ public class VisualizerMediaPlayerHolder implements Runnable
         //future specification, custom exception to prevent unloading the current song if it is not found or is the same song.
         System.out.println("Type the name of the song file with it's extension. Note this is case sensitive!");
         songStr = input.nextLine();
+        songStr = songStr.trim();
         try {
             //To prevent operator overload from recognizing the string as a Path.
             String filePath = DIRECTORY + songStr;
@@ -98,8 +102,10 @@ public class VisualizerMediaPlayerHolder implements Runnable
                 System.out.println("File loaded!");
                 isLoading = false;
             });
-            //For now
-            mediaPlayer.setOnEndOfMedia(() -> deInitialize());
+            //For now -Note scanner hogs the thread therefore
+            mediaPlayer.setOnEndOfMedia(()->{
+                deInitialize();
+            });
         }
         catch (MediaException e) {
             System.err.println("Media file \"" + songStr + "\" does not exist");
@@ -188,6 +194,8 @@ public class VisualizerMediaPlayerHolder implements Runnable
     {
         return isLoading;
     }
+
+    public static boolean isPlaying(){ return isPlaying; }
 
     /**
      * The start point of VisualizerMediaPlayerHolder Runnable when threaded.
