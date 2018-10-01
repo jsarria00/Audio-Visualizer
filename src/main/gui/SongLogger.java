@@ -107,20 +107,26 @@ public class SongLogger extends VisualizerOption {
         openButton = new Rectangle((int)panelRectangle.getX()-SONG_LOG_TOGGLE_SIZE, (int)panelRectangle.getY(), SONG_LOG_TOGGLE_SIZE, SONG_LOG_TOGGLE_SIZE);
         //DRAW ENCLOSURES
         g2.setColor(new Color(0));
-        drawPicture(g2, openButton , "src/main/images/historyButton_Default.png");
         if(clicked)
         {
             if(checkCollision(openButton, x_y_pressed[0], x_y_pressed[1]))
             {
                 drawPicture(g2, openButton , "src/main/images/historyButton_Selected.png");
             }
+            else
+                drawPicture(g2, openButton , "src/main/images/historyButton_Default.png");
 
-        } else if (checkCollision(openButton, x_y_position[0], x_y_position[1]))
+        }
+        else if (checkCollision(openButton, x_y_position[0], x_y_position[1]))
         {
             drawPicture(g2, openButton , "src/main/images/historyButton_Hover.png");
         }
+        else
+            drawPicture(g2, openButton , "src/main/images/historyButton_Default.png");
+
         g2.draw(openButton);
-        //
+
+        //Saves the created rectangles for later use on collision checking
         songsLogged = new ArrayList<>();
         int spacing = OPTION_SPACING;
 
@@ -144,8 +150,6 @@ public class SongLogger extends VisualizerOption {
                 Rectangle songButton = new Rectangle((int)panelRectangle.getX() + OPTION_SPACING, (int)enclosure.getY()+spacing, SONG_LOG_ITEM_X, SONG_LOG_ITEM_Y);
                 songsLogged.add(songButton);
                 spacing += OPTION_SPACING + SONG_LOG_ITEM_Y;
-                drawPicture(g2, songButton, "src/main/images/logItem_Default.png");
-                g2.drawString(sE.getSongName(), (int)(songButton.getX()+OPTION_SPACING*2), (int)(songButton.getY()+songButton.getHeight()/2 + OPTION_SPACING));
 
 
                 if(clicked) {
@@ -153,9 +157,21 @@ public class SongLogger extends VisualizerOption {
                         drawPicture(g2, songButton, "src/main/images/logItem_Selected.png");
                         g2.drawString(sE.getSongName(), (int)(songButton.getX()+OPTION_SPACING*2), (int)(songButton.getY()+songButton.getHeight()/2 + OPTION_SPACING));
                     }
-                } else // hover
-                if(checkCollision(songButton, x_y_position[0], x_y_position[1])) {
+                    else
+                    {
+
+                        drawPicture(g2, songButton, "src/main/images/logItem_Default.png");
+                        g2.drawString(sE.getSongName(), (int)(songButton.getX()+OPTION_SPACING*2), (int)(songButton.getY()+songButton.getHeight()/2 + OPTION_SPACING));
+                    }
+                }
+                else if(checkCollision(songButton, x_y_position[0], x_y_position[1])) {
                     drawPicture(g2, songButton, "src/main/images/logItem_Hover.png");
+                    g2.drawString(sE.getSongName(), (int)(songButton.getX()+OPTION_SPACING*2), (int)(songButton.getY()+songButton.getHeight()/2 + OPTION_SPACING));
+                }
+                else
+                {
+
+                    drawPicture(g2, songButton, "src/main/images/logItem_Default.png");
                     g2.drawString(sE.getSongName(), (int)(songButton.getX()+OPTION_SPACING*2), (int)(songButton.getY()+songButton.getHeight()/2 + OPTION_SPACING));
                 }
 
