@@ -1,21 +1,51 @@
 package util;
 
+import java.util.ArrayList;
+
 import static java.lang.Thread.sleep;
 
 public class VisualizerApplication implements Runnable {
     private VisualizerMediaPlayerHolder player;
     private boolean isPlaying = false;
+    private SongLog songLog;
+    private boolean debug;
 
-    public VisualizerApplication()
+
+    /**
+     * Default constructor, which requires a boolean to check if it will start the VisualizerApplication in debug mode or not
+     * @param debug boolean value that determine if debug mode turned on.
+     */
+    public VisualizerApplication(boolean debug)
     {
-        player = new VisualizerMediaPlayerHolder();
+        this.debug = debug;
+        songLog = new SongLog();
+        player = new VisualizerMediaPlayerHolder(debug, songLog);
     }
 
+    /**
+     * Prepares a Runnable class to function with the Java VisualizerApplication platform in threading
+     * @param r Class that implements the Runnable interface
+     */
     private static void startup(Runnable r)
     {
         com.sun.javafx.application.PlatformImpl.startup(r);
     }
 
+    public void togglePlayState()
+    {
+        if(isPlaying)
+        {
+            player.pause();
+        }else
+        {
+            player.play();
+        }//Only request once, so that it does not get hogged by the J.AWT thread
+       isPlaying = player.isPlaying();
+    }
+
+    /**
+     * Endlessly feeds the Application thread to get a new set of instructions via String input.
+     */
     private void start()
     {
         while(true) {
@@ -40,13 +70,56 @@ public class VisualizerApplication implements Runnable {
         }
     }
 
+    /**
+     * Returns the playing status
+     * @return Boolean which determines if the VisualizerMediaPlayerHolder is Playing
+     */
     public boolean isPlaying()
     {
         return isPlaying;
     }
 
+    /**
+     * Requests the VisualizerMediaPlayerHolder to load a file
+     * @param path string containing the Absolute directory and file name
+     */
+    public void load(String path)
+    {
+        player.load(path);
+        isPlaying = player.isPlaying();
+    }
+
+    /**
+     * returns a reference to the Universal songLog Object in MediaPlayerHolder and VisualizerApplication.
+     * @return
+     */
+    public SongLog getLog()
+    {
+        return songLog;
+    }
+
+
+    /**
+     * Overridden method for Runnable interface via threading.
+     * If in debug mode VisualizerApplication will request string input until quit.
+     * Otherwise Java Application thread will be fed, and VisualizerApplication will consistently request and save the playing status of VisualizerMediaPlayerHolder
+     */
     @Override
     public void run() {
-        start();
+        if(debug) {
+            start();
+        }
+        else
+        {
+            startup(player);
+            while (true) {
+                try {
+                    sleep(200);
+                } catch (InterruptedException e) {
+                    System.out.println("Main thread sleep was interrupted");
+                }
+                isPlaying = player.isPlaying();
+            }
+        }
     }
 }

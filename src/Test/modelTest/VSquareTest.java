@@ -1,7 +1,6 @@
 package modelTest;
 
 import model.VSquare;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -19,7 +18,7 @@ public class VSquareTest {
 
     //This allows for comparing values that use PI, we desire at least no error at 10 decimal places
     //Note that a loop adding 1/400th will produce a different result than multiplying D_Radians - This will be interfaced.
-    public double floorToTenthD(double a)
+    private double floorToTenthD(double a)
     {
         return (Math.floor(a*Math.pow(10,10)))/Math.pow(10,10);
     }
@@ -58,19 +57,19 @@ public class VSquareTest {
     public void testAwake()
     {
         assertEquals(SLEEPNG_HALF_WIDTH, testSquare.getSquareHalfWidth());
-        assertEquals(SLEEPING_RGB[0], testSquare.getVSquareColor().getRed());
+        assertEquals(SLEEPING_RGB[0], testSquare.getColor().getRed());
         int counter = 0;
         testSquare.awake();
         counter++;
         assertEquals(SLEEPNG_HALF_WIDTH+counter, testSquare.getSquareHalfWidth());
-        assertEquals(SLEEPING_RGB[0]+counter, testSquare.getVSquareColor().getRed());
+        assertEquals(SLEEPING_RGB[0]+counter, testSquare.getColor().getRed());
         for(int i = 0; i < 5; i++)
         {
             counter++;
             testSquare.awake();
         }
         assertEquals(SLEEPNG_HALF_WIDTH+counter, testSquare.getSquareHalfWidth());
-        assertEquals(SLEEPING_RGB[0]+counter,testSquare.getVSquareColor().getRed());
+        assertEquals(SLEEPING_RGB[0]+counter,testSquare.getColor().getRed());
 
         //extremes
         for(int i = 0; i < 1000; i++)
@@ -78,7 +77,7 @@ public class VSquareTest {
             testSquare.awake();
         }
         assertEquals(PLAYING_HALF_WIDTH, testSquare.getSquareHalfWidth());
-        assertEquals(PLAYING_RGB[0],testSquare.getVSquareColor().getRed());
+        assertEquals(PLAYING_RGB[0],testSquare.getColor().getRed());
     }
 
     @Test
@@ -89,13 +88,13 @@ public class VSquareTest {
             testSquare.awake();
         }
         assertEquals(PLAYING_HALF_WIDTH ,testSquare.getSquareHalfWidth());
-        assertEquals(PLAYING_RGB[0], testSquare.getVSquareColor().getRed());
+        assertEquals(PLAYING_RGB[0], testSquare.getColor().getRed());
         int counter = 0;
 
         counter++;
         testSquare.asleep();
         assertEquals(PLAYING_HALF_WIDTH-counter ,testSquare.getSquareHalfWidth());
-        assertEquals(PLAYING_RGB[0]-counter, testSquare.getVSquareColor().getRed());
+        assertEquals(PLAYING_RGB[0]-counter, testSquare.getColor().getRed());
 
         for(int i = 0; i < 5; i++)
         {
@@ -103,7 +102,7 @@ public class VSquareTest {
             testSquare.asleep();
         }
         assertEquals(PLAYING_HALF_WIDTH-counter ,testSquare.getSquareHalfWidth());
-        assertEquals(PLAYING_RGB[0]-counter, testSquare.getVSquareColor().getRed());
+        assertEquals(PLAYING_RGB[0]-counter, testSquare.getColor().getRed());
 
         //extremes
         for(int i = 0; i < 1000; i++)
@@ -111,6 +110,6 @@ public class VSquareTest {
             testSquare.asleep();
         }
         assertEquals(SLEEPNG_HALF_WIDTH, testSquare.getSquareHalfWidth());
-        assertEquals(SLEEPING_RGB[0], testSquare.getVSquareColor().getRed());
+        assertEquals(SLEEPING_RGB[0], testSquare.getColor().getRed());
     }
 }

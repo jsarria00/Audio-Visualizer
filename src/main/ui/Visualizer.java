@@ -1,13 +1,19 @@
 package ui;
 
 
-import javax.swing.JFrame;
+import javax.swing.*;
 //To play an audio file
 //CustomClasses
 
 import model.VisualizerComponent;
+import util.MouseEventManager;
+import util.MouseMotionEventManager;
 import util.VisualizerApplication;
 import util.VisualizerTimer;
+
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 //import java.awt.image.BufferedImage;
 //import java.awt.Point;
 
@@ -31,9 +37,10 @@ public class Visualizer {
      */
     private static JFrame createFrame()
     {
-        System.out.println("Creating a frame with 640x400 size.");
+        //System.out.println("Creating a frame with XxY size.");//for debug
         JFrame frame = new JFrame();
-        frame.setSize(640,400);
+        frame.setMinimumSize(new Dimension(800, 600));
+        frame.setSize(1920,1080);
         frame.setTitle("Audio Visualizer");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         return frame;
@@ -45,26 +52,27 @@ public class Visualizer {
      */
     private static void visualize(JFrame frame)
     {
-
-        visualizerComponent = new VisualizerComponent(player);
+        JSlider slider = new JSlider(0,100,0);
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
+        visualizerComponent = new VisualizerComponent(player, frame);
+        visualizerComponent.setPreferredSize(new Dimension(visualizerComponent.getWidth(), (visualizerComponent.getHeight()) - 75));
+        panel.add(visualizerComponent, BorderLayout.PAGE_START);
+        panel.add(slider, BorderLayout.PAGE_END);
         vTimer = new VisualizerTimer(visualizerComponent);
         vTimer.start();
-        System.out.println("Showing frame and adding the visualizer");
+        visualizerComponent.addMouseListener(new MouseEventManager(visualizerComponent));
+        visualizerComponent.addMouseMotionListener(new MouseMotionEventManager(visualizerComponent));
+        //System.out.println("Showing frame and adding the visualizer");//for Debug
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.setUndecorated(true);
-        frame.add(visualizerComponent); //statement that adds our visualizer component to be set within the frame.
+        frame.add(panel); //statement that adds our visualizer component to be set within the frame.
         frame.setVisible(true);
-        /*Note for hiding and showing cursor in future development.
-        frame.setCursor(frame.getToolkit().createCustomCursor(
-                new BufferedImage(3, 3, BufferedImage.TYPE_INT_ARGB), new Point(0, 0),
-                "null"));
-                */
+
+
     }
 
-    /**
-     * Prepares a Runnable class to function with the Java VisualizerApplication platform in threading
-     * @param r Class that implements the Runnable interface
-     */
+
     private static void startup(Runnable r)
     {
         com.sun.javafx.application.PlatformImpl.startup(r);
@@ -72,7 +80,13 @@ public class Visualizer {
 
     public static void main(String[] args)
     {
-        player = new VisualizerApplication();
+        boolean debug = false;
+        //lineArguments bool setter
+        for(int i=0; i<args.length; i++)
+        {
+            debug = args[i].equals("-debug");
+        }
+        player = new VisualizerApplication(debug);
         mediaThread = new Thread(player);
         mediaThread.start();
         JFrame fr = createFrame();

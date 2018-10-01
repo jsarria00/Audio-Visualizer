@@ -7,6 +7,7 @@ import javafx.scene.media.MediaPlayer;
 import javax.imageio.IIOException;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -24,30 +25,36 @@ public class VisualizerMediaPlayerHolder implements Runnable
     private static final String QUIT = "quit";
     private static final String DIRECTORY = "src/main/media/";
 
+    private static boolean debug;
     private static boolean isActive;
     private static boolean firstStart;
     private static boolean isPlaying;
     private static boolean isLoading;
     private static boolean hasInitialized;
+    private static boolean firstLoad;
     private static MediaPlayer mediaPlayer;
     private static Media song;
-    private String songStr;
+    private String songName;
     private String inputStr;
     private Scanner input;
+    private SongLog log;
+
 
 
     /**
      * Constructor that sets up a scanner for use, initial bool values, and a non-null string.
      */
-    public VisualizerMediaPlayerHolder() {
-        songStr = "";
+    public VisualizerMediaPlayerHolder(boolean debug, SongLog log) {
+        this.debug = debug;
+        this.log = log;
+        songName = "";
         input = new Scanner(System.in);
-
         isActive = false;
         firstStart = true;
         isPlaying = false;
         isLoading = false;
         hasInitialized = false;
+        firstLoad = log.getSongList().size() > 0;
     }
 
     /**
@@ -76,21 +83,19 @@ public class VisualizerMediaPlayerHolder implements Runnable
         mediaPlayer = null;
         hasInitialized = false;
     }
+    
+
+
 
     /**
-     * Requests one additional step of user input, this input will vary on the files located in the media package
+     * Will try to load the file directory indicated
+     * @param attempt a file directory in a string
      */
-    private void load() {
-        //future specification, custom exception to prevent unloading the current song if it is not found or is the same song.
-        System.out.println("Type the name of the song file with it's extension. Note this is case sensitive!");
-        songStr = input.nextLine();
-        songStr = songStr.trim();
-        try {
-            //To prevent operator overload from recognizing the string as a Path.
-            String filePath = DIRECTORY + songStr;
+    void load(String attempt) {
 
+        try {
             // This local variable will throw an exception without interrupting the current playback if no file is found
-            Media tempPointer = new Media(new File(filePath).toURI().toString());
+            Media tempPointer = new Media(new File(attempt).toURI().toString());
             deInitialize();
             song = tempPointer;
             //System.out.println("TIME: " + song.getDuration());
@@ -99,23 +104,75 @@ public class VisualizerMediaPlayerHolder implements Runnable
             //Waiting done through a listener.
             isLoading = true;
             mediaPlayer.setOnReady(() -> {
+                SongEntry newestSong = new SongEntry(attempt);
+                songName = newestSong.getSongName();
+                log.addToLog(newestSong);
                 System.out.println("File loaded!");
                 isLoading = false;
             });
             //For now -Note scanner hogs the thread therefore
             mediaPlayer.setOnEndOfMedia(()->{
-                deInitialize();
+                mediaPlayer.stop();
+                isPlaying = false;
             });
         }
         catch (MediaException e) {
-            System.err.println("Media file \"" + songStr + "\" does not exist");
+
+            System.err.println("Media file \"" + new SongEntry(attempt).getSongName() + "\" does not exist");
         }
+    }
+
+    /**
+     * Will run the first time the Java Application thread is fed and load a song into the mediaPlayer
+     */
+    private void firstTimeLoad()
+    {
+        //Almost identical to load, but looks at the most recent song loaded does not re-log that song.
+        ArrayList<SongEntry> songList = log.getSongList();
+        int size = songList.size();
+        try {
+            // This local variable will throw an exception without interrupting the current playback if no file is found
+            Media tempPointer = new Media(new File(songName = songList.get(size-1).getSongDirectory()).toURI().toString());
+            deInitialize();
+            song = tempPointer;
+            //System.out.println("TIME: " + song.getDuration());
+            mediaPlayer = new MediaPlayer(song);
+            hasInitialized = true;
+            //Waiting done through a listener.
+            isLoading = true;
+            mediaPlayer.setOnReady(() -> {
+                songName = songList.get(size-1).getSongName();
+                System.out.println("Previous session file successfully loaded!");
+                isLoading = false;
+            });
+            //For now -Note scanner hogs the thread therefore
+            mediaPlayer.setOnEndOfMedia(()->{
+                mediaPlayer.stop();
+                isPlaying = false;
+            });
+        }catch (MediaException e) {
+
+            System.err.println("Media file \"" + songList.get(size-1).getSongName() + "\" does not exist anymore");
+        }
+
+    }
+
+    /**
+     * Requests sting input from the user in Debug mode before attempting file Load
+     */
+    private void loadCMD()
+    {
+        //future specification, custom exception to prevent unloading the current song if it is not found or is the same song.
+        System.out.println("Type the name of the song file with it's extension. Note this is case sensitive!");
+        String songStr = input.nextLine();
+        songStr = songStr.trim();
+        load(DIRECTORY+songStr);
     }
 
     /**
      * sets the MediaPlayer class to PLAYING state.
      */
-    private void play() {
+    public void play() {
         if (!hasInitialized) {
             System.err.println("There is no song loaded; please load a song before playing."); //Exception throw idea
         } else if (isPlaying) {
@@ -123,14 +180,14 @@ public class VisualizerMediaPlayerHolder implements Runnable
         } else {
             mediaPlayer.play();
             isPlaying = true;
-            System.out.println("\"" + songStr + "\" is now playing.");
+            System.out.println("\"" + songName + "\" is now playing.");
         }
     }
 
     /**
      * Sets the media player class to a PAUSED state
      */
-    private void pause() {
+    public void pause() {
         if(!hasInitialized) {
             System.err.println("There is no song loaded; please load a song before attempting to pause"); //Exception throw idea
         }
@@ -164,7 +221,7 @@ public class VisualizerMediaPlayerHolder implements Runnable
                         "quit - De-initializes the program, and exits.");
                 break;
             case LOAD:
-                load();
+                loadCMD();
                 break;
             case PLAY:
                 play();
@@ -203,9 +260,15 @@ public class VisualizerMediaPlayerHolder implements Runnable
     @Override
     public void run() {
         isActive = true;
-        //System.out.println("First");
-        start();
-        //System.out.println("Second");
+        if (firstLoad) {
+            firstTimeLoad();
+            firstLoad = false;
+        }
+        if(debug) {
+            //System.out.println("First");
+            start();
+            //System.out.println("Second");
+        }
         isActive = false;
     }
 
