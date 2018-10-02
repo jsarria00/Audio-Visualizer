@@ -19,6 +19,12 @@ public class SongLogger extends VisualizerOption {
     private ArrayList<SongEntry> log;
     private Rectangle openButton;
     private ArrayList<Rectangle> songsLogged;
+    private BufferedImage historyButtonDefault;
+    private BufferedImage historyButtonSelected;
+    private BufferedImage historyButtonHover;
+    private BufferedImage logItemDefault;
+    private BufferedImage logItemSelected;
+    private BufferedImage logItemHover;
 
 
     public SongLogger(VisualizerApplication vApplication)
@@ -29,6 +35,18 @@ public class SongLogger extends VisualizerOption {
         xPosition = SONG_LOG_SIZE_X;
         opened = false;
         songsLogged = new ArrayList<>();
+        try {
+            historyButtonDefault = ImageIO.read(new File("src/main/images/historyButton_Default.png"));
+            historyButtonSelected = ImageIO.read(new File("src/main/images/historyButton_Selected.png"));
+            historyButtonHover = ImageIO.read(new File("src/main/images/historyButton_Hover.png"));
+            logItemDefault = ImageIO.read(new File("src/main/images/logItem_Default.png"));
+            logItemSelected = ImageIO.read(new File("src/main/images/logItem_Selected.png"));
+            logItemHover = ImageIO.read(new File("src/main/images/logItem_Hover.png"));
+        }
+        catch (IOException e)
+        {
+
+        }
     }
 
     private void toggleState()
@@ -111,18 +129,18 @@ public class SongLogger extends VisualizerOption {
         {
             if(checkCollision(openButton, x_y_pressed[0], x_y_pressed[1]))
             {
-                drawPicture(g2, openButton , "src/main/images/historyButton_Selected.png");
+                drawPicture(g2, openButton , historyButtonSelected);
             }
             else
-                drawPicture(g2, openButton , "src/main/images/historyButton_Default.png");
+                drawPicture(g2, openButton , historyButtonDefault);
 
         }
         else if (checkCollision(openButton, x_y_position[0], x_y_position[1]))
         {
-            drawPicture(g2, openButton , "src/main/images/historyButton_Hover.png");
+            drawPicture(g2, openButton , historyButtonHover);
         }
         else
-            drawPicture(g2, openButton , "src/main/images/historyButton_Default.png");
+            drawPicture(g2, openButton , historyButtonDefault);
 
         g2.draw(openButton);
 
@@ -154,24 +172,24 @@ public class SongLogger extends VisualizerOption {
 
                 if(clicked) {
                     if(checkCollision(songButton, x_y_pressed[0], x_y_pressed[1])) {
-                        drawPicture(g2, songButton, "src/main/images/logItem_Selected.png");
+                        drawPicture(g2, songButton, logItemSelected);
                         g2.drawString(sE.getSongName(), (int)(songButton.getX()+OPTION_SPACING*2), (int)(songButton.getY()+songButton.getHeight()/2 + OPTION_SPACING));
                     }
                     else
                     {
 
-                        drawPicture(g2, songButton, "src/main/images/logItem_Default.png");
+                        drawPicture(g2, songButton, logItemDefault);
                         g2.drawString(sE.getSongName(), (int)(songButton.getX()+OPTION_SPACING*2), (int)(songButton.getY()+songButton.getHeight()/2 + OPTION_SPACING));
                     }
                 }
                 else if(checkCollision(songButton, x_y_position[0], x_y_position[1])) {
-                    drawPicture(g2, songButton, "src/main/images/logItem_Hover.png");
+                    drawPicture(g2, songButton, logItemHover);
                     g2.drawString(sE.getSongName(), (int)(songButton.getX()+OPTION_SPACING*2), (int)(songButton.getY()+songButton.getHeight()/2 + OPTION_SPACING));
                 }
                 else
                 {
 
-                    drawPicture(g2, songButton, "src/main/images/logItem_Default.png");
+                    drawPicture(g2, songButton, logItemDefault);
                     g2.drawString(sE.getSongName(), (int)(songButton.getX()+OPTION_SPACING*2), (int)(songButton.getY()+songButton.getHeight()/2 + OPTION_SPACING));
                 }
 

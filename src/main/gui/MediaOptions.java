@@ -2,21 +2,49 @@ package gui;
 
 import util.VisualizerApplication;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 
 public class MediaOptions extends VisualizerOption{
 
     private boolean isPlaying;
     private Rectangle playButton;
     private Rectangle fileSelectButton;
+    private BufferedImage playDefault;
+    private BufferedImage playSelected;
+    private BufferedImage playHover;
+    private BufferedImage pauseDefault;
+    private BufferedImage pauseSelected;
+    private BufferedImage pauseHover;
+    private BufferedImage fileSelectDefault;
+    private BufferedImage fileSelectSelected;
+    private BufferedImage fileSelectHover;
+
 
     public MediaOptions(VisualizerApplication vApplication)
     {
         super(vApplication);
         isPlaying = false;
+        try {
+            playDefault = ImageIO.read(new File("src/main/images/play_Default.png"));
+            playSelected = ImageIO.read(new File("src/main/images/play_Selected.png"));
+            playHover = ImageIO.read(new File("src/main/images/play_Hover.png"));
+            pauseDefault = ImageIO.read(new File("src/main/images/pause_Default.png"));
+            pauseSelected = ImageIO.read(new File("src/main/images/pause_Selected.png"));
+            pauseHover = ImageIO.read(new File("src/main/images/pause_Hover.png"));
+            fileSelectDefault = ImageIO.read(new File("src/main/images/fileSelect_Default.png"));
+            fileSelectSelected = ImageIO.read(new File("src/main/images/fileSelect_Selected.png"));
+            fileSelectHover = ImageIO.read(new File("src/main/images/fileSelect_Hover.png"));
+        }
+        catch(IOException e)
+        {
+            System.err.println("Failed to load one or more images");
+        }
     }
 
     @Override
@@ -84,17 +112,17 @@ public class MediaOptions extends VisualizerOption{
             {
                 if(checkCollision(playButton, x_y_pressed[0], x_y_pressed[1]))
                 {
-                    drawPicture(g2, playButton , "src/main/images/pause_Selected.png");
+                    drawPicture(g2, playButton , pauseSelected);
                 }
                 else
-                    drawPicture(g2, playButton , "src/main/images/pause_Default.png");
+                    drawPicture(g2, playButton , pauseDefault);
 
             } else if (checkCollision(playButton, x_y_position[0], x_y_position[1]))
             {
-                drawPicture(g2, playButton , "src/main/images/pause_Hover.png");
+                drawPicture(g2, playButton , pauseHover);
             }
             else
-                drawPicture(g2, playButton , "src/main/images/pause_Default.png");
+                drawPicture(g2, playButton , pauseDefault);
         }
         else
         {
@@ -102,20 +130,20 @@ public class MediaOptions extends VisualizerOption{
             {
                 if(checkCollision(playButton, x_y_pressed[0], x_y_pressed[1]))
                 {
-                    drawPicture(g2, playButton , "src/main/images/play_Selected.png");
+                    drawPicture(g2, playButton , playSelected);
                 }
                 else
                 {
-                    drawPicture(g2, playButton , "src/main/images/play_Default.png");
+                    drawPicture(g2, playButton , playDefault);
                 }
 
             } else if (checkCollision(playButton, x_y_position[0], x_y_position[1]))
             {
-                drawPicture(g2, playButton , "src/main/images/play_Hover.png");
+                drawPicture(g2, playButton , playHover);
             }
             else
             {
-                drawPicture(g2, playButton , "src/main/images/play_Default.png");
+                drawPicture(g2, playButton , playDefault);
             }
         }
 
@@ -123,18 +151,18 @@ public class MediaOptions extends VisualizerOption{
         if(clicked)
         {
             if(checkCollision(fileSelectButton, x_y_pressed[0], x_y_pressed[1]) ) {
-                drawPicture(g2, fileSelectButton, "src/main/images/fileSelect_Selected.png");
+                drawPicture(g2, fileSelectButton, fileSelectSelected);
             }
             else
-                drawPicture(g2, fileSelectButton , "src/main/images/fileSelect_Default.png");
+                drawPicture(g2, fileSelectButton , fileSelectDefault);
 
         }
         else if(checkCollision(fileSelectButton, x_y_position[0], x_y_position[1]))
         {
-            drawPicture(g2, fileSelectButton, "src/main/images/fileSelect_Hover.png");
+            drawPicture(g2, fileSelectButton, fileSelectHover);
         }
         else
-            drawPicture(g2, fileSelectButton , "src/main/images/fileSelect_Default.png");
+            drawPicture(g2, fileSelectButton , fileSelectDefault);
     }
 
 }

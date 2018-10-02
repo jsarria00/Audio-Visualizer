@@ -5,6 +5,7 @@ import util.VisualizerApplication;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.BufferedImageOp;
 import java.io.File;
 import java.io.IOException;
 
@@ -48,16 +49,10 @@ public abstract class VisualizerOption implements Selectable {
         );
     }
 
-    protected void drawPicture(Graphics2D g2, Rectangle container, String path)
+    protected void drawPicture(Graphics2D g2, Rectangle container, BufferedImage bI)
     {
-        try {
-            BufferedImage bI = ImageIO.read(new File(path));
-            g2.drawImage(bI,  (int)container.getX(), (int)container.getY(), null);
-        }
-        catch(IOException e)
-        {
-            System.err.println("Failed to load \"" + path + "\"");
-        }
+        g2.drawImage(bI,  (int)container.getX(), (int)container.getY(), null);
+
     }
 
     public abstract void timedEvent();
