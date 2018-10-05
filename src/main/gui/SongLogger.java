@@ -45,7 +45,7 @@ public class SongLogger extends VisualizerOption {
         }
         catch (IOException e)
         {
-
+            System.err.println("One or many SongLog elements failed to load");
         }
     }
 
@@ -195,13 +195,5 @@ public class SongLogger extends VisualizerOption {
 
             }
         }
-        //for condition to check debounce -
-
-        //for condition to draw rectangles
-
-        //g2.fill(panelRectangle);
-
     }
-
-
 }

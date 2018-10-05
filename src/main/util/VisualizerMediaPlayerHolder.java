@@ -1,5 +1,6 @@
 package util;
 
+import javafx.scene.media.AudioSpectrumListener;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaException;
 import javafx.scene.media.MediaPlayer;
@@ -38,6 +39,8 @@ public class VisualizerMediaPlayerHolder implements Runnable
     private String inputStr;
     private Scanner input;
     private SongLog log;
+    private int numberOfBands;
+    private AudioSpectrumListener audioSpectrumListener;
 
 
 
@@ -55,6 +58,7 @@ public class VisualizerMediaPlayerHolder implements Runnable
         isLoading = false;
         hasInitialized = false;
         firstLoad = log.getSongList().size() > 0;
+        numberOfBands = 0;
     }
 
     /**
@@ -83,7 +87,7 @@ public class VisualizerMediaPlayerHolder implements Runnable
         mediaPlayer = null;
         hasInitialized = false;
     }
-    
+
 
 
 
@@ -104,6 +108,7 @@ public class VisualizerMediaPlayerHolder implements Runnable
             //Waiting done through a listener.
             isLoading = true;
             mediaPlayer.setOnReady(() -> {
+                mediaPlayer.setAudioSpectrumNumBands(80);
                 SongEntry newestSong = new SongEntry(attempt);
                 songName = newestSong.getSongName();
                 log.addToLog(newestSong);
@@ -136,11 +141,13 @@ public class VisualizerMediaPlayerHolder implements Runnable
             deInitialize();
             song = tempPointer;
             //System.out.println("TIME: " + song.getDuration());
+
             mediaPlayer = new MediaPlayer(song);
             hasInitialized = true;
             //Waiting done through a listener.
             isLoading = true;
             mediaPlayer.setOnReady(() -> {
+                mediaPlayer.setAudioSpectrumNumBands(80);
                 songName = songList.get(size-1).getSongName();
                 System.out.println("Previous session file successfully loaded!");
                 isLoading = false;
@@ -178,6 +185,7 @@ public class VisualizerMediaPlayerHolder implements Runnable
         } else if (isPlaying) {
             System.out.println("Song is already playing");
         } else {
+            mediaPlayer.setAudioSpectrumListener(audioSpectrumListener);
             mediaPlayer.play();
             isPlaying = true;
             System.out.println("\"" + songName + "\" is now playing.");
@@ -253,6 +261,11 @@ public class VisualizerMediaPlayerHolder implements Runnable
     }
 
     public static boolean isPlaying(){ return isPlaying; }
+
+    public void setAudioSpectrumListener(AudioSpectrumListener audioSpectrumListener)
+    {
+        this.audioSpectrumListener = audioSpectrumListener;
+    }
 
     /**
      * The start point of VisualizerMediaPlayerHolder Runnable when threaded.
