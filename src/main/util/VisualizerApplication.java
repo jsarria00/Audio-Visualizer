@@ -1,5 +1,7 @@
 package util;
 
+import javafx.scene.media.AudioSpectrumListener;
+
 import java.util.ArrayList;
 
 import static java.lang.Thread.sleep;
@@ -91,11 +93,16 @@ public class VisualizerApplication implements Runnable {
 
     /**
      * returns a reference to the Universal songLog Object in MediaPlayerHolder and VisualizerApplication.
-     * @return
+     * @return a SongLog object
      */
     public SongLog getLog()
     {
         return songLog;
+    }
+
+    public void setAudioSpectrumListener(AudioSpectrumListener audioSpectrumListener)
+    {
+        player.setAudioSpectrumListener(audioSpectrumListener);
     }
 
 

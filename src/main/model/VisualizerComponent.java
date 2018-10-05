@@ -4,6 +4,7 @@ import gui.MediaOptions;
 import gui.Selectable;
 import gui.SongLogger;
 import gui.WindowOptions;
+import javafx.scene.media.AudioSpectrumListener;
 import util.*;
 
 import javax.swing.*;
@@ -24,12 +25,16 @@ public class VisualizerComponent extends JComponent implements Selectable {
     private WindowOptions wO;
     private Boolean canSelect;
     private JFrame heldBy;
+    private AudioSpectrumListener audioSpectrumListener;
+    private float[] magnitudes;
 
 
     public VisualizerComponent(VisualizerApplication vApplication , JFrame heldBy)
     {
         this.vApplication = vApplication;
         this.heldBy = heldBy;
+        audioSpectrumListener = new VisualizerAudioSpectrumListener(this);
+        vApplication.setAudioSpectrumListener(audioSpectrumListener);
         vS = new VSquare();
         vBg = new VBackground();
         sL = new SongLogger(vApplication);
@@ -134,11 +139,26 @@ public class VisualizerComponent extends JComponent implements Selectable {
 
         sL.draw(g2, historyLogEnclosing);
         mO.draw(g2, mediaOptionsEnclosing);
-        /*
+
+
+        int rectWidth = this.getWidth()/60;
+        int x = 0;
+        if(magnitudes !=null) {
+            for (int i = 0; i < 60; i++) {
+                g2.draw(new Rectangle(x, getHeight() / 2, rectWidth, 5*(60+((int)magnitudes[i]))));
+                x+=rectWidth;
+            }
+        }
+
         //for visual debugging
-        g2.draw(mediaOptionsEnclosing);
-        g2.draw(windowOptionsEnclosing);
-        g2.draw(historyLogEnclosing);
-        */
+//        g2.draw(mediaOptionsEnclosing);
+//        g2.draw(windowOptionsEnclosing);
+//        g2.draw(historyLogEnclosing);
+
+    }
+
+    public void visualize(float[] magnitudes) {
+        this.magnitudes = magnitudes;
+        System.out.println(magnitudes[40]);
     }
 }

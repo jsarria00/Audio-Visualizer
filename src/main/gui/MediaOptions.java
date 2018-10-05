@@ -155,7 +155,6 @@ public class MediaOptions extends VisualizerOption{
             }
             else
                 drawPicture(g2, fileSelectButton , fileSelectDefault);
-
         }
         else if(checkCollision(fileSelectButton, x_y_position[0], x_y_position[1]))
         {
