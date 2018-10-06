@@ -14,6 +14,7 @@ import java.awt.image.BufferedImage;
 public class VisualizerComponent extends JComponent implements Selectable {
     private VSquare vS;
     private VBackground vBg;
+    private VAudioRectangles vAudioRectangles;
     private int screenX;
     private int screenY;
     private int waitTimeRemaining;
@@ -27,6 +28,7 @@ public class VisualizerComponent extends JComponent implements Selectable {
     private JFrame heldBy;
     private AudioSpectrumListener audioSpectrumListener;
     private float[] magnitudes;
+    private static final int NUM_AUDIO_RECTANGLES = 60;
 
 
     public VisualizerComponent(VisualizerApplication vApplication , JFrame heldBy)
@@ -37,6 +39,7 @@ public class VisualizerComponent extends JComponent implements Selectable {
         vApplication.setAudioSpectrumListener(audioSpectrumListener);
         vS = new VSquare();
         vBg = new VBackground();
+        vAudioRectangles = new VAudioRectangles();
         sL = new SongLogger(vApplication);
         mO = new MediaOptions(vApplication);
         waitTimeRemaining = 0;
@@ -63,14 +66,16 @@ public class VisualizerComponent extends JComponent implements Selectable {
         if(vApplication.isPlaying()) {
             vS.rotate();
             vS.awake();
-            //Call twice for thread priority.
+            //Call twice for design preference
             vBg.awake();
             vBg.awake();
+            vAudioRectangles.awake();
         }
         else
         {
             vS.asleep();
             vBg.asleep();
+            vAudioRectangles.asleep();
         }
 
         if(mouseHideWaitTime > 0)
@@ -79,9 +84,7 @@ public class VisualizerComponent extends JComponent implements Selectable {
         }else if(!mouseHidden)
         {
             mouseHidden = true;
-            heldBy.setCursor(heldBy.getToolkit().createCustomCursor(
-                    new BufferedImage(3, 3, BufferedImage.TYPE_INT_ARGB), new Point(0, 0),
-                    "null"));
+            heldBy.setCursor(heldBy.getToolkit().createCustomCursor(new BufferedImage(3, 3, BufferedImage.TYPE_INT_ARGB), new Point(0, 0), "null"));
         }
         sL.timedEvent();
         mO.timedEvent();
@@ -99,6 +102,7 @@ public class VisualizerComponent extends JComponent implements Selectable {
         unHideMouse();
 
     }
+
     public void selection(int x, int y)
     {
         if(canSelect) {
@@ -117,6 +121,16 @@ public class VisualizerComponent extends JComponent implements Selectable {
 
     }
 
+    public void visualize(float[] magnitudes) {
+        this.magnitudes = magnitudes;
+        int[] integerMagnitudes = new int[NUM_AUDIO_RECTANGLES];
+        for(int i = 0; i < NUM_AUDIO_RECTANGLES; i++)
+        {
+            integerMagnitudes[i] = 60+((int)(magnitudes[i]));
+        }
+        vAudioRectangles.visualize(integerMagnitudes);
+    }
+
     @Override
     public void paintComponent(Graphics g)
     {
@@ -126,11 +140,9 @@ public class VisualizerComponent extends JComponent implements Selectable {
         //SCREEN defined as a rectangle
         Rectangle enclosing = new Rectangle(0, 0, this.screenX, this.screenY);
 
-
-        //vS.rotate();
         vBg.draw(g2, enclosing);
         vS.draw(g2, enclosing);
-
+        vAudioRectangles.draw(g2, enclosing);
 
         //GEOMETRIC REPRESENTATIONS OF MEDIA OPTIONS
         Rectangle mediaOptionsEnclosing = new Rectangle(OPTION_SPACING, this.screenY - MEDIA_OPTION_SIZE - OPTION_SPACING, this.screenX - SONG_LOG_SIZE_X - 2*OPTION_SPACING, MEDIA_OPTION_SIZE );
@@ -140,15 +152,15 @@ public class VisualizerComponent extends JComponent implements Selectable {
         sL.draw(g2, historyLogEnclosing);
         mO.draw(g2, mediaOptionsEnclosing);
 
-
-        int rectWidth = this.getWidth()/60;
-        int x = 0;
-        if(magnitudes !=null) {
-            for (int i = 0; i < 60; i++) {
-                g2.draw(new Rectangle(x, getHeight() / 2, rectWidth, 5*(60+((int)magnitudes[i]))));
-                x+=rectWidth;
-            }
-        }
+        //DEBUG
+//        int rectWidth = this.getWidth()/60;
+//        int x = 0;
+//        if(magnitudes !=null) {
+//            for (int i = 0; i < 60; i++) {
+//                g2.draw(new Rectangle(x, getHeight() / 2, rectWidth, 7*(60+((int)magnitudes[i]))));
+//                x+=rectWidth;
+//            }
+//        }
 
         //for visual debugging
 //        g2.draw(mediaOptionsEnclosing);
@@ -157,8 +169,5 @@ public class VisualizerComponent extends JComponent implements Selectable {
 
     }
 
-    public void visualize(float[] magnitudes) {
-        this.magnitudes = magnitudes;
-        System.out.println(magnitudes[40]);
-    }
+
 }

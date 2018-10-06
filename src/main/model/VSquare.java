@@ -65,6 +65,11 @@ public class VSquare extends VShape {
     @Override
     public void asleep()
     {
+        if(!isVisualizeDataDefault)
+        {
+            isVisualizeDataDefault = true;
+            resetVisualizeData();
+        }
         if(xHalfWidth > SLEEPING_HALF_WIDTH)
         {
             //BECAUSE I do not like the visuals of it suddenly stopping, it will rotate until it is done shifting size
@@ -75,6 +80,14 @@ public class VSquare extends VShape {
             currentColor[0]--;
             color = new Color(currentColor[0], currentColor[1], currentColor[2]);
         }
+    }
+
+
+
+    @Override
+    public void visualize(int[] magnitudes)
+    {
+        isVisualizeDataDefault = false;
     }
 
     public double getRadians()
@@ -92,19 +105,17 @@ public class VSquare extends VShape {
         return color;
     }
 
+    @Override
     public void draw(Graphics2D g2, Rectangle enclosing)
     {
-        //Due to rotate, lets save the current
+        //Due to rotate, save the current orientation
         AffineTransform oldTransform = g2.getTransform();
         int enclosingW =(int)enclosing.getWidth();
         int enclosingH = (int)enclosing.getHeight();
         Rectangle square = new Rectangle(enclosingW/2-xHalfWidth, enclosingH/2-xHalfWidth, 2*xHalfWidth, 2*xHalfWidth);
-        //AffineTransform rotatedSquare = new AffineTransform();
-        //rotatedSquare.rotate(radians, square.getX() + square.width/2, square.getY() + square.width/2);
         g2.rotate(radians, enclosingW/2.0, enclosingH/2.0);
         g2.setColor(color);
         g2.fill(square);
-        //g2.fill((Shape) rotatedSquare);
         g2.setColor(new Color(0));
         g2.setStroke(new BasicStroke(2));
         g2.draw(square);
