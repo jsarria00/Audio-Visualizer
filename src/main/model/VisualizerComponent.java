@@ -66,8 +66,6 @@ public class VisualizerComponent extends JComponent implements Selectable {
         if(vApplication.isPlaying()) {
             vS.rotate();
             vS.awake();
-            //Call twice for design preference
-            vBg.awake();
             vBg.awake();
             vAudioRectangles.awake();
         }
