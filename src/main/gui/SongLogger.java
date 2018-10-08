@@ -1,6 +1,7 @@
 package gui;
 
 
+import org.w3c.dom.css.Rect;
 import util.SongEntry;
 import util.SongLog;
 import util.VisualizerApplication;
@@ -117,13 +118,8 @@ public class SongLogger extends VisualizerOption {
         x_y_position[1] = y;
     }
 
-
-    @Override
-    public void draw(Graphics2D g2, Rectangle enclosure)
+    public void drawOpenButton(Graphics2D g2)
     {
-        Rectangle panelRectangle = new Rectangle((int)enclosure.getX()+xPosition, (int)enclosure.getY(), (int)enclosure.getWidth(), (int)enclosure.getHeight());
-        openButton = new Rectangle((int)panelRectangle.getX()-SONG_LOG_TOGGLE_SIZE, (int)panelRectangle.getY(), SONG_LOG_TOGGLE_SIZE, SONG_LOG_TOGGLE_SIZE);
-        //DRAW ENCLOSURES
         g2.setColor(new Color(0));
         if(clicked)
         {
@@ -143,24 +139,22 @@ public class SongLogger extends VisualizerOption {
             drawPicture(g2, openButton , historyButtonDefault);
 
         g2.draw(openButton);
+    }
 
-        //Saves the created rectangles for later use on collision checking
+    public void drawLogItems()
+    {
+
+    }
+
+    public void drawSongLogger(Graphics2D g2, Rectangle panelRectangle, Rectangle enclosure)
+    {
         songsLogged = new ArrayList<>();
-        int spacing = OPTION_SPACING;
-
-        //Since list is backwards we need to decrement a counter
-        int size = log.size();
-        //Draw enclosure depending on mouse condition
-        g2.setColor(new Color(0,0,0));
-        g2.setFont(new Font("TimesRoman", Font.BOLD, 20));
-
-        g2.setColor(new Color(195, 195, 195));
-        g2.fill(panelRectangle);
-        g2.setColor(new Color(0));
-
+        int spacing = OPTION_SPACING; //BETWEEN LOGS
         //Hide entities that are not in frame performance increase
         if(xPosition<SONG_LOG_SIZE_X)
         {
+            //Since list is backwards we need to decrement a counter
+            int size = log.size();
             g2.draw(panelRectangle);
             for(int i = size -1; i >=0 ; i--)
             {
@@ -168,8 +162,6 @@ public class SongLogger extends VisualizerOption {
                 Rectangle songButton = new Rectangle((int)panelRectangle.getX() + OPTION_SPACING, (int)enclosure.getY()+spacing, SONG_LOG_ITEM_X, SONG_LOG_ITEM_Y);
                 songsLogged.add(songButton);
                 spacing += OPTION_SPACING + SONG_LOG_ITEM_Y;
-
-
                 if(clicked) {
                     if(checkCollision(songButton, x_y_pressed[0], x_y_pressed[1])) {
                         drawPicture(g2, songButton, logItemSelected);
@@ -177,7 +169,6 @@ public class SongLogger extends VisualizerOption {
                     }
                     else
                     {
-
                         drawPicture(g2, songButton, logItemDefault);
                         g2.drawString(sE.getSongName(), (int)(songButton.getX()+OPTION_SPACING*2), (int)(songButton.getY()+songButton.getHeight()/2 + OPTION_SPACING));
                     }
@@ -188,12 +179,29 @@ public class SongLogger extends VisualizerOption {
                 }
                 else
                 {
-
                     drawPicture(g2, songButton, logItemDefault);
                     g2.drawString(sE.getSongName(), (int)(songButton.getX()+OPTION_SPACING*2), (int)(songButton.getY()+songButton.getHeight()/2 + OPTION_SPACING));
                 }
 
             }
         }
+    }
+
+    @Override
+    public void draw(Graphics2D g2, Rectangle enclosure)
+    {
+        Rectangle panelRectangle = new Rectangle((int)enclosure.getX()+xPosition, (int)enclosure.getY(), (int)enclosure.getWidth(), (int)enclosure.getHeight());
+        openButton = new Rectangle((int)panelRectangle.getX()-SONG_LOG_TOGGLE_SIZE, (int)panelRectangle.getY(), SONG_LOG_TOGGLE_SIZE, SONG_LOG_TOGGLE_SIZE);
+        //DRAW ENCLOSURES
+        drawOpenButton(g2);
+
+        //Draw enclosure depending on mouse condition
+        g2.setColor(new Color(0,0,0));
+        g2.setFont(new Font("TimesRoman", Font.BOLD, 20));
+
+        g2.setColor(new Color(195, 195, 195));
+        g2.fill(panelRectangle);
+        g2.setColor(new Color(0));
+        drawSongLogger(g2, panelRectangle, enclosure);
     }
 }
