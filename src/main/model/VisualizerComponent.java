@@ -58,11 +58,8 @@ public class VisualizerComponent extends JComponent implements Selectable {
         }
     }
 
-    public void timedActions()
+    public void modifyByState()
     {
-        if(waitTimeRemaining > 0) {
-            waitTimeRemaining--;
-        }
         if(vApplication.isPlaying()) {
             vS.rotate();
             vS.awake();
@@ -75,7 +72,14 @@ public class VisualizerComponent extends JComponent implements Selectable {
             vBg.asleep();
             vAudioRectangles.asleep();
         }
+    }
 
+    public void timedActions()
+    {
+        if(waitTimeRemaining > 0) {
+            waitTimeRemaining--;
+        }
+        modifyByState();
         if(mouseHideWaitTime > 0)
         {
             mouseHideWaitTime--;
