@@ -47,8 +47,7 @@ public class VAudioRectangles extends VShape {
         }
     }
 
-    @Override
-    public void asleep()
+    private void resetAudioRectangles()
     {
         for(int i = 0; i < NUMBER_OF_AUDIO_RECTANGLES; i++)
         {
@@ -61,6 +60,12 @@ public class VAudioRectangles extends VShape {
                 rectangleHeight[i] -= D_RECTANGLE_HEIGHT;
             }
         }
+    }
+
+    @Override
+    public void asleep()
+    {
+        resetAudioRectangles();
         if(!isVisualizeDataDefault)
         {
             isVisualizeDataDefault = true;

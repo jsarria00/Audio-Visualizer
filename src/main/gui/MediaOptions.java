@@ -99,55 +99,50 @@ public class MediaOptions extends VisualizerOption{
         x_y_position[1] = y;
     }
 
-
-
-    @Override
-    public void draw(Graphics2D g2, Rectangle enclosure)
+    public void drawPauseButton(Graphics2D g2)
     {
-        playButton = new Rectangle((int)(enclosure.getX()+enclosure.getWidth()/2), (int)enclosure.getY(), MEDIA_OPTION_SIZE, MEDIA_OPTION_SIZE);
-        fileSelectButton = new Rectangle((int)(enclosure.getWidth()- MEDIA_OPTION_SIZE), (int)(enclosure.getY()), MEDIA_OPTION_SIZE, MEDIA_OPTION_SIZE);
-        if(isPlaying)
+        if(clicked)
         {
-            if(clicked)
+            if(checkCollision(playButton, x_y_pressed[0], x_y_pressed[1]))
             {
-                if(checkCollision(playButton, x_y_pressed[0], x_y_pressed[1]))
-                {
-                    drawPicture(g2, playButton , pauseSelected);
-                }
-                else
-                    drawPicture(g2, playButton , pauseDefault);
-
-            } else if (checkCollision(playButton, x_y_position[0], x_y_position[1]))
-            {
-                drawPicture(g2, playButton , pauseHover);
+                drawPicture(g2, playButton , pauseSelected);
             }
             else
                 drawPicture(g2, playButton , pauseDefault);
+
+        } else if (checkCollision(playButton, x_y_position[0], x_y_position[1]))
+        {
+            drawPicture(g2, playButton , pauseHover);
         }
         else
-        {
-            if(clicked)
-            {
-                if(checkCollision(playButton, x_y_pressed[0], x_y_pressed[1]))
-                {
-                    drawPicture(g2, playButton , playSelected);
-                }
-                else
-                {
-                    drawPicture(g2, playButton , playDefault);
-                }
+            drawPicture(g2, playButton , pauseDefault);
+    }
 
-            } else if (checkCollision(playButton, x_y_position[0], x_y_position[1]))
+    public void drawPlayButton(Graphics2D g2)
+    {
+        if(clicked)
+        {
+            if(checkCollision(playButton, x_y_pressed[0], x_y_pressed[1]))
             {
-                drawPicture(g2, playButton , playHover);
+                drawPicture(g2, playButton , playSelected);
             }
             else
             {
                 drawPicture(g2, playButton , playDefault);
             }
+
+        } else if (checkCollision(playButton, x_y_position[0], x_y_position[1]))
+        {
+            drawPicture(g2, playButton , playHover);
         }
+        else
+        {
+            drawPicture(g2, playButton , playDefault);
+        }
+    }
 
-
+    public void drawFileSelectButton(Graphics2D g2)
+    {
         if(clicked)
         {
             if(checkCollision(fileSelectButton, x_y_pressed[0], x_y_pressed[1]) ) {
@@ -164,4 +159,20 @@ public class MediaOptions extends VisualizerOption{
             drawPicture(g2, fileSelectButton , fileSelectDefault);
     }
 
+    @Override
+    public void draw(Graphics2D g2, Rectangle enclosure)
+    {
+        playButton = new Rectangle((int)(enclosure.getX()+enclosure.getWidth()/2), (int)enclosure.getY(), MEDIA_OPTION_SIZE, MEDIA_OPTION_SIZE);
+        fileSelectButton = new Rectangle((int)(enclosure.getWidth()- MEDIA_OPTION_SIZE), (int)(enclosure.getY()), MEDIA_OPTION_SIZE, MEDIA_OPTION_SIZE);
+        if(isPlaying)
+        {
+            drawPauseButton(g2);
+        }
+        else
+        {
+            drawPlayButton(g2);
+        }
+
+        drawFileSelectButton(g2);
+    }
 }

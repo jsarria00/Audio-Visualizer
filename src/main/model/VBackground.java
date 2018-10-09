@@ -50,6 +50,37 @@ public class VBackground extends VShape {
         dBlue = r.nextInt()%7+1;
     }
 
+    private void modifyRed()
+    {
+
+        //RED MODIFIER
+        if ((currentColor[0] + dRed * redDirection > BACKGROUND_MAX_COLOR_BRIGHTNESS) || (currentColor[0] + dRed * redDirection < BACKGROUND_SLEEPING_RGB[0])) {
+            redDirection *= -1;
+        } else {
+            currentColor[0] += dRed * redDirection;
+        }
+    }
+
+    private void modifyGreen()
+    {
+        //GREEN MODIFIER
+        if ((currentColor[1] + dGreen * greenDirection > BACKGROUND_MAX_COLOR_BRIGHTNESS) || (currentColor[1] + dGreen * greenDirection < BACKGROUND_SLEEPING_RGB[1])) {
+            greenDirection *= -1;
+        } else {
+            currentColor[1] += dGreen * greenDirection;
+        }
+    }
+
+    private void modifyBlue()
+    {
+        //BLUE MODIFIER
+        if ((currentColor[2] + dBlue * blueDirection > BACKGROUND_MAX_COLOR_BRIGHTNESS) || (currentColor[2] + dBlue * blueDirection < BACKGROUND_SLEEPING_RGB[2])) {
+            blueDirection *= -1;
+        } else {
+            currentColor[2] += dBlue * blueDirection;
+        }
+    }
+
     @Override
     public void awake(){
 
@@ -63,25 +94,9 @@ public class VBackground extends VShape {
         }
         if(colorIncrementCounter >= BACKGROUND_COLOR_INCREMENT_THRESHOLD){
             colorIncrementCounter = 0;
-            //RED MODIFIER
-            if ((currentColor[0] + dRed * redDirection > BACKGROUND_MAX_COLOR_BRIGHTNESS) || (currentColor[0] + dRed * redDirection < BACKGROUND_SLEEPING_RGB[0])) {
-                redDirection *= -1;
-            } else {
-                currentColor[0] += dRed * redDirection;
-            }
-            //GREEN MODIFIER
-            if ((currentColor[1] + dGreen * greenDirection > BACKGROUND_MAX_COLOR_BRIGHTNESS) || (currentColor[1] + dGreen * greenDirection < BACKGROUND_SLEEPING_RGB[1])) {
-                greenDirection *= -1;
-            } else {
-                currentColor[1] += dGreen * greenDirection;
-            }
-
-            //BLUE MODIFIER
-            if ((currentColor[2] + dBlue * blueDirection > BACKGROUND_MAX_COLOR_BRIGHTNESS) || (currentColor[2] + dBlue * blueDirection < BACKGROUND_SLEEPING_RGB[2])) {
-                blueDirection *= -1;
-            } else {
-                currentColor[2] += dBlue * blueDirection;
-            }
+            modifyRed();
+            modifyGreen();
+            modifyBlue();
             color = new Color(currentColor[0], currentColor[1], currentColor[2]);
         }
         else

@@ -6,7 +6,7 @@ public interface VShapeable {
     int NUMBER_OF_COLORS = 3;
     int BACKGROUND_COLOR_CHANGE_THRESHOLD = 600;
     int BACKGROUND_MAX_COLOR_BRIGHTNESS = 140; // change this for
-    int BACKGROUND_COLOR_INCREMENT_THRESHOLD = 20;
+    int BACKGROUND_COLOR_INCREMENT_THRESHOLD = 10;
 
     double D_RADIANS = (Math.PI) / 200;
     int D_GROWTH = 2;
