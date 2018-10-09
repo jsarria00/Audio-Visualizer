@@ -93,6 +93,8 @@ public class VBackground extends VShape {
     @Override
     public void asleep()
     {
+        resetVisualizeData();
+
         if(currentColor[0] > BACKGROUND_SLEEPING_RGB[0])
         {
             currentColor[0]--;
@@ -106,6 +108,13 @@ public class VBackground extends VShape {
             currentColor[2]--;
         }
         color = new Color(currentColor[0], currentColor[1], currentColor[2]);
+    }
+
+    @Override
+    public void visualize(int[] magnitudes)
+    {
+        isVisualizeDataDefault = false;
+
     }
 
     @Override
