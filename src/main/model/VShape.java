@@ -8,6 +8,8 @@ public abstract class VShape implements VShapeable {
     protected int[] visualizeData;
     protected boolean isVisualizeDataDefault;
 
+    int[] rectangleHeight;
+
     public  VShape(int[] defaultColor)
     {
         currentColor = new int[NUMBER_OF_COLORS];
@@ -32,11 +34,37 @@ public abstract class VShape implements VShapeable {
         }
     }
 
+    protected void setAnimatedHeight()
+    {
+        for(int i = 0; i < NUMBER_OF_AUDIO_RECTANGLES; i++) {
+            if((rectangleHeight[i] < AUDIO_RECTANGLE_MINIMUM_HEIGHT + D_RECTANGLE_HEIGHT * visualizeData[i]) && (rectangleHeight[i] + D_RECTANGLE_HEIGHT >  AUDIO_RECTANGLE_MINIMUM_HEIGHT + D_RECTANGLE_HEIGHT * visualizeData[i]))
+            {
+                rectangleHeight[i] = AUDIO_RECTANGLE_MINIMUM_HEIGHT + D_RECTANGLE_HEIGHT * visualizeData[i];
+            }
+            else if (rectangleHeight[i] < AUDIO_RECTANGLE_MINIMUM_HEIGHT + D_RECTANGLE_HEIGHT * visualizeData[i]) {
+                rectangleHeight[i] += D_RECTANGLE_HEIGHT;
+            }
+            else if((rectangleHeight[i] > AUDIO_RECTANGLE_MINIMUM_HEIGHT + D_RECTANGLE_HEIGHT * visualizeData[i]) && (rectangleHeight[i] - D_RECTANGLE_HEIGHT < AUDIO_RECTANGLE_MINIMUM_HEIGHT + D_RECTANGLE_HEIGHT * visualizeData[i]))
+            {
+                rectangleHeight[i] = AUDIO_RECTANGLE_MINIMUM_HEIGHT + D_RECTANGLE_HEIGHT * visualizeData[i];
+            }
+            else if (rectangleHeight[i] > AUDIO_RECTANGLE_MINIMUM_HEIGHT + D_RECTANGLE_HEIGHT * visualizeData[i]) {
+                rectangleHeight[i] -= D_RECTANGLE_HEIGHT;
+            }
+        }
+    }
+
+
     public abstract void awake();
 
     public abstract void asleep();
 
-    public abstract void visualize(int[] magnitudes);
+
+    public void visualize(int[] magnitudes)
+    {
+        isVisualizeDataDefault = false;
+        visualizeData = magnitudes;
+    }
 
     public abstract void draw(Graphics2D g2, Rectangle enclosing);
 

@@ -4,7 +4,7 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 
 public class VAudioRectangles extends VShape {
-    int[] rectangleHeight;
+
 
     public VAudioRectangles()
     {
@@ -16,25 +16,7 @@ public class VAudioRectangles extends VShape {
         }
     }
 
-    public void setAnimatedHeight()
-    {
-        for(int i = 0; i < NUMBER_OF_AUDIO_RECTANGLES; i++) {
-            if((rectangleHeight[i] < AUDIO_RECTANGLE_MINIMUM_HEIGHT + D_RECTANGLE_HEIGHT * visualizeData[i]) && (rectangleHeight[i] + D_RECTANGLE_HEIGHT >  AUDIO_RECTANGLE_MINIMUM_HEIGHT + D_RECTANGLE_HEIGHT * visualizeData[i]))
-            {
-                rectangleHeight[i] = AUDIO_RECTANGLE_MINIMUM_HEIGHT + D_RECTANGLE_HEIGHT * visualizeData[i];
-            }
-            else if (rectangleHeight[i] < AUDIO_RECTANGLE_MINIMUM_HEIGHT + D_RECTANGLE_HEIGHT * visualizeData[i]) {
-                rectangleHeight[i] += D_RECTANGLE_HEIGHT;
-            }
-            else if((rectangleHeight[i] > AUDIO_RECTANGLE_MINIMUM_HEIGHT + D_RECTANGLE_HEIGHT * visualizeData[i]) && (rectangleHeight[i] - D_RECTANGLE_HEIGHT < AUDIO_RECTANGLE_MINIMUM_HEIGHT + D_RECTANGLE_HEIGHT * visualizeData[i]))
-            {
-                rectangleHeight[i] = AUDIO_RECTANGLE_MINIMUM_HEIGHT + D_RECTANGLE_HEIGHT * visualizeData[i];
-            }
-            else if (rectangleHeight[i] > AUDIO_RECTANGLE_MINIMUM_HEIGHT + D_RECTANGLE_HEIGHT * visualizeData[i]) {
-                rectangleHeight[i] -= D_RECTANGLE_HEIGHT;
-            }
-        }
-    }
+
 
 
     @Override
