@@ -47,6 +47,7 @@ public class VSquare extends VShape {
     @Override
     public void awake()
     {
+        setAnimatedHeight();
         if(xHalfWidth < PLAYING_HALF_WIDTH)
         {
             xHalfWidth += D_GROWTH;
@@ -65,6 +66,7 @@ public class VSquare extends VShape {
     @Override
     public void asleep()
     {
+        resetAudioRectangles();
         if(!isVisualizeDataDefault)
         {
             isVisualizeDataDefault = true;
@@ -84,11 +86,11 @@ public class VSquare extends VShape {
 
 
 
-    @Override
-    public void visualize(int[] magnitudes)
-    {
-        isVisualizeDataDefault = false;
-    }
+//    @Override
+//    public void visualize(int[] magnitudes)
+//    {
+//        isVisualizeDataDefault = false;
+//    }
 
     public double getRadians()
     {
@@ -112,7 +114,8 @@ public class VSquare extends VShape {
         AffineTransform oldTransform = g2.getTransform();
         int enclosingW =(int)enclosing.getWidth();
         int enclosingH = (int)enclosing.getHeight();
-        Rectangle square = new Rectangle(enclosingW/2-xHalfWidth, enclosingH/2-xHalfWidth, 2*xHalfWidth, 2*xHalfWidth);
+        //MATH: Needs to reposition itself by half of the added average to simulate growth from the center
+        Rectangle square = new Rectangle(enclosingW/2-xHalfWidth-rectangleAverage, enclosingH/2-xHalfWidth-rectangleAverage, 2*xHalfWidth+2*rectangleAverage, 2*xHalfWidth+2*rectangleAverage);
         g2.rotate(radians, enclosingW/2.0, enclosingH/2.0);
         g2.setColor(color);
         g2.fill(square);
