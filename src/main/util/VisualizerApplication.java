@@ -85,9 +85,9 @@ public class VisualizerApplication implements Runnable {
      * Requests the VisualizerMediaPlayerHolder to load a file
      * @param path string containing the Absolute directory and file name
      */
-    public void load(String path)
+    public void load(String path, boolean fromLog)
     {
-        player.load(path);
+        player.load(path, fromLog);
         isPlaying = player.isPlaying();
     }
 

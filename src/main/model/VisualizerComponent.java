@@ -26,6 +26,7 @@ public class VisualizerComponent extends JComponent implements Selectable {
     private WindowOptions wO;
     private Boolean canSelect;
     private JFrame heldBy;
+    private JSlider slider;
     private AudioSpectrumListener audioSpectrumListener;
     private float[] magnitudes;
     private static final int NUM_AUDIO_RECTANGLES = 60;
@@ -45,6 +46,15 @@ public class VisualizerComponent extends JComponent implements Selectable {
         waitTimeRemaining = 0;
         mouseHideWaitTime = TIME_UNTILL_HIDDEN;
         mouseHidden = false;
+
+    }
+    public void setSlider(JSlider slider)
+    {
+        this.slider = slider;
+    }
+
+    public void updateSlider()
+    {
 
     }
 
@@ -91,6 +101,10 @@ public class VisualizerComponent extends JComponent implements Selectable {
         sL.timedEvent();
         mO.timedEvent();
         repaint();
+        if(slider != null) // AND slider not currently clicked.
+        {
+            updateSlider();
+        }
     }
 
     public void checkSelection(int x, int y)

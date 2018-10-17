@@ -89,13 +89,11 @@ public class VisualizerMediaPlayerHolder implements Runnable
     }
 
 
-
-
     /**
      * Will try to load the file directory indicated
      * @param attempt a file directory in a string
      */
-    void load(String attempt) {
+    public void load(String attempt,boolean fromLog) {
 
         try {
             // This local variable will throw an exception without interrupting the current playback if no file is found
@@ -109,9 +107,11 @@ public class VisualizerMediaPlayerHolder implements Runnable
             isLoading = true;
             mediaPlayer.setOnReady(() -> {
                 mediaPlayer.setAudioSpectrumNumBands(80);
-                SongEntry newestSong = new SongEntry(attempt);
-                songName = newestSong.getSongName();
-                log.addToLog(newestSong);
+                if(!fromLog) {
+                    SongEntry newestSong = new SongEntry(attempt);
+                    songName = newestSong.getSongName();
+                    log.addToLog(newestSong);
+                }
                 System.out.println("File loaded!");
                 isLoading = false;
             });
@@ -173,7 +173,7 @@ public class VisualizerMediaPlayerHolder implements Runnable
         System.out.println("Type the name of the song file with it's extension. Note this is case sensitive!");
         String songStr = input.nextLine();
         songStr = songStr.trim();
-        load(DIRECTORY+songStr);
+        load(DIRECTORY+songStr, false);
     }
 
     /**

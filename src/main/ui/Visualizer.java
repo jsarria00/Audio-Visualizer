@@ -63,6 +63,7 @@ public class Visualizer {
         vTimer.start();
         visualizerComponent.addMouseListener(new MouseEventManager(visualizerComponent));
         visualizerComponent.addMouseMotionListener(new MouseMotionEventManager(visualizerComponent));
+        visualizerComponent.setSlider(slider);
         //System.out.println("Showing frame and adding the visualizer");//for Debug
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.setUndecorated(true);

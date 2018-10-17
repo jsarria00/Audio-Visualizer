@@ -87,7 +87,7 @@ public class MediaOptions extends VisualizerOption{
             if (option == JFileChooser.APPROVE_OPTION) {
                 String fileDir = selector.getSelectedFile().toString();
                 System.out.println(fileDir + " was the selected path and file \nRequesting Visualizer Application to load file" );
-                vApplication.load(fileDir);
+                vApplication.load(fileDir, false);
                 isPlaying = false;
             }
         }
