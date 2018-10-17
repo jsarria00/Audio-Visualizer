@@ -1,6 +1,7 @@
 package util;
 
 import javafx.scene.media.AudioSpectrumListener;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 
@@ -24,6 +25,20 @@ public class VisualizerApplication implements Runnable {
         player = new VisualizerMediaPlayerHolder(debug, songLog);
     }
 
+    public double getEndTime()
+    {
+        return player.getEndTime();
+    }
+
+    public double getCurrentTime()
+    {
+        return player.getCurrentTime();
+    }
+
+    public void setSeek(Duration requestedTime)
+    {
+        player.setSeek(requestedTime);
+    }
     /**
      * Prepares a Runnable class to function with the Java VisualizerApplication platform in threading
      * @param r Class that implements the Runnable interface

@@ -6,14 +6,12 @@ import javax.swing.*;
 //CustomClasses
 
 import model.VisualizerComponent;
-import util.MouseEventManager;
+import util.CanvasMouseEventManager;
 import util.MouseMotionEventManager;
 import util.VisualizerApplication;
 import util.VisualizerTimer;
 
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
 //import java.awt.image.BufferedImage;
 //import java.awt.Point;
 
@@ -61,7 +59,7 @@ public class Visualizer {
         panel.add(slider, BorderLayout.PAGE_END);
         vTimer = new VisualizerTimer(visualizerComponent);
         vTimer.start();
-        visualizerComponent.addMouseListener(new MouseEventManager(visualizerComponent));
+        visualizerComponent.addMouseListener(new CanvasMouseEventManager(visualizerComponent));
         visualizerComponent.addMouseMotionListener(new MouseMotionEventManager(visualizerComponent));
         visualizerComponent.setSlider(slider);
         //System.out.println("Showing frame and adding the visualizer");//for Debug

@@ -8,6 +8,7 @@ import javafx.scene.media.MediaPlayer;
 import javax.imageio.IIOException;
 import java.io.File;
 import java.io.IOException;
+import javafx.util.Duration;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -88,6 +89,30 @@ public class VisualizerMediaPlayerHolder implements Runnable
         hasInitialized = false;
     }
 
+    public double getEndTime()
+    {
+        if(mediaPlayer != null) {
+            return mediaPlayer.getStopTime().toMillis();
+        }
+        return 0;
+    }
+
+    public double getCurrentTime()
+    {
+        if(mediaPlayer != null)
+        {
+            return mediaPlayer.getCurrentTime().toMillis();
+        }
+        return 0;
+    }
+
+    public void setSeek(Duration requestedTime)
+    {
+        if(mediaPlayer !=null)
+        {
+            mediaPlayer.seek(requestedTime);
+        }
+    }
 
     /**
      * Will try to load the file directory indicated
@@ -117,8 +142,10 @@ public class VisualizerMediaPlayerHolder implements Runnable
             });
             //For now -Note scanner hogs the thread therefore
             mediaPlayer.setOnEndOfMedia(()->{
-                mediaPlayer.stop();
+                //Pausing then setting the media back to 0 instead of using stop -> stop causes the Duration to be NULL until media starts playing again
+                mediaPlayer.seek(new Duration(0));
                 isPlaying = false;
+                mediaPlayer.pause();
             });
         }
         catch (MediaException e) {
@@ -154,8 +181,10 @@ public class VisualizerMediaPlayerHolder implements Runnable
             });
             //For now -Note scanner hogs the thread therefore
             mediaPlayer.setOnEndOfMedia(()->{
-                mediaPlayer.stop();
+                //Pausing then setting the media back to 0 instead of using stop -> stop causes the Duration to be NULL until media starts playing again
+                mediaPlayer.seek(new Duration(0));
                 isPlaying = false;
+                mediaPlayer.pause();
             });
         }catch (MediaException e) {
 
