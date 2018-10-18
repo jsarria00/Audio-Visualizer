@@ -62,6 +62,26 @@ public class VisualizerMediaPlayerHolder implements Runnable
         numberOfBands = 0;
     }
 
+    private void validateLog()
+    {
+        ArrayList<SongEntry> songEntries = log.getSongList();
+        for(int i = 0; i < songEntries.size(); i++)
+        {
+            try {
+                Media attempt = new Media(new File(songEntries.get(i).getSongDirectory()).toURI().toString());
+                MediaPlayer fakePlayer = new MediaPlayer(attempt);
+            }
+            catch (MediaException e)
+            {
+                System.err.println("Song: " + songEntries.get(i).getSongName() + " was not found and removed from the song Log ");
+                songEntries.remove(i);
+                i--;
+                log.validateSerialFile();
+
+            }
+        }
+    }
+
     /**
      * Trims all the spaces before and after the the first and last characters respectively, limits the spaces between characters to 1,
      * sets it to lower case to make commands non-case sensitive
@@ -114,6 +134,10 @@ public class VisualizerMediaPlayerHolder implements Runnable
         }
     }
 
+
+    //Requires: File directory attempt not equivalent to currently loaded file
+    //Modifies: This
+    //Effects: MediaPlayer loads a unique media file
     /**
      * Will try to load the file directory indicated
      * @param attempt a file directory in a string
@@ -152,6 +176,9 @@ public class VisualizerMediaPlayerHolder implements Runnable
 
             System.err.println("Media file \"" + new SongEntry(attempt).getSongName() + "\" does not exist");
         }
+        finally {
+            validateLog();
+        }
     }
 
     /**
@@ -159,6 +186,7 @@ public class VisualizerMediaPlayerHolder implements Runnable
      */
     private void firstTimeLoad()
     {
+        validateLog();
         //Almost identical to load, but looks at the most recent song loaded does not re-log that song.
         ArrayList<SongEntry> songList = log.getSongList();
         int size = songList.size();

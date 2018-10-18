@@ -69,6 +69,11 @@ public class SongLog implements Saveable, Loadable{
         }
     }
 
+    public void validateSerialFile()
+    {
+        save(FILE_NAME);
+    }
+
     /**
      * Adds to the currently held songLog ArrayList, then saves the ArrayList
      * @param s
