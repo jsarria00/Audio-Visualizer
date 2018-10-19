@@ -106,7 +106,7 @@ public class MediaOptions extends VisualizerOption{
         x_y_position[1] = y;
     }
 
-    public void drawPauseButton(Graphics2D g2)
+    private void drawPauseButton(Graphics2D g2)
     {
         if(clicked)
         {
@@ -125,7 +125,7 @@ public class MediaOptions extends VisualizerOption{
             drawPicture(g2, playButton , pauseDefault);
     }
 
-    public void drawPlayButton(Graphics2D g2)
+    private void drawPlayButton(Graphics2D g2)
     {
         if(clicked)
         {
@@ -148,7 +148,7 @@ public class MediaOptions extends VisualizerOption{
         }
     }
 
-    public void drawFileSelectButton(Graphics2D g2)
+    private void drawFileSelectButton(Graphics2D g2)
     {
         if(clicked)
         {

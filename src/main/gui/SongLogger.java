@@ -123,7 +123,7 @@ public class SongLogger extends VisualizerOption {
         x_y_position[1] = y;
     }
 
-    public void drawOpenButton(Graphics2D g2)
+    private void drawOpenButton(Graphics2D g2)
     {
         g2.setColor(new Color(0));
         if(clicked)
@@ -146,12 +146,7 @@ public class SongLogger extends VisualizerOption {
         g2.draw(openButton);
     }
 
-    public void drawLogItems()
-    {
-
-    }
-
-    public void drawSongLogger(Graphics2D g2, Rectangle panelRectangle, Rectangle enclosure)
+    private void drawSongLogger(Graphics2D g2, Rectangle panelRectangle, Rectangle enclosure)
     {
         songsLogged = new ArrayList<>();
         int spacing = OPTION_SPACING; //BETWEEN LOGS
