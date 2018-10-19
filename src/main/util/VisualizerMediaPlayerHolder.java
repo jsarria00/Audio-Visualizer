@@ -44,7 +44,6 @@ public class VisualizerMediaPlayerHolder implements Runnable
     private int numberOfBands;
     private AudioSpectrumListener audioSpectrumListener;
 
-
     /**
      * Constructor that sets up a scanner for use, initial bool values, and a non-null string.
      */
@@ -63,32 +62,24 @@ public class VisualizerMediaPlayerHolder implements Runnable
         numberOfBands = 0;
     }
 
-    private void validateLog() // This is an example where the c language would excel...
+    private void validateLog()
     {
         ArrayList<SongEntry> songEntries = log.getSongList();
-        ArrayList<SongEntry> dummySet = new ArrayList<>(); // This will hold references to all song
-        Thread latest = null;
-        for(SongEntry s: log.getSongList())
-        {
-            dummySet.add(s);
-        }
         for(int i = 0; i < songEntries.size(); i++)
         {
-            MediaCleaner mC = new MediaCleaner(songEntries, dummySet.get(i));
-            Thread cleanProcess = new Thread(mC);
-            cleanProcess.start();
-            latest = cleanProcess;
-        }
-        try {
-            if(latest != null) {
-                latest.join();
+            try {
+                Media attempt = new Media(new File(songEntries.get(i).getSongDirectory()).toURI().toString());
+                MediaPlayer fakePlayer = new MediaPlayer(attempt);
+            }
+            catch (MediaException e)
+            {
+                System.err.println("Song: " + songEntries.get(i).getSongName() + " was not found and removed from the song Log ");
+                songEntries.remove(i);
+                i--;
+                log.validateSerialFile();
+
             }
         }
-        catch (InterruptedException e)
-        {
-            System.err.println("Log validation process halted unexpectedly");
-        }
-        log.validateSerialFile();
     }
 
     /**
@@ -211,40 +202,37 @@ public class VisualizerMediaPlayerHolder implements Runnable
         validateLog();
         //Almost identical to load, but looks at the most recent song loaded does not re-log that song.
         ArrayList<SongEntry> songList = log.getSongList();
-
         int size = songList.size();
-        if(size > 0) //Prevents unchecked exception(index out of bounds) in case log is empty
-        {
-            try {
-                // This local variable will throw an exception without interrupting the current playback if no file is found
-                Media tempPointer = new Media(new File(songName = songList.get(size - 1).getSongDirectory()).toURI().toString());
-                deInitialize();
-                song = tempPointer;
-                //System.out.println("TIME: " + song.getDuration());
+        try {
+            // This local variable will throw an exception without interrupting the current playback if no file is found
+            Media tempPointer = new Media(new File(songName = songList.get(size-1).getSongDirectory()).toURI().toString());
+            deInitialize();
+            song = tempPointer;
+            //System.out.println("TIME: " + song.getDuration());
 
-                mediaPlayer = new MediaPlayer(song);
-                hasInitialized = true;
-                //Waiting done through a listener.
-                isLoading = true;
-                mediaPlayer.setOnReady(() -> {
-                    mediaPlayer.setAudioSpectrumNumBands(80);
-                    songDir = songList.get(size - 1).getSongDirectory();
-                    songName = songList.get(size - 1).getSongName();
-                    System.out.println("Previous session file successfully loaded!");
-                    isLoading = false;
-                });
-                //For now -Note scanner hogs the thread therefore
-                mediaPlayer.setOnEndOfMedia(() -> {
-                    //Pausing then setting the media back to 0 instead of using stop -> stop causes the Duration to be NULL until media starts playing again
-                    mediaPlayer.seek(new Duration(0));
-                    isPlaying = false;
-                    mediaPlayer.pause();
-                });
-            } catch (MediaException e) {
+            mediaPlayer = new MediaPlayer(song);
+            hasInitialized = true;
+            //Waiting done through a listener.
+            isLoading = true;
+            mediaPlayer.setOnReady(() -> {
+                mediaPlayer.setAudioSpectrumNumBands(80);
+                songDir = songList.get(size-1).getSongDirectory();
+                songName = songList.get(size-1).getSongName();
+                System.out.println("Previous session file successfully loaded!");
+                isLoading = false;
+            });
+            //For now -Note scanner hogs the thread therefore
+            mediaPlayer.setOnEndOfMedia(()->{
+                //Pausing then setting the media back to 0 instead of using stop -> stop causes the Duration to be NULL until media starts playing again
+                mediaPlayer.seek(new Duration(0));
+                isPlaying = false;
+                mediaPlayer.pause();
+            });
+        }catch (MediaException e) {
 
-                System.err.println("Media file \"" + songList.get(size - 1).getSongName() + "\" does not exist anymore");
-            }
+            System.err.println("Media file \"" + songList.get(size-1).getSongName() + "\" does not exist anymore");
         }
+
     }
 
     /**
