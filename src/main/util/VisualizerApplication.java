@@ -100,7 +100,7 @@ public class VisualizerApplication implements Runnable {
      * Requests the VisualizerMediaPlayerHolder to load a file
      * @param path string containing the Absolute directory and file name
      */
-    public void load(String path, boolean fromLog)
+    public void load(String path, boolean fromLog) throws MediaAlreadyLoadedException
     {
         player.load(path, fromLog);
         isPlaying = player.isPlaying();
