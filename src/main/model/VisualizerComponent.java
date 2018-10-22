@@ -31,7 +31,6 @@ public class VisualizerComponent extends JComponent implements Selectable {
     private JFrame heldBy;
     private JSlider slider;
     private AudioSpectrumListener audioSpectrumListener;
-    private float[] magnitudes;
     private static final int NUM_AUDIO_RECTANGLES = 60;
 
 
@@ -179,7 +178,6 @@ public class VisualizerComponent extends JComponent implements Selectable {
     }
 
     public void visualize(float[] magnitudes) {
-        this.magnitudes = magnitudes;
         int[] integerMagnitudes = new int[NUM_AUDIO_RECTANGLES];
         for(int i = 0; i < NUM_AUDIO_RECTANGLES; i++)
         {

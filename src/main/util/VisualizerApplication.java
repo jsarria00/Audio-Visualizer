@@ -3,7 +3,6 @@ package util;
 import javafx.scene.media.AudioSpectrumListener;
 import javafx.util.Duration;
 
-import java.util.ArrayList;
 
 import static java.lang.Thread.sleep;
 

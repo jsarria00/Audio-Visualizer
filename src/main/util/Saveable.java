@@ -1,9 +1,5 @@
 package util;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.util.ArrayList;
 
 public interface Saveable {
     String FILE_DIRECTORY = "src/main/config/";

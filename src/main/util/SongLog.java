@@ -1,5 +1,4 @@
 package util;
-import util.SongEntry;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -80,7 +79,7 @@ public class SongLog implements Saveable, Loadable{
      */
     public void addToLog(SongEntry s) {
         if(s != null) {
-            if(songList.size() >= 10)
+            if(songList.size() >= MAX_CAPACITY)
             {
                 int index_to_remove = 0;
                 songList.remove(index_to_remove);

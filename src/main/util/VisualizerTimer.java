@@ -1,7 +1,6 @@
 package util;
 
 import model.VisualizerComponent;
-import ui.Visualizer;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,7 +17,6 @@ public class VisualizerTimer implements ActionListener {
         this.component = component;
         listener = this;
         t = new Timer(MILISECONDS, listener);
-        t.start();
     }
 
     public void start()

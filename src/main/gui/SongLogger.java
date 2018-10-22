@@ -1,16 +1,13 @@
 package gui;
 
 
-import org.w3c.dom.css.Rect;
 import util.MediaAlreadyLoadedException;
 import util.SongEntry;
-import util.SongLog;
 import util.VisualizerApplication;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.awt.image.BufferedImageOp;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,6 +24,7 @@ public class SongLogger extends VisualizerOption {
     private BufferedImage logItemDefault;
     private BufferedImage logItemSelected;
     private BufferedImage logItemHover;
+    private int errorMessageTime;
 
 
     public SongLogger(VisualizerApplication vApplication)
@@ -37,6 +35,7 @@ public class SongLogger extends VisualizerOption {
         xPosition = SONG_LOG_SIZE_X;
         opened = false;
         songsLogged = new ArrayList<>();
+        errorMessageTime = 0;
         try {
             historyButtonDefault = ImageIO.read(new File("src/main/images/historyButton_Default.png"));
             historyButtonSelected = ImageIO.read(new File("src/main/images/historyButton_Selected.png"));
@@ -59,6 +58,10 @@ public class SongLogger extends VisualizerOption {
     @Override
     public void timedEvent()
     {
+        if(errorMessageTime > 0)
+        {
+            errorMessageTime--;
+        }
         if(opened) {
             if(xPosition > 0)
             {
@@ -111,6 +114,7 @@ public class SongLogger extends VisualizerOption {
             } catch(MediaAlreadyLoadedException e)
             {
                 System.err.println("Media was already loaded, aborting request.");
+                errorMessageTime = 1000;
             }
         }
 
@@ -148,6 +152,7 @@ public class SongLogger extends VisualizerOption {
 
     private void drawSongLogger(Graphics2D g2, Rectangle panelRectangle, Rectangle enclosure)
     {
+
         songsLogged = new ArrayList<>();
         int spacing = OPTION_SPACING; //BETWEEN LOGS
         //Hide entities that are not in frame performance increase
@@ -155,6 +160,7 @@ public class SongLogger extends VisualizerOption {
         {
             //Since list is backwards we need to decrement a counter
             int size = log.size();
+            g2.setColor(new Color(0,0,0));
             g2.draw(panelRectangle);
             for(int i = size -1; i >=0 ; i--)
             {
@@ -190,6 +196,11 @@ public class SongLogger extends VisualizerOption {
     @Override
     public void draw(Graphics2D g2, Rectangle enclosure)
     {
+        if(errorMessageTime > 0)
+        {
+            g2.setColor(new Color(100,0,0));
+            g2.drawString("Media is AlreadyLoaded, Aborting request", OPTION_SPACING ,2*OPTION_SPACING);
+        }
         Rectangle panelRectangle = new Rectangle((int)enclosure.getX()+xPosition, (int)enclosure.getY(), (int)enclosure.getWidth(), (int)enclosure.getHeight());
         openButton = new Rectangle((int)panelRectangle.getX()-SONG_LOG_TOGGLE_SIZE, (int)panelRectangle.getY(), SONG_LOG_TOGGLE_SIZE, SONG_LOG_TOGGLE_SIZE);
         //DRAW ENCLOSURES

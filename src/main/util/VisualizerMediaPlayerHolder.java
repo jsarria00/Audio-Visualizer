@@ -5,9 +5,7 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaException;
 import javafx.scene.media.MediaPlayer;
 
-import javax.imageio.IIOException;
 import java.io.File;
-import java.io.IOException;
 import javafx.util.Duration;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -41,7 +39,6 @@ public class VisualizerMediaPlayerHolder implements Runnable
     private String inputStr;
     private Scanner input;
     private SongLog log;
-    private int numberOfBands;
     private AudioSpectrumListener audioSpectrumListener;
 
     /**
@@ -59,7 +56,6 @@ public class VisualizerMediaPlayerHolder implements Runnable
         isLoading = false;
         hasInitialized = false;
         firstLoad = log.getSongList().size() > 0;
-        numberOfBands = 0;
     }
 
     private void validateLog()
@@ -138,7 +134,7 @@ public class VisualizerMediaPlayerHolder implements Runnable
     //Requires: File directory attempt not equivalent to currently loaded file
     //Modifies: This
     //Effects: MediaPlayer loads a unique media file
-    public void checkLoaded(String attempt) throws MediaAlreadyLoadedException
+    private void checkLoaded(String attempt) throws MediaAlreadyLoadedException
     {
         int size = log.getSongList().size();
         if(size > 0)
@@ -320,6 +316,12 @@ public class VisualizerMediaPlayerHolder implements Runnable
                 System.out.println("Unrecognized command \"" + inputStr + "\". Type \"help\" for a list of commands");
                 break;
         }
+    }
+
+    //Mainly for testing, due to absolute directories
+    public String getSongDir()
+    {
+        return songDir;
     }
 
     /**
