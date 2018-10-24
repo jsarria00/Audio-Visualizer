@@ -2,26 +2,19 @@ package gui;
 
 import util.VisualizerApplication;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.awt.image.BufferedImageOp;
-import java.io.File;
-import java.io.IOException;
-
 public abstract class VisualizerOption implements Selectable {
 
 
     protected static VisualizerApplication vApplication;
-    private Rectangle currentArea;
-    protected Boolean clicked;
+    protected boolean clicked;
     protected int[] x_y_pressed;
     protected int[] x_y_position;
 
 
     public VisualizerOption(VisualizerApplication vApplication) {
         this.vApplication = vApplication;
-        currentArea = new Rectangle();
         clicked = false;
         x_y_pressed = new int[NUMBER_OF_DIMENSIONS];
         x_y_pressed[0] = 0;

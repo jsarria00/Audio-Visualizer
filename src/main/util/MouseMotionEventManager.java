@@ -1,7 +1,6 @@
 package util;
 
 import model.VisualizerComponent;
-import ui.Visualizer;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;

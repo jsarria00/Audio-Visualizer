@@ -1,5 +1,7 @@
 package gui;
 
+import java.awt.*;
+
 public interface Selectable {
     //
     String MEDIA_DIRECTORY = "src/main/media";

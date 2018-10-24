@@ -25,12 +25,14 @@ public class MediaOptions extends VisualizerOption{
     private BufferedImage fileSelectDefault;
     private BufferedImage fileSelectSelected;
     private BufferedImage fileSelectHover;
+    private int errorMessageTime;
 
 
     public MediaOptions(VisualizerApplication vApplication)
     {
         super(vApplication);
         isPlaying = false;
+        errorMessageTime = 0;
         try {
             playDefault = ImageIO.read(new File("src/main/images/play_Default.png"));
             playSelected = ImageIO.read(new File("src/main/images/play_Selected.png"));
@@ -51,6 +53,10 @@ public class MediaOptions extends VisualizerOption{
     @Override
     public void timedEvent()
     {
+        if(errorMessageTime > 0)
+        {
+            errorMessageTime--;
+        }
         isPlaying = vApplication.isPlaying();
     }
 
@@ -94,6 +100,7 @@ public class MediaOptions extends VisualizerOption{
                 }
                 catch(MediaAlreadyLoadedException e)
                 {
+                    errorMessageTime = 1000;
                     System.err.println("Media was already loaded, aborting request.");
                 }
             }
@@ -106,7 +113,7 @@ public class MediaOptions extends VisualizerOption{
         x_y_position[1] = y;
     }
 
-    public void drawPauseButton(Graphics2D g2)
+    private void drawPauseButton(Graphics2D g2)
     {
         if(clicked)
         {
@@ -125,7 +132,7 @@ public class MediaOptions extends VisualizerOption{
             drawPicture(g2, playButton , pauseDefault);
     }
 
-    public void drawPlayButton(Graphics2D g2)
+    private void drawPlayButton(Graphics2D g2)
     {
         if(clicked)
         {
@@ -148,7 +155,7 @@ public class MediaOptions extends VisualizerOption{
         }
     }
 
-    public void drawFileSelectButton(Graphics2D g2)
+    private void drawFileSelectButton(Graphics2D g2)
     {
         if(clicked)
         {
@@ -169,6 +176,11 @@ public class MediaOptions extends VisualizerOption{
     @Override
     public void draw(Graphics2D g2, Rectangle enclosure)
     {
+        if(errorMessageTime > 0)
+        {
+            g2.setColor(new Color(100,0,0));
+            g2.drawString("Media is AlreadyLoaded, Aborting request", OPTION_SPACING ,2*OPTION_SPACING);
+        }
         playButton = new Rectangle((int)(enclosure.getX()+enclosure.getWidth()/2), (int)enclosure.getY(), MEDIA_OPTION_SIZE, MEDIA_OPTION_SIZE);
         fileSelectButton = new Rectangle((int)(enclosure.getWidth()- MEDIA_OPTION_SIZE), (int)(enclosure.getY()), MEDIA_OPTION_SIZE, MEDIA_OPTION_SIZE);
         if(isPlaying)
@@ -179,7 +191,6 @@ public class MediaOptions extends VisualizerOption{
         {
             drawPlayButton(g2);
         }
-
         drawFileSelectButton(g2);
     }
 }
