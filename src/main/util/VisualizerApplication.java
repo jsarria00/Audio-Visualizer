@@ -1,6 +1,7 @@
 package util;
 
 import javafx.scene.media.AudioSpectrumListener;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 
@@ -24,6 +25,20 @@ public class VisualizerApplication implements Runnable {
         player = new VisualizerMediaPlayerHolder(debug, songLog);
     }
 
+    public double getEndTime()
+    {
+        return player.getEndTime();
+    }
+
+    public double getCurrentTime()
+    {
+        return player.getCurrentTime();
+    }
+
+    public void setSeek(Duration requestedTime)
+    {
+        player.setSeek(requestedTime);
+    }
     /**
      * Prepares a Runnable class to function with the Java VisualizerApplication platform in threading
      * @param r Class that implements the Runnable interface
@@ -85,9 +100,9 @@ public class VisualizerApplication implements Runnable {
      * Requests the VisualizerMediaPlayerHolder to load a file
      * @param path string containing the Absolute directory and file name
      */
-    public void load(String path)
+    public void load(String path, boolean fromLog) throws MediaAlreadyLoadedException
     {
-        player.load(path);
+        player.load(path, fromLog);
         isPlaying = player.isPlaying();
     }
 

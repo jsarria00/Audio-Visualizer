@@ -1,5 +1,6 @@
 package gui;
 
+import util.MediaAlreadyLoadedException;
 import util.VisualizerApplication;
 
 import javax.imageio.ImageIO;
@@ -87,8 +88,14 @@ public class MediaOptions extends VisualizerOption{
             if (option == JFileChooser.APPROVE_OPTION) {
                 String fileDir = selector.getSelectedFile().toString();
                 System.out.println(fileDir + " was the selected path and file \nRequesting Visualizer Application to load file" );
-                vApplication.load(fileDir);
-                isPlaying = false;
+                try {
+                    vApplication.load(fileDir, false);
+                    isPlaying = false;
+                }
+                catch(MediaAlreadyLoadedException e)
+                {
+                    System.err.println("Media was already loaded, aborting request.");
+                }
             }
         }
     }

@@ -5,6 +5,7 @@ import gui.Selectable;
 import gui.SongLogger;
 import gui.WindowOptions;
 import javafx.scene.media.AudioSpectrumListener;
+import javafx.util.Duration;
 import util.*;
 
 import javax.swing.*;
@@ -19,6 +20,8 @@ public class VisualizerComponent extends JComponent implements Selectable {
     private int screenY;
     private int waitTimeRemaining;
     private int mouseHideWaitTime;
+    private boolean wasPlaying;
+    private boolean sliderClicked;
     private boolean mouseHidden;
     private VisualizerApplication vApplication;
     private SongLogger sL;
@@ -26,6 +29,7 @@ public class VisualizerComponent extends JComponent implements Selectable {
     private WindowOptions wO;
     private Boolean canSelect;
     private JFrame heldBy;
+    private JSlider slider;
     private AudioSpectrumListener audioSpectrumListener;
     private float[] magnitudes;
     private static final int NUM_AUDIO_RECTANGLES = 60;
@@ -44,8 +48,55 @@ public class VisualizerComponent extends JComponent implements Selectable {
         mO = new MediaOptions(vApplication);
         waitTimeRemaining = 0;
         mouseHideWaitTime = TIME_UNTILL_HIDDEN;
+        sliderClicked = false;
+        wasPlaying = false;
         mouseHidden = false;
 
+    }
+
+    public void clickedSlider()
+    {
+        sliderClicked = true;
+        if(vApplication.isPlaying())
+        {
+            wasPlaying = true;
+            vApplication.togglePlayState();
+        }
+    }
+
+    public void releasedSlider()
+    {
+        if(wasPlaying)
+        {
+            wasPlaying = false;
+            vApplication.togglePlayState();
+        }
+        Duration selectedTime = new Duration(slider.getValue());
+        vApplication.setSeek(selectedTime);
+        sliderClicked = false;
+    }
+
+    public void setSlider(JSlider slider)
+    {
+        this.slider = slider;
+        slider.addMouseListener(new SliderMouseEventManager(this));
+    }
+
+    public void updateSlider()
+    {
+        int end = (int)vApplication.getEndTime();
+        int current = (int)vApplication.getCurrentTime();
+        if(end != 0)
+        {
+            slider.setMaximum(end);
+            slider.setValue(current);
+
+        }
+        else
+        {
+          slider.setMaximum(1);
+          slider.setValue(0);
+        }
     }
 
     private void unHideMouse()
@@ -91,6 +142,10 @@ public class VisualizerComponent extends JComponent implements Selectable {
         sL.timedEvent();
         mO.timedEvent();
         repaint();
+        if(slider != null && !sliderClicked) // AND slider not currently clicked.
+        {
+            updateSlider();
+        }
     }
 
     public void checkSelection(int x, int y)
@@ -131,6 +186,7 @@ public class VisualizerComponent extends JComponent implements Selectable {
             integerMagnitudes[i] = 60+((int)(magnitudes[i]));
         }
         vAudioRectangles.visualize(integerMagnitudes);
+        vS.visualize(integerMagnitudes);
     }
 
     @Override

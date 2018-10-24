@@ -2,6 +2,7 @@ package gui;
 
 
 import org.w3c.dom.css.Rect;
+import util.MediaAlreadyLoadedException;
 import util.SongEntry;
 import util.SongLog;
 import util.VisualizerApplication;
@@ -102,11 +103,15 @@ public class SongLogger extends VisualizerOption {
         for(Rectangle r: songsLogged)
         {
             inHitBox = checkSelection(r, x_y_pressed[0], x_y_pressed[1], x, y);
-            if(inHitBox)
+            try {
+                if (inHitBox) {
+                    vApplication.load(log.get(songIndex).getSongDirectory(), true);
+                }
+                songIndex--;
+            } catch(MediaAlreadyLoadedException e)
             {
-                vApplication.load(log.get(songIndex).getSongDirectory());
+                System.err.println("Media was already loaded, aborting request.");
             }
-            songIndex--;
         }
 
     }
