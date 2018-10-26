@@ -6,10 +6,7 @@ import javax.swing.*;
 //CustomClasses
 
 import model.VisualizerComponent;
-import util.CanvasMouseEventManager;
-import util.MouseMotionEventManager;
-import util.VisualizerApplication;
-import util.VisualizerTimer;
+import util.*;
 
 import java.awt.*;
 //import java.awt.image.BufferedImage;
@@ -59,8 +56,6 @@ public class Visualizer {
         panel.add(slider, BorderLayout.PAGE_END);
         vTimer = new VisualizerTimer(visualizerComponent);
         vTimer.start();
-        visualizerComponent.addMouseListener(new CanvasMouseEventManager(visualizerComponent));
-        visualizerComponent.addMouseMotionListener(new MouseMotionEventManager(visualizerComponent));
         visualizerComponent.setSlider(slider);
         //System.out.println("Showing frame and adding the visualizer");//for Debug
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -71,11 +66,6 @@ public class Visualizer {
 
     }
 
-
-    private static void startup(Runnable r)
-    {
-        com.sun.javafx.application.PlatformImpl.startup(r);
-    }
 
     public static void main(String[] args)
     {
