@@ -3,13 +3,27 @@ package model;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 
-public class VAudioRectangles extends VShape {
+public class VAudioRectangles extends VShape implements Rotatable{
 
+    private double radians;
 
     public VAudioRectangles()
     {
         super(AUDIO_RECTANGLE_SLEEPING_RGB);
+        radians = 0;
+    }
 
+    @Override
+    public void rotate()
+    {
+        if(radians - D_RADIANS/SLOWER_BY <= 0)
+        {
+            radians = 2*Math.PI;
+        }
+        else
+        {
+            radians -= D_RADIANS/SLOWER_BY;
+        }
     }
 
 
@@ -17,6 +31,7 @@ public class VAudioRectangles extends VShape {
     public void awake()
     {
         setAnimatedHeight();
+        rotate();
         if(currentColor[2] < AUDIO_RECTANGLE_PLAYING_RGB[2])
         {
             currentColor[2]++;
@@ -36,6 +51,7 @@ public class VAudioRectangles extends VShape {
         }
         if(currentColor[2] > AUDIO_RECTANGLE_SLEEPING_RGB[2])
         {
+            rotate();
             currentColor[2]--;
         }
     }
@@ -46,6 +62,9 @@ public class VAudioRectangles extends VShape {
     @Override
     public void draw(Graphics2D g2, Rectangle enclosing){
         AffineTransform oldTransform = g2.getTransform();
+        int enclosingW =(int)enclosing.getWidth();
+        int enclosingH = (int)enclosing.getHeight();
+        g2.rotate(radians, enclosingW/2.0, enclosingH/2.0);
         g2.setStroke(new BasicStroke(1));
 
         for(int i = 0; i < 2*NUMBER_OF_AUDIO_RECTANGLES; i++)
