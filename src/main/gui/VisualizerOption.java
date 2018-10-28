@@ -4,17 +4,22 @@ import util.VisualizerApplication;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-public abstract class VisualizerOption implements Selectable {
+import java.util.HashMap;
+
+public abstract class VisualizerOption implements Selectable, UIKeys{
 
 
     protected static VisualizerApplication vApplication;
     protected boolean clicked;
     protected int[] x_y_pressed;
     protected int[] x_y_position;
+    protected HashMap<String, BufferedImage> uiImages;
+
 
 
     public VisualizerOption(VisualizerApplication vApplication) {
         this.vApplication = vApplication;
+        uiImages = new HashMap<>();
         clicked = false;
         x_y_pressed = new int[NUMBER_OF_DIMENSIONS];
         x_y_pressed[0] = 0;

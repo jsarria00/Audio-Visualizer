@@ -7,7 +7,6 @@ import util.VisualizerApplication;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,12 +17,6 @@ public class SongLogger extends VisualizerOption {
     private ArrayList<SongEntry> log;
     private Rectangle openButton;
     private ArrayList<Rectangle> songsLogged;
-    private BufferedImage historyButtonDefault;
-    private BufferedImage historyButtonSelected;
-    private BufferedImage historyButtonHover;
-    private BufferedImage logItemDefault;
-    private BufferedImage logItemSelected;
-    private BufferedImage logItemHover;
     private int errorMessageTime;
 
 
@@ -37,12 +30,12 @@ public class SongLogger extends VisualizerOption {
         songsLogged = new ArrayList<>();
         errorMessageTime = 0;
         try {
-            historyButtonDefault = ImageIO.read(new File("src/main/images/historyButton_Default.png"));
-            historyButtonSelected = ImageIO.read(new File("src/main/images/historyButton_Selected.png"));
-            historyButtonHover = ImageIO.read(new File("src/main/images/historyButton_Hover.png"));
-            logItemDefault = ImageIO.read(new File("src/main/images/logItem_Default.png"));
-            logItemSelected = ImageIO.read(new File("src/main/images/logItem_Selected.png"));
-            logItemHover = ImageIO.read(new File("src/main/images/logItem_Hover.png"));
+            uiImages.put(historyButtonDefault, ImageIO.read(new File("src/main/images/historyButton_Default.png")));
+            uiImages.put(historyButtonSelected,ImageIO.read(new File("src/main/images/historyButton_Selected.png")));
+            uiImages.put(historyButtonHover, ImageIO.read(new File("src/main/images/historyButton_Hover.png")));
+            uiImages.put(logItemDefault, ImageIO.read(new File("src/main/images/logItem_Default.png")));
+            uiImages.put(logItemSelected,  ImageIO.read(new File("src/main/images/logItem_Selected.png")));
+            uiImages.put(logItemHover, ImageIO.read(new File("src/main/images/logItem_Hover.png")));
         }
         catch (IOException e)
         {
@@ -134,18 +127,18 @@ public class SongLogger extends VisualizerOption {
         {
             if(checkCollision(openButton, x_y_pressed[0], x_y_pressed[1]))
             {
-                drawPicture(g2, openButton , historyButtonSelected);
+                drawPicture(g2, openButton , uiImages.get(historyButtonSelected));
             }
             else
-                drawPicture(g2, openButton , historyButtonDefault);
+                drawPicture(g2, openButton , uiImages.get(historyButtonDefault));
 
         }
         else if (checkCollision(openButton, x_y_position[0], x_y_position[1]))
         {
-            drawPicture(g2, openButton , historyButtonHover);
+            drawPicture(g2, openButton , uiImages.get(historyButtonHover));
         }
         else
-            drawPicture(g2, openButton , historyButtonDefault);
+            drawPicture(g2, openButton , uiImages.get(historyButtonDefault));
 
         g2.draw(openButton);
     }
@@ -170,22 +163,22 @@ public class SongLogger extends VisualizerOption {
                 spacing += OPTION_SPACING + SONG_LOG_ITEM_Y;
                 if(clicked) {
                     if(checkCollision(songButton, x_y_pressed[0], x_y_pressed[1])) {
-                        drawPicture(g2, songButton, logItemSelected);
+                        drawPicture(g2, songButton, uiImages.get(logItemSelected));
                         g2.drawString(sE.getSongName(), (int)(songButton.getX()+OPTION_SPACING*2), (int)(songButton.getY()+songButton.getHeight()/2 + OPTION_SPACING));
                     }
                     else
                     {
-                        drawPicture(g2, songButton, logItemDefault);
+                        drawPicture(g2, songButton, uiImages.get(logItemDefault));
                         g2.drawString(sE.getSongName(), (int)(songButton.getX()+OPTION_SPACING*2), (int)(songButton.getY()+songButton.getHeight()/2 + OPTION_SPACING));
                     }
                 }
                 else if(checkCollision(songButton, x_y_position[0], x_y_position[1])) {
-                    drawPicture(g2, songButton, logItemHover);
+                    drawPicture(g2, songButton, uiImages.get(logItemHover));
                     g2.drawString(sE.getSongName(), (int)(songButton.getX()+OPTION_SPACING*2), (int)(songButton.getY()+songButton.getHeight()/2 + OPTION_SPACING));
                 }
                 else
                 {
-                    drawPicture(g2, songButton, logItemDefault);
+                    drawPicture(g2, songButton, uiImages.get(logItemDefault));
                     g2.drawString(sE.getSongName(), (int)(songButton.getX()+OPTION_SPACING*2), (int)(songButton.getY()+songButton.getHeight()/2 + OPTION_SPACING));
                 }
 
