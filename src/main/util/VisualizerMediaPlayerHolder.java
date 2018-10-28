@@ -65,7 +65,6 @@ public class VisualizerMediaPlayerHolder implements Runnable
         {
             try {
                 Media attempt = new Media(new File(songEntries.get(i).getSongDirectory()).toURI().toString());
-                MediaPlayer fakePlayer = new MediaPlayer(attempt);
             }
             catch (MediaException e)
             {
