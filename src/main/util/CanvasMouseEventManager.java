@@ -4,17 +4,41 @@ import model.VisualizerComponent;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Objects;
 
 public class CanvasMouseEventManager implements MouseListener {
     private VisualizerComponent vC;
     private int xMouse;
     private int yMouse;
     // constructor
-    public CanvasMouseEventManager(VisualizerComponent vC)
+    public CanvasMouseEventManager()
     {
-        this.vC = vC;
-
     }
+
+    public void setVisualizerComponent(VisualizerComponent vC)
+    {
+        if(this.vC == null || !this.vC.equals(vC))
+        {
+            this.vC = vC;
+            this.vC.setCanvasMouseManager(this);
+        }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CanvasMouseEventManager that = (CanvasMouseEventManager) o;
+        return xMouse == that.xMouse &&
+                yMouse == that.yMouse &&
+                Objects.equals(vC, that.vC);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(vC, xMouse, yMouse);
+    }
+
     @Override
     public void mousePressed(MouseEvent event)
     {

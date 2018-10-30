@@ -7,10 +7,10 @@ import gui.WindowOptions;
 import javafx.scene.media.AudioSpectrumListener;
 import javafx.util.Duration;
 import util.*;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.Objects;
 
 public class VisualizerComponent extends JComponent implements Selectable {
     private VSquare vS;
@@ -32,7 +32,8 @@ public class VisualizerComponent extends JComponent implements Selectable {
     private JSlider slider;
     private AudioSpectrumListener audioSpectrumListener;
     private static final int NUM_AUDIO_RECTANGLES = 60;
-
+    private MouseMotionEventManager mouseMotionManager;
+    private CanvasMouseEventManager canvasMouseManager;
 
     public VisualizerComponent(VisualizerApplication vApplication , JFrame heldBy)
     {
@@ -50,7 +51,63 @@ public class VisualizerComponent extends JComponent implements Selectable {
         sliderClicked = false;
         wasPlaying = false;
         mouseHidden = false;
+        mouseMotionManager = new MouseMotionEventManager();
+        mouseMotionManager.setVisualizerComponent(this);
+        canvasMouseManager = new CanvasMouseEventManager();
+        canvasMouseManager.setVisualizerComponent(this);
 
+    }
+
+    public void setCanvasMouseManager(CanvasMouseEventManager canvasMouseManager) {
+
+        this.canvasMouseManager = canvasMouseManager;
+        if(this.canvasMouseManager == null || !this.canvasMouseManager.equals(canvasMouseManager)) {
+            this.canvasMouseManager =  canvasMouseManager;
+            canvasMouseManager.setVisualizerComponent(this);
+        }
+        this.addMouseListener(this.canvasMouseManager);
+    }
+
+    public void setMouseMotionManager(MouseMotionEventManager mouseMotionManager)
+    {
+        if(this.mouseMotionManager == null || !this.mouseMotionManager.equals(mouseMotionManager)) {
+            this.mouseMotionManager = mouseMotionManager;
+            mouseMotionManager.setVisualizerComponent(this);
+        }
+
+        this.addMouseMotionListener(this.mouseMotionManager);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        VisualizerComponent that = (VisualizerComponent) o;
+        return screenX == that.screenX &&
+                screenY == that.screenY &&
+                waitTimeRemaining == that.waitTimeRemaining &&
+                mouseHideWaitTime == that.mouseHideWaitTime &&
+                wasPlaying == that.wasPlaying &&
+                sliderClicked == that.sliderClicked &&
+                mouseHidden == that.mouseHidden &&
+                Objects.equals(vS, that.vS) &&
+                Objects.equals(vBg, that.vBg) &&
+                Objects.equals(vAudioRectangles, that.vAudioRectangles) &&
+                Objects.equals(vApplication, that.vApplication) &&
+                Objects.equals(sL, that.sL) &&
+                Objects.equals(mO, that.mO) &&
+                Objects.equals(wO, that.wO) &&
+                Objects.equals(canSelect, that.canSelect) &&
+                Objects.equals(heldBy, that.heldBy) &&
+                Objects.equals(slider, that.slider) &&
+                Objects.equals(audioSpectrumListener, that.audioSpectrumListener) &&
+                Objects.equals(mouseMotionManager, that.mouseMotionManager) &&
+                Objects.equals(canvasMouseManager, that.canvasMouseManager);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(vS, vBg, vAudioRectangles, screenX, screenY, waitTimeRemaining, mouseHideWaitTime, wasPlaying, sliderClicked, mouseHidden, vApplication, sL, mO, wO, canSelect, heldBy, slider, audioSpectrumListener, mouseMotionManager, canvasMouseManager);
     }
 
     public void clickedSlider()
@@ -156,7 +213,6 @@ public class VisualizerComponent extends JComponent implements Selectable {
             mO.clickedEvent(x,y);
         }
         unHideMouse();
-
     }
 
     public void selection(int x, int y)
@@ -170,11 +226,9 @@ public class VisualizerComponent extends JComponent implements Selectable {
 
     public void checkHover(int x, int y)
     {
-
         sL.hoverEvent(x, y);
         mO.hoverEvent(x,y);
         unHideMouse();
-
     }
 
     public void visualize(float[] magnitudes) {
@@ -195,11 +249,9 @@ public class VisualizerComponent extends JComponent implements Selectable {
         this.screenY = getHeight();
         //SCREEN defined as a rectangle
         Rectangle enclosing = new Rectangle(0, 0, this.screenX, this.screenY);
-
         vBg.draw(g2, enclosing);
         vS.draw(g2, enclosing);
         vAudioRectangles.draw(g2, enclosing);
-
         //GEOMETRIC REPRESENTATIONS OF MEDIA OPTIONS
         Rectangle mediaOptionsEnclosing = new Rectangle(OPTION_SPACING, this.screenY - MEDIA_OPTION_SIZE - OPTION_SPACING, this.screenX - SONG_LOG_SIZE_X - 2*OPTION_SPACING, MEDIA_OPTION_SIZE );
         Rectangle windowOptionsEnclosing = new Rectangle(this.screenX - (2*WINDOW_OPTION_SIZE_X), 0, 2*WINDOW_OPTION_SIZE_X, WINDOW_OPTION_SIZE_Y);
@@ -207,7 +259,6 @@ public class VisualizerComponent extends JComponent implements Selectable {
 
         sL.draw(g2, historyLogEnclosing);
         mO.draw(g2, mediaOptionsEnclosing);
-
         //DEBUG
 //        int rectWidth = this.getWidth()/60;
 //        int x = 0;
@@ -224,6 +275,4 @@ public class VisualizerComponent extends JComponent implements Selectable {
 //        g2.draw(historyLogEnclosing);
 
     }
-
-
 }

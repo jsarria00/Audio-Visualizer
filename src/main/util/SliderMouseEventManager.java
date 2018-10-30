@@ -11,7 +11,6 @@ public class SliderMouseEventManager implements MouseListener {
     public SliderMouseEventManager(VisualizerComponent vC)
     {
         this.vC = vC;
-
     }
     @Override
     public void mousePressed(MouseEvent event)

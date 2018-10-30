@@ -30,6 +30,7 @@ public class VisualizerMediaPlayerHolder implements Runnable
     private static boolean firstStart;
     private static boolean isPlaying;
     private static boolean isLoading;
+    private static boolean isValidating;
     private static boolean hasInitialized;
     private static boolean firstLoad;
     private static MediaPlayer mediaPlayer;
@@ -55,17 +56,18 @@ public class VisualizerMediaPlayerHolder implements Runnable
         isPlaying = false;
         isLoading = false;
         hasInitialized = false;
+        isValidating = false;
         firstLoad = log.getSongList().size() > 0;
     }
 
     private void validateLog()
     {
+        isValidating = true;
         ArrayList<SongEntry> songEntries = log.getSongList();
         for(int i = 0; i < songEntries.size(); i++)
         {
             try {
                 Media attempt = new Media(new File(songEntries.get(i).getSongDirectory()).toURI().toString());
-                MediaPlayer fakePlayer = new MediaPlayer(attempt);
             }
             catch (MediaException e)
             {
@@ -76,6 +78,7 @@ public class VisualizerMediaPlayerHolder implements Runnable
 
             }
         }
+        isValidating = false;
     }
 
     /**
@@ -150,43 +153,42 @@ public class VisualizerMediaPlayerHolder implements Runnable
      * @param attempt a file directory in a string
      */
     public void load(String attempt,boolean fromLog) throws MediaAlreadyLoadedException {
+        if(!isLoading && !isValidating) {
+            try {
+                checkLoaded(attempt);
+                // This local variable will throw an exception without interrupting the current playback if no file is found
+                Media tempPointer = new Media(new File(attempt).toURI().toString());
+                deInitialize();
+                song = tempPointer;
+                //System.out.println("TIME: " + song.getDuration());
+                mediaPlayer = new MediaPlayer(song);
+                hasInitialized = true;
+                //Waiting done through a listener.
+                isLoading = true;
+                mediaPlayer.setOnReady(() -> {
+                    songDir = attempt;
+                    mediaPlayer.setAudioSpectrumNumBands(80);
+                    if (!fromLog) {
+                        SongEntry newestSong = new SongEntry(attempt);
+                        songName = newestSong.getSongName();
+                        log.addToLog(newestSong);
+                    }
+                    System.out.println("File loaded!");
+                    isLoading = false;
+                });
+                //For now -Note scanner hogs the thread therefore
+                mediaPlayer.setOnEndOfMedia(() -> {
+                    //Pausing then setting the media back to 0 instead of using stop -> stop causes the Duration to be NULL until media starts playing again
+                    mediaPlayer.seek(new Duration(0));
+                    isPlaying = false;
+                    mediaPlayer.pause();
+                });
+            } catch (MediaException e) {
 
-        try {
-            checkLoaded(attempt);
-            // This local variable will throw an exception without interrupting the current playback if no file is found
-            Media tempPointer = new Media(new File(attempt).toURI().toString());
-            deInitialize();
-            song = tempPointer;
-            //System.out.println("TIME: " + song.getDuration());
-            mediaPlayer = new MediaPlayer(song);
-            hasInitialized = true;
-            //Waiting done through a listener.
-            isLoading = true;
-            mediaPlayer.setOnReady(() -> {
-                songDir = attempt;
-                mediaPlayer.setAudioSpectrumNumBands(80);
-                if(!fromLog) {
-                    SongEntry newestSong = new SongEntry(attempt);
-                    songName = newestSong.getSongName();
-                    log.addToLog(newestSong);
-                }
-                System.out.println("File loaded!");
-                isLoading = false;
-            });
-            //For now -Note scanner hogs the thread therefore
-            mediaPlayer.setOnEndOfMedia(()->{
-                //Pausing then setting the media back to 0 instead of using stop -> stop causes the Duration to be NULL until media starts playing again
-                mediaPlayer.seek(new Duration(0));
-                isPlaying = false;
-                mediaPlayer.pause();
-            });
-        }
-        catch (MediaException e) {
-
-            System.err.println("Media file \"" + new SongEntry(attempt).getSongName() + "\" does not exist");
-        }
-        finally {
-            validateLog();
+                System.err.println("Media file \"" + new SongEntry(attempt).getSongName() + "\" does not exist");
+            } finally {
+                validateLog();
+            }
         }
     }
 

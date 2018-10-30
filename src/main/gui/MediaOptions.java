@@ -16,15 +16,6 @@ public class MediaOptions extends VisualizerOption{
     private boolean isPlaying;
     private Rectangle playButton;
     private Rectangle fileSelectButton;
-    private BufferedImage playDefault;
-    private BufferedImage playSelected;
-    private BufferedImage playHover;
-    private BufferedImage pauseDefault;
-    private BufferedImage pauseSelected;
-    private BufferedImage pauseHover;
-    private BufferedImage fileSelectDefault;
-    private BufferedImage fileSelectSelected;
-    private BufferedImage fileSelectHover;
     private int errorMessageTime;
 
 
@@ -34,15 +25,15 @@ public class MediaOptions extends VisualizerOption{
         isPlaying = false;
         errorMessageTime = 0;
         try {
-            playDefault = ImageIO.read(new File("src/main/images/play_Default.png"));
-            playSelected = ImageIO.read(new File("src/main/images/play_Selected.png"));
-            playHover = ImageIO.read(new File("src/main/images/play_Hover.png"));
-            pauseDefault = ImageIO.read(new File("src/main/images/pause_Default.png"));
-            pauseSelected = ImageIO.read(new File("src/main/images/pause_Selected.png"));
-            pauseHover = ImageIO.read(new File("src/main/images/pause_Hover.png"));
-            fileSelectDefault = ImageIO.read(new File("src/main/images/fileSelect_Default.png"));
-            fileSelectSelected = ImageIO.read(new File("src/main/images/fileSelect_Selected.png"));
-            fileSelectHover = ImageIO.read(new File("src/main/images/fileSelect_Hover.png"));
+            uiImages.put(playDefault, ImageIO.read(new File("src/main/images/play_Default.png")));
+            uiImages.put(playSelected, ImageIO.read(new File("src/main/images/play_Selected.png")));
+            uiImages.put(playHover, ImageIO.read(new File("src/main/images/play_Hover.png")));
+            uiImages.put(pauseDefault, ImageIO.read(new File("src/main/images/pause_Default.png")));
+            uiImages.put(pauseSelected, ImageIO.read(new File("src/main/images/pause_Selected.png")));
+            uiImages.put(pauseHover, ImageIO.read(new File("src/main/images/pause_Hover.png")));
+            uiImages.put(fileSelectDefault, ImageIO.read(new File("src/main/images/fileSelect_Default.png")));
+            uiImages.put(fileSelectSelected, ImageIO.read(new File("src/main/images/fileSelect_Selected.png")));
+            uiImages.put(fileSelectHover, ImageIO.read(new File("src/main/images/fileSelect_Hover.png")));
         }
         catch(IOException e)
         {
@@ -119,17 +110,17 @@ public class MediaOptions extends VisualizerOption{
         {
             if(checkCollision(playButton, x_y_pressed[0], x_y_pressed[1]))
             {
-                drawPicture(g2, playButton , pauseSelected);
+                drawPicture(g2, playButton , uiImages.get(pauseSelected));
             }
             else
-                drawPicture(g2, playButton , pauseDefault);
+                drawPicture(g2, playButton , uiImages.get(pauseDefault));
 
         } else if (checkCollision(playButton, x_y_position[0], x_y_position[1]))
         {
-            drawPicture(g2, playButton , pauseHover);
+            drawPicture(g2, playButton , uiImages.get(pauseHover));
         }
         else
-            drawPicture(g2, playButton , pauseDefault);
+            drawPicture(g2, playButton , uiImages.get(pauseDefault));
     }
 
     private void drawPlayButton(Graphics2D g2)
@@ -138,20 +129,20 @@ public class MediaOptions extends VisualizerOption{
         {
             if(checkCollision(playButton, x_y_pressed[0], x_y_pressed[1]))
             {
-                drawPicture(g2, playButton , playSelected);
+                drawPicture(g2, playButton , uiImages.get(playSelected));
             }
             else
             {
-                drawPicture(g2, playButton , playDefault);
+                drawPicture(g2, playButton , uiImages.get(playDefault));
             }
 
         } else if (checkCollision(playButton, x_y_position[0], x_y_position[1]))
         {
-            drawPicture(g2, playButton , playHover);
+            drawPicture(g2, playButton , uiImages.get(playHover));
         }
         else
         {
-            drawPicture(g2, playButton , playDefault);
+            drawPicture(g2, playButton , uiImages.get(playDefault));
         }
     }
 
@@ -160,17 +151,17 @@ public class MediaOptions extends VisualizerOption{
         if(clicked)
         {
             if(checkCollision(fileSelectButton, x_y_pressed[0], x_y_pressed[1]) ) {
-                drawPicture(g2, fileSelectButton, fileSelectSelected);
+                drawPicture(g2, fileSelectButton, uiImages.get(fileSelectSelected));
             }
             else
-                drawPicture(g2, fileSelectButton , fileSelectDefault);
+                drawPicture(g2, fileSelectButton , uiImages.get(fileSelectDefault));
         }
         else if(checkCollision(fileSelectButton, x_y_position[0], x_y_position[1]))
         {
-            drawPicture(g2, fileSelectButton, fileSelectHover);
+            drawPicture(g2, fileSelectButton, uiImages.get(fileSelectHover));
         }
         else
-            drawPicture(g2, fileSelectButton , fileSelectDefault);
+            drawPicture(g2, fileSelectButton , uiImages.get(fileSelectDefault));
     }
 
     @Override
