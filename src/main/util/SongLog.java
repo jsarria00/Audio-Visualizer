@@ -79,6 +79,10 @@ public class SongLog implements Saveable, Loadable{
      */
     public void addToLog(SongEntry s) {
         if(s != null) {
+            if(songList.contains(s))//removes the old entry, and bumps it back to the top
+            {
+                songList.remove(s);
+            }
             if(songList.size() >= MAX_CAPACITY)
             {
                 int index_to_remove = 0;

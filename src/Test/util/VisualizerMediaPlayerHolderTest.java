@@ -39,7 +39,7 @@ public class VisualizerMediaPlayerHolderTest {
     {
         testWait();
         try {
-            vMPH.load(LIGHT, false);
+            vMPH.load(LIGHT);
         } catch (MediaAlreadyLoadedException e)
         {
             fail("Should not catch MediaAlreadyLoadedException");
@@ -48,7 +48,7 @@ public class VisualizerMediaPlayerHolderTest {
         songDir = vMPH.getSongDir();
         vMPH.play();
         try {
-            vMPH.load(songDir, false);
+            vMPH.load(songDir);
             fail("Should catch MediaAlreadyLoadedException as it is already loaded!");
         } catch (MediaAlreadyLoadedException e)
         {
@@ -56,7 +56,7 @@ public class VisualizerMediaPlayerHolderTest {
         }
         assertTrue(vMPH.isPlaying());
         try {
-            vMPH.load(SHELTER, false);
+            vMPH.load(SHELTER);
         } catch (MediaAlreadyLoadedException e)
         {
             fail("Should not catch MediaAlreadyLoadedException");

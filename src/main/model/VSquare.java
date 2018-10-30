@@ -3,7 +3,7 @@ package model;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 
-public class VSquare extends VShape {
+public class VSquare extends VShape implements Rotatable {
     //VShape(<- abstract class idea) interface idea
 
 

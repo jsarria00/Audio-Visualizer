@@ -10,7 +10,6 @@ public interface VShapeable {
     int BACKGROUND_MAX_COLOR_BRIGHTNESS = 140; // change this for
     int BACKGROUND_COLOR_INCREMENT_THRESHOLD = 10;
 
-    double D_RADIANS = (Math.PI) / 400;
     int D_GROWTH = 2;
     int SLEEPING_HALF_WIDTH = 150;
     int PLAYING_HALF_WIDTH = 200;

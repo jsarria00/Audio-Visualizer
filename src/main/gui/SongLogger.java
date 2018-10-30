@@ -101,7 +101,7 @@ public class SongLogger extends VisualizerOption {
             inHitBox = checkSelection(r, x_y_pressed[0], x_y_pressed[1], x, y);
             try {
                 if (inHitBox) {
-                    vApplication.load(log.get(songIndex).getSongDirectory(), true);
+                    vApplication.load(log.get(songIndex).getSongDirectory());
                 }
                 songIndex--;
             } catch(MediaAlreadyLoadedException e)

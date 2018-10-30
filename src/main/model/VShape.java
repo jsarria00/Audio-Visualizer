@@ -60,8 +60,8 @@ public abstract class VShape implements VShapeable {
             else if (rectangleHeight[i] > AUDIO_RECTANGLE_MINIMUM_HEIGHT + D_RECTANGLE_HEIGHT * visualizeData[i]) {
                 rectangleHeight[i] -= D_RECTANGLE_HEIGHT;
             }
-            //INTEGRATION OF A SIN FUNCTION TRANSLATED TO CODE(SIMULATES )
-            recAvg += rectangleHeight[i]/2;
+            //INTEGRATION OF A SIN FUNCTION TRANSLATED TO CODE(SIMULATES ) - now double the integral
+            recAvg += rectangleHeight[i];///2;
             if(rectangleAverage < recAvg) {
                 rectangleAverage++;
             }
