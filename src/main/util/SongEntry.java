@@ -1,6 +1,7 @@
 package util;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class SongEntry implements Serializable {
     private String songName;
@@ -29,6 +30,19 @@ public class SongEntry implements Serializable {
             }
             counter--;
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SongEntry songEntry = (SongEntry) o;
+        return Objects.equals(songName, songEntry.songName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(songName);
     }
 
     /**
