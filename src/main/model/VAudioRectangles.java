@@ -77,8 +77,8 @@ public class VAudioRectangles extends VShape implements Rotatable{
             }
             else
             {
-                smallAudioRectangle = new Rectangle((int) enclosing.getWidth() / 2, AUDIO_RECTANGLE_DISTANCE + (int) enclosing.getHeight() / 2 + rectangleAverage, AUDIO_RECTANGLE_WIDTH, rectangleHeight[2*NUMBER_OF_AUDIO_RECTANGLES-i-1]*4/7);
-                largeAudioRectangle = new Rectangle((int) enclosing.getWidth() / 2, AUDIO_RECTANGLE_DISTANCE + (int) enclosing.getHeight() / 2 + rectangleAverage, AUDIO_RECTANGLE_WIDTH, rectangleHeight[2*NUMBER_OF_AUDIO_RECTANGLES-i-1]);
+                smallAudioRectangle = new Rectangle((int) enclosing.getWidth() / 2, AUDIO_RECTANGLE_DISTANCE + (int) enclosing.getHeight() / 2 + rectangleAverage, AUDIO_RECTANGLE_WIDTH, rectangleHeight[i-NUMBER_OF_AUDIO_RECTANGLES]*4/7);
+                largeAudioRectangle = new Rectangle((int) enclosing.getWidth() / 2, AUDIO_RECTANGLE_DISTANCE + (int) enclosing.getHeight() / 2 + rectangleAverage, AUDIO_RECTANGLE_WIDTH, rectangleHeight[i-NUMBER_OF_AUDIO_RECTANGLES]);//2*NUMBER_OF_AUDIO_RECTANGLES-i-1
             }
             g2.setColor(new Color(0, 0, 0, 200));
             g2.fill(largeAudioRectangle);
