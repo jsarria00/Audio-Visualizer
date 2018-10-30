@@ -152,7 +152,7 @@ public class VisualizerMediaPlayerHolder implements Runnable
      * Will try to load the file directory indicated
      * @param attempt a file directory in a string
      */
-    public void load(String attempt,boolean fromLog) throws MediaAlreadyLoadedException {
+    public void load(String attempt) throws MediaAlreadyLoadedException {
         if(!isLoading && !isValidating) {
             try {
                 checkLoaded(attempt);
@@ -168,11 +168,9 @@ public class VisualizerMediaPlayerHolder implements Runnable
                 mediaPlayer.setOnReady(() -> {
                     songDir = attempt;
                     mediaPlayer.setAudioSpectrumNumBands(80);
-                    if (!fromLog) {
-                        SongEntry newestSong = new SongEntry(attempt);
-                        songName = newestSong.getSongName();
-                        log.addToLog(newestSong);
-                    }
+                    SongEntry newestSong = new SongEntry(attempt);
+                    songName = newestSong.getSongName();
+                    log.addToLog(newestSong);
                     System.out.println("File loaded!");
                     isLoading = false;
                 });
@@ -243,7 +241,7 @@ public class VisualizerMediaPlayerHolder implements Runnable
         String songStr = input.nextLine();
         songStr = songStr.trim();
         try {
-            load(DIRECTORY + songStr, false);
+            load(DIRECTORY + songStr);
         } catch (MediaAlreadyLoadedException e)
         {
             System.err.println("Media was already loaded, aborting request.");

@@ -86,7 +86,7 @@ public class MediaOptions extends VisualizerOption{
                 String fileDir = selector.getSelectedFile().toString();
                 System.out.println(fileDir + " was the selected path and file \nRequesting Visualizer Application to load file" );
                 try {
-                    vApplication.load(fileDir, false);
+                    vApplication.load(fileDir);
                     isPlaying = false;
                 }
                 catch(MediaAlreadyLoadedException e)
