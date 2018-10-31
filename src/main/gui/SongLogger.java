@@ -10,6 +10,7 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import static gui.UIKeys.*;
 
 public class SongLogger extends VisualizerOption {
     private boolean opened;
