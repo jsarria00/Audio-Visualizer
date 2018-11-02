@@ -23,7 +23,6 @@ public class MouseMotionEventManager implements MouseMotionListener {
         {
             this.vC = vC;
             this.vC.setMouseMotionManager(this);
-            System.out.println("xddd");
         }
     }
     @Override

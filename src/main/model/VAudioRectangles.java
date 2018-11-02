@@ -26,7 +26,6 @@ public class VAudioRectangles extends VShape implements Rotatable{
         }
     }
 
-
     @Override
     public void awake()
     {
@@ -37,8 +36,6 @@ public class VAudioRectangles extends VShape implements Rotatable{
             currentColor[2]++;
         }
     }
-
-
 
     @Override
     public void asleep()
@@ -56,17 +53,7 @@ public class VAudioRectangles extends VShape implements Rotatable{
         }
     }
 
-
-
-
-    @Override
-    public void draw(Graphics2D g2, Rectangle enclosing){
-        AffineTransform oldTransform = g2.getTransform();
-        int enclosingW =(int)enclosing.getWidth();
-        int enclosingH = (int)enclosing.getHeight();
-        g2.rotate(radians, enclosingW/2.0, enclosingH/2.0);
-        g2.setStroke(new BasicStroke(1));
-
+    private void drawSongLogEntries(Graphics2D g2, Rectangle enclosing) {
         for(int i = 0; i < 2*NUMBER_OF_AUDIO_RECTANGLES; i++)
         {
             Rectangle smallAudioRectangle;
@@ -89,6 +76,19 @@ public class VAudioRectangles extends VShape implements Rotatable{
             g2.rotate(Math.PI / NUMBER_OF_AUDIO_RECTANGLES, enclosing.getWidth() / 2, enclosing.getHeight() / 2);
 
         }
+    }
+
+    @Override
+    public void draw(Graphics2D g2, Rectangle enclosing){
+        AffineTransform oldTransform = g2.getTransform();
+        int enclosingW =(int)enclosing.getWidth();
+        int enclosingH = (int)enclosing.getHeight();
+        g2.rotate(radians, enclosingW/2.0, enclosingH/2.0);
+        g2.setStroke(new BasicStroke(1));
+
+        drawSongLogEntries(g2, enclosing);
         g2.setTransform(oldTransform);
     }
+
+
 }
