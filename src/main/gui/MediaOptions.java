@@ -26,19 +26,20 @@ public class MediaOptions extends VisualizerOption{
         isPlaying = false;
         errorMessageTime = 0;
         try {
-            uiImages.put(playDefault, ImageIO.read(new File("src/main/images/play_Default.png")));
-            uiImages.put(playSelected, ImageIO.read(new File("src/main/images/play_Selected.png")));
-            uiImages.put(playHover, ImageIO.read(new File("src/main/images/play_Hover.png")));
-            uiImages.put(pauseDefault, ImageIO.read(new File("src/main/images/pause_Default.png")));
-            uiImages.put(pauseSelected, ImageIO.read(new File("src/main/images/pause_Selected.png")));
-            uiImages.put(pauseHover, ImageIO.read(new File("src/main/images/pause_Hover.png")));
-            uiImages.put(fileSelectDefault, ImageIO.read(new File("src/main/images/fileSelect_Default.png")));
-            uiImages.put(fileSelectSelected, ImageIO.read(new File("src/main/images/fileSelect_Selected.png")));
-            uiImages.put(fileSelectHover, ImageIO.read(new File("src/main/images/fileSelect_Hover.png")));
+            //ImageIO.read(this.getClass().getResource("/resources/play_Default.png"))
+            uiImages.put(playDefault, ImageIO.read(this.getClass().getResource("/resources/play_Default.png")));
+            uiImages.put(playSelected, ImageIO.read(this.getClass().getResource("/resources/play_Selected.png")));
+            uiImages.put(playHover, ImageIO.read(this.getClass().getResource("/resources/play_Hover.png")));
+            uiImages.put(pauseDefault, ImageIO.read(this.getClass().getResource("/resources/pause_Default.png")));
+            uiImages.put(pauseSelected, ImageIO.read(this.getClass().getResource("/resources/pause_Selected.png")));
+            uiImages.put(pauseHover, ImageIO.read(this.getClass().getResource("/resources/pause_Hover.png")));
+            uiImages.put(fileSelectDefault, ImageIO.read(this.getClass().getResource("/resources/fileSelect_Default.png")));
+            uiImages.put(fileSelectSelected, ImageIO.read(this.getClass().getResource("/resources/fileSelect_Selected.png")));
+            uiImages.put(fileSelectHover, ImageIO.read(this.getClass().getResource("/resources/fileSelect_Hover.png")));
         }
         catch(IOException e)
         {
-            System.err.println("Failed to load one or more images");
+            System.err.println("Failed to load one or more resources");
         }
     }
 
