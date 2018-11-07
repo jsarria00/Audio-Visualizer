@@ -62,20 +62,49 @@ public class VisualizerComponent extends JComponent implements Selectable {
 
         this.canvasMouseManager = canvasMouseManager;
         if(this.canvasMouseManager == null || !this.canvasMouseManager.equals(canvasMouseManager)) {
+            if(this.canvasMouseManager != null) {
+                this.canvasMouseManager.removeVisualizerComponent();
+            }
             this.canvasMouseManager =  canvasMouseManager;
             canvasMouseManager.setVisualizerComponent(this);
         }
         this.addMouseListener(this.canvasMouseManager);
     }
 
+    public void removeCanvasMouseManager()
+    {
+        if(canvasMouseManager != null)
+        {
+            this.removeMouseListener(canvasMouseManager);
+            CanvasMouseEventManager temp = canvasMouseManager;
+            canvasMouseManager = null;
+            temp.removeVisualizerComponent();
+        }
+    }
+
     public void setMouseMotionManager(MouseMotionEventManager mouseMotionManager)
     {
         if(this.mouseMotionManager == null || !this.mouseMotionManager.equals(mouseMotionManager)) {
+            if(this.mouseMotionManager != null)
+            {
+                this.mouseMotionManager.removeVisualizerComponent();
+            }
             this.mouseMotionManager = mouseMotionManager;
             mouseMotionManager.setVisualizerComponent(this);
         }
 
         this.addMouseMotionListener(this.mouseMotionManager);
+    }
+
+    public void removeMouseMotionManager()
+    {
+        if(mouseMotionManager != null)
+        {
+            this.removeMouseMotionListener(mouseMotionManager);
+            MouseMotionEventManager temp = mouseMotionManager;
+            mouseMotionManager = null;
+            temp.removeVisualizerComponent();
+        }
     }
 
     @Override
@@ -167,7 +196,6 @@ public class VisualizerComponent extends JComponent implements Selectable {
     public void modifyByState()
     {
         if(vApplication.isPlaying()) {
-            vS.rotate();
             vS.awake();
             vBg.awake();
             vAudioRectangles.awake();
