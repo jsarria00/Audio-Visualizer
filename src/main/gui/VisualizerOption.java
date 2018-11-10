@@ -6,14 +6,14 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
-public abstract class VisualizerOption implements Selectable, UIKeys{
+public abstract class VisualizerOption implements Selectable{
 
 
     protected static VisualizerApplication vApplication;
     protected boolean clicked;
     protected int[] x_y_pressed;
     protected int[] x_y_position;
-    protected HashMap<String, BufferedImage> uiImages;
+    protected HashMap<UIKeys, BufferedImage> uiImages;
 
 
 

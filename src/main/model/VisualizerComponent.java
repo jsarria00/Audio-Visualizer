@@ -146,7 +146,6 @@ public class VisualizerComponent extends JComponent implements Selectable {
         {
             slider.setMaximum(end);
             slider.setValue(current);
-
         }
         else
         {

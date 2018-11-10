@@ -7,9 +7,9 @@ import util.VisualizerApplication;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import static gui.UIKeys.*;
 
 public class SongLogger extends VisualizerOption {
     private boolean opened;
@@ -30,12 +30,12 @@ public class SongLogger extends VisualizerOption {
         songsLogged = new ArrayList<>();
         errorMessageTime = 0;
         try {
-            uiImages.put(historyButtonDefault, ImageIO.read(new File("src/main/images/historyButton_Default.png")));
-            uiImages.put(historyButtonSelected,ImageIO.read(new File("src/main/images/historyButton_Selected.png")));
-            uiImages.put(historyButtonHover, ImageIO.read(new File("src/main/images/historyButton_Hover.png")));
-            uiImages.put(logItemDefault, ImageIO.read(new File("src/main/images/logItem_Default.png")));
-            uiImages.put(logItemSelected,  ImageIO.read(new File("src/main/images/logItem_Selected.png")));
-            uiImages.put(logItemHover, ImageIO.read(new File("src/main/images/logItem_Hover.png")));
+            uiImages.put(historyButtonDefault, ImageIO.read(this.getClass().getResource("/resources/historyButton_Default.png")));
+            uiImages.put(historyButtonSelected,ImageIO.read(this.getClass().getResource("/resources/historyButton_Selected.png")));
+            uiImages.put(historyButtonHover, ImageIO.read(this.getClass().getResource("/resources/historyButton_Hover.png")));
+            uiImages.put(logItemDefault, ImageIO.read(this.getClass().getResource("/resources/logItem_Default.png")));
+            uiImages.put(logItemSelected,  ImageIO.read(this.getClass().getResource("/resources/logItem_Selected.png")));
+            uiImages.put(logItemHover, ImageIO.read(this.getClass().getResource("/resources/logItem_Hover.png")));
         }
         catch (IOException e)
         {

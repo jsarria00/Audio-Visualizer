@@ -62,8 +62,6 @@ public class Visualizer {
         frame.setUndecorated(true);
         frame.add(panel); //statement that adds our visualizer component to be set within the frame.
         frame.setVisible(true);
-
-
     }
 
 

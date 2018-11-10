@@ -4,13 +4,8 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 
 public class VSquare extends VShape implements Rotatable {
-    //VShape(<- abstract class idea) interface idea
-
-
     private double radians;
     private int xHalfWidth;
-
-
 
     //REQUIRES: nothing
     //MODIFIES: This
@@ -48,6 +43,10 @@ public class VSquare extends VShape implements Rotatable {
     public void awake()
     {
         setAnimatedHeight();
+        awakeAnimation();
+    }
+
+    private void awakeAnimation() {
         if(xHalfWidth < PLAYING_HALF_WIDTH)
         {
             xHalfWidth += D_GROWTH;
@@ -72,6 +71,10 @@ public class VSquare extends VShape implements Rotatable {
             isVisualizeDataDefault = true;
             resetVisualizeData();
         }
+        sleepAnimation();
+    }
+
+    private void sleepAnimation() {
         if(xHalfWidth > SLEEPING_HALF_WIDTH)
         {
             //BECAUSE I do not like the visuals of it suddenly stopping, it will rotate until it is done shifting size
@@ -83,7 +86,6 @@ public class VSquare extends VShape implements Rotatable {
             color = new Color(currentColor[0], currentColor[1], currentColor[2]);
         }
     }
-
 
 
 //    @Override
