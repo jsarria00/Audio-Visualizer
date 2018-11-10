@@ -266,6 +266,7 @@ public class VisualizerComponent extends JComponent implements Selectable {
         }
         vAudioRectangles.visualize(integerMagnitudes);
         vS.visualize(integerMagnitudes);
+        vBg.visualize(integerMagnitudes);
     }
 
     @Override

@@ -5,7 +5,7 @@ package model;
 import java.awt.*;
 import java.util.Random;
 
-public class VBackground extends VShape {
+public class VBackground extends VShape implements VShapeable {
 
 
     private static int dRed;
@@ -16,6 +16,11 @@ public class VBackground extends VShape {
     private static int blueDirection;
     private static int colorChangeCounter;
     private static int colorIncrementCounter;
+    private int max;
+    private int decreaseMaxCounter;
+    private int flashCooldownRemaining;
+    private int flashVisibility;
+    private final int COOLDOWN = 100;//one-half second
 
 
 
@@ -38,6 +43,10 @@ public class VBackground extends VShape {
         redDirection = 1;
         greenDirection = 1;
         blueDirection = 1;
+        max = AUDIO_RECTANGLE_MINIMUM_HEIGHT;
+        decreaseMaxCounter = 0;
+        flashCooldownRemaining = 0;
+        flashVisibility = 0;
 
     }
 
@@ -82,7 +91,7 @@ public class VBackground extends VShape {
 
     @Override
     public void awake(){
-
+        setAnimatedHeight();
         if(colorChangeCounter >= BACKGROUND_COLOR_CHANGE_THRESHOLD)
         {
             randomizeDeltas();
@@ -92,6 +101,7 @@ public class VBackground extends VShape {
             colorChangeCounter++;
         }
         animateColorAwake();
+        setFlash();
     }
 
     private void animateColorAwake() {
@@ -114,6 +124,15 @@ public class VBackground extends VShape {
         resetVisualizeData();
         animateColorToSleep();
         color = new Color(currentColor[0], currentColor[1], currentColor[2]);
+        if(rectangleAverage > AUDIO_RECTANGLE_MINIMUM_HEIGHT)
+        {
+            rectangleAverage = AUDIO_RECTANGLE_MINIMUM_HEIGHT;
+        }
+        if(!isVisualizeDataDefault)
+        {
+            isVisualizeDataDefault = true;
+            resetVisualizeData();
+        }
     }
 
     private void animateColorToSleep() {
@@ -131,11 +150,31 @@ public class VBackground extends VShape {
         }
     }
 
-    @Override
-    public void visualize(int[] magnitudes)
+    private void setFlash()
     {
-        isVisualizeDataDefault = false;
-
+        if(flashVisibility > 0)
+        {
+            flashVisibility--;
+        }
+        else if(flashCooldownRemaining > 0)
+        {
+            flashCooldownRemaining--;
+        }
+        else if(rectangleAverage > max && rectangleAverage > FLASH_SENSITIVITY)
+        {
+            max = rectangleAverage;
+            flashVisibility = 255;
+            flashCooldownRemaining = COOLDOWN;
+        }
+        if(decreaseMaxCounter > 0)
+        {
+            decreaseMaxCounter--;
+        }
+        else if(max > FLASH_SENSITIVITY)
+        {
+            max--;
+            decreaseMaxCounter = COOLDOWN;
+        }
     }
 
     @Override
@@ -143,5 +182,8 @@ public class VBackground extends VShape {
     {
         g2.setColor(color);
         g2.fill(enclosing);
+        g2.setColor(new Color(255,255,255, flashVisibility));
+        g2.fill(enclosing);
+        //System.out.println(rectangleAverage);
     }
 }
