@@ -19,8 +19,21 @@ public class CanvasMouseEventManager implements MouseListener {
     {
         if(this.vC == null || !this.vC.equals(vC))
         {
+            if(this.vC != null) {
+                this.vC.removeCanvasMouseManager();
+            }
             this.vC = vC;
             this.vC.setCanvasMouseManager(this);
+        }
+    }
+
+    public void removeVisualizerComponent()
+    {
+        if(this.vC !=null)
+        {
+            VisualizerComponent temp = this.vC;
+            this.vC = null;
+            temp.removeCanvasMouseManager();
         }
     }
 

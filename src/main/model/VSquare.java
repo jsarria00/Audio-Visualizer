@@ -42,6 +42,7 @@ public class VSquare extends VShape implements Rotatable {
     @Override
     public void awake()
     {
+        rotate();
         setAnimatedHeight();
         awakeAnimation();
     }

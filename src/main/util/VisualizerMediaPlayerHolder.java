@@ -173,6 +173,8 @@ public class VisualizerMediaPlayerHolder implements Runnable
                     log.addToLog(newestSong);
                     System.out.println("File loaded!");
                     isLoading = false;
+                    play();
+
                 });
                 //For now -Note scanner hogs the thread therefore
                 mediaPlayer.setOnEndOfMedia(() -> {

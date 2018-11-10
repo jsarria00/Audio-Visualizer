@@ -69,11 +69,12 @@ public class VAudioRectangles extends VShape implements Rotatable{
             }
             g2.setColor(new Color(0, 0, 0, 200));
             g2.fill(largeAudioRectangle);
-            g2.setColor(new Color(currentColor[1], currentColor[1], currentColor[2], 157));
+            g2.setColor(new Color(currentColor[0], currentColor[1], currentColor[2], 157));
             g2.fill(smallAudioRectangle);
             g2.setColor(new Color(0, 0, 0, 157));
             g2.draw(smallAudioRectangle);
             g2.rotate(Math.PI / NUMBER_OF_AUDIO_RECTANGLES, enclosing.getWidth() / 2, enclosing.getHeight() / 2);
+            //System.out.println(rectangleAverage);
 
         }
     }

@@ -22,4 +22,5 @@ public interface VShapeable {
     int AUDIO_RECTANGLE_WIDTH = 15;
     int AUDIO_RECTANGLE_DISTANCE = (int)(PLAYING_HALF_WIDTH/(Math.PI/5));
     int D_RECTANGLE_HEIGHT = 4;
+    int FLASH_SENSITIVITY = 70;
 }
