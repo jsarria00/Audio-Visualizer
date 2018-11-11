@@ -154,7 +154,7 @@ public class VBackground extends VShape implements VShapeable {
     {
         if(flashVisibility > 0)
         {
-            flashVisibility--;
+            flashVisibility-=2;
         }
         else if(flashCooldownRemaining > 0)
         {
@@ -163,8 +163,8 @@ public class VBackground extends VShape implements VShapeable {
         else if(rectangleAverage > max && rectangleAverage > FLASH_SENSITIVITY)
         {
             max = rectangleAverage;
-            flashVisibility = 255;
-            flashCooldownRemaining = COOLDOWN;
+            flashVisibility = 254;
+            flashCooldownRemaining = COOLDOWN/2;
         }
         if(decreaseMaxCounter > 0)
         {
@@ -184,6 +184,6 @@ public class VBackground extends VShape implements VShapeable {
         g2.fill(enclosing);
         g2.setColor(new Color(255,255,255, flashVisibility));
         g2.fill(enclosing);
-        //System.out.println(rectangleAverage);
+        System.out.println(rectangleAverage);
     }
 }
