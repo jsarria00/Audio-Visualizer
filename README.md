@@ -1,16 +1,16 @@
 # Personal Project - Audio visualizer
-[1]: https://edge.edx.org/courses/course-v1:UBC+CPSC210+2018W1/courseware/a4d49b3ef5fa4fe2bd9496e76d72dc48/e2887456a15a48dbb040ecdac313168f/1?activate_block_id=block-v1%3AUBC%2BCPSC210%2B2018W1%2Btype%40vertical%2Bblock%40ff793bbcd5544e82bb5052f0dffe5d71
-*The general idea of this project is to create a Audio Visualizer from user inputted files.
-*The ideal functionality of the project would be:
--Get the user to start the application
--Get the user to import an audio file
--The program will decode analog data from audio files, and organize them into subsets of data that would occur at a time t
--The data at time t will be transmitted to models and will take on a shape and color depending on the data and time collected, which will animate the audio.
--The user will be able to interact with the UI to play, pause, or import a new file. (Maybe a timeline will be implemented to allow the user to go back or ahead on the track)
--The user's audio file will play alongside the visualization.
 
-Version W2
-To use:
--Place .mp3 files into the /src/media directory of this project
--Run the compile and run the project.
--Type "help" for a list of instructions
+File version: 1.00
+
+The audio visualizer is a user interactive program. On start the user has the choice to load a .mp3 file into the program, and their audio file will start to visualize once loaded.
+When loading a file, a history log will keep track of unique song names, and displayed them in the order they were recently loaded in where a max of 10 will display in the log. 
+The user also has a choice to load a song from the history log. 
+The user will be unable to reload a song that is already loaded.
+The history log will validate itself and clean the history of files that no longer exist in the directory they were loaded in. 
+On the following application start up, if there is a history, the most recently existing file will load.
+
+On visualization the user has a choice to Play and pause the song that is loaded. The user can also seek a particular time in the song. 
+Once the song ends, the visualization will end, and the song will be set to the start.
+
+It is recommended to have a dedicated GPU to take advantage of the openGL, where GPU threads will render the image and CPU will be free to process the application. 
+A 1080p resolution is preferable, but a 720p resolution is also viable.
