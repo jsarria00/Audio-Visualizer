@@ -1,9 +1,13 @@
 package util;
 
+import designPattern.AbstractSongLog;
+import designPattern.Observer;
+import designPattern.User;
+
 import java.io.*;
 import java.util.ArrayList;
 
-public class SongLog implements Saveable, Loadable{
+public class SongLog extends AbstractSongLog implements Saveable, Loadable{
     private static final int MAX_CAPACITY = 10;
     private static final String FILE_NAME = "SongLog.ser";
     private static ArrayList<SongEntry> songList;
@@ -16,6 +20,15 @@ public class SongLog implements Saveable, Loadable{
         songList = load(FILE_NAME);
         if(songList == null) {
             songList = new ArrayList<>();
+        }
+    }
+
+    public void notifyUsers(SongEntry a)
+    {
+        System.out.println("Informing all observers that " + a.getSongName() + " was loaded into the system");
+        for(Observer user: users)
+        {
+            user.update(a);
         }
     }
 
@@ -90,6 +103,7 @@ public class SongLog implements Saveable, Loadable{
             }
             songList.add(s);
             save(FILE_NAME);
+            notifyUsers(s);
         }
     }
 

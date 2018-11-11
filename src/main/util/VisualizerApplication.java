@@ -1,5 +1,6 @@
 package util;
 
+import designPattern.User;
 import javafx.scene.media.AudioSpectrumListener;
 import javafx.util.Duration;
 
@@ -11,6 +12,8 @@ public class VisualizerApplication implements Runnable {
     private boolean isPlaying = false;
     private SongLog songLog;
     private boolean debug;
+    private User user1;
+    private User user2;
 
 
     /**
@@ -22,6 +25,10 @@ public class VisualizerApplication implements Runnable {
         this.debug = debug;
         songLog = new SongLog();
         player = new VisualizerMediaPlayerHolder(debug, songLog);
+        user1 = new User("Mike");
+        user2 = new User("Megan");
+        songLog.addObserver(user1);
+        songLog.addObserver(user2);
     }
 
     public double getEndTime()
