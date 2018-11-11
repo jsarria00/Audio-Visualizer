@@ -10,6 +10,10 @@ import util.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.Objects;
 
 public class VisualizerComponent extends JComponent implements Selectable {
@@ -34,6 +38,7 @@ public class VisualizerComponent extends JComponent implements Selectable {
     private static final int NUM_AUDIO_RECTANGLES = 60;
     private MouseMotionEventManager mouseMotionManager;
     private CanvasMouseEventManager canvasMouseManager;
+    private String line;
 
     public VisualizerComponent(VisualizerApplication vApplication , JFrame heldBy)
     {
@@ -56,6 +61,39 @@ public class VisualizerComponent extends JComponent implements Selectable {
         canvasMouseManager = new CanvasMouseEventManager();
         canvasMouseManager.setVisualizerComponent(this);
 
+        BufferedReader br = null;
+
+        try {
+            String theURL = "https://www.ugrad.cs.ubc.ca/~cs210/2018w1/welcomemsg.html"; //this can point to any URL
+            URL url = new URL(theURL);
+            br = new BufferedReader(new InputStreamReader(url.openStream()));
+
+
+            StringBuilder sb = new StringBuilder();
+
+            while ((line = br.readLine()) != null) {
+
+                sb.append(line);
+                sb.append(System.lineSeparator());
+            }
+            line = sb.toString();
+
+        }
+        catch (IOException e)
+        {
+
+        }
+        finally {
+            try {
+                if (br != null) {
+                    br.close();
+                }
+            }
+            catch(IOException e)
+            {
+
+            }
+        }
     }
 
     public void setCanvasMouseManager(CanvasMouseEventManager canvasMouseManager) {
@@ -287,6 +325,8 @@ public class VisualizerComponent extends JComponent implements Selectable {
 
         sL.draw(g2, historyLogEnclosing);
         mO.draw(g2, mediaOptionsEnclosing);
+
+        g2.drawString(line, this.screenX/2-220, this.screenY/2);
         //DEBUG
 //        int rectWidth = this.getWidth()/60;
 //        int x = 0;
