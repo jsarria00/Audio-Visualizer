@@ -43,7 +43,7 @@ public class MediaQueuer implements Runnable, Selectable{
         queueWindow.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         queue = new JList(new DefaultListModel());
         queue.setFixedCellHeight(20);
-        queue.setFixedCellWidth(400);
+        queue.setFixedCellWidth(350);
 
         //SplitPane
         panelHolder = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
@@ -72,10 +72,10 @@ public class MediaQueuer implements Runnable, Selectable{
         buttonHolder.add(clearQueue);
         buttonHolder.add(toggleQueue);
 
-        panelHolder.add(queue);
+        panelHolder.add(new JScrollPane(queue));
         panelHolder.add(buttonHolder);
 
-        queueWindow.add(new JScrollPane(panelHolder));
+        queueWindow.add(panelHolder);
         queueWindow.setSize(new Dimension(800,400));
         queueWindow.setResizable(false);
         queueWindow.addWindowListener(new WindowAdapter() {
@@ -102,7 +102,8 @@ public class MediaQueuer implements Runnable, Selectable{
 
     private void removeFromQueue(int i)
     {
-        if(!dataList.isEmpty()) {
+
+        if(!dataList.isEmpty() && i != -1) {
             dataList.remove(i);
             queueCount = dataList.size();
         }
