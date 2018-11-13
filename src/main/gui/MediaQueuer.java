@@ -1,6 +1,9 @@
 package gui;
 
+import javafx.util.Duration;
+import util.MediaAlreadyLoadedException;
 import util.SongEntry;
+import util.VisualizerApplication;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -10,8 +13,11 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.ArrayList;
 
-public class MediaQueuer implements Selectable{
+import static java.lang.Thread.sleep;
+
+public class MediaQueuer implements Runnable, Selectable{
     private int queueCount;
+    private VisualizerApplication vApplication;
     private JFrame queueWindow;
     private ArrayList<SongEntry> dataList;
     private JList queue;
@@ -25,8 +31,10 @@ public class MediaQueuer implements Selectable{
     boolean queuePlaying;
     private final String NOT_PLAYING = "Not playing";
     private final String PLAYING = "Playing queue";
-    public MediaQueuer()
+
+    public MediaQueuer(VisualizerApplication vApplication)
     {
+        this.vApplication = vApplication;
         dataList = new ArrayList<>();
         queueCount = 0;
         visibility = true;
@@ -96,7 +104,7 @@ public class MediaQueuer implements Selectable{
     {
         if(!dataList.isEmpty()) {
             dataList.remove(i);
-            queueCount--;
+            queueCount = dataList.size();
         }
         updateJList();
     }
@@ -118,7 +126,7 @@ public class MediaQueuer implements Selectable{
         if (option == JFileChooser.APPROVE_OPTION) {
             String fileDir = selector.getSelectedFile().toString();
             dataList.add(new SongEntry(fileDir));
-            queueCount++;
+            queueCount = dataList.size();
             updateJList();
         }
     }
@@ -126,6 +134,10 @@ public class MediaQueuer implements Selectable{
     private void toggleQueueStatus()
     {
         queuePlaying = !queuePlaying;
+        changeQueueButtonText();
+    }
+
+    private void changeQueueButtonText() {
         if(queuePlaying)
         {
             toggleQueue.setText(PLAYING);
@@ -141,4 +153,46 @@ public class MediaQueuer implements Selectable{
         visibility = !visibility;
         queueWindow.setVisible(visibility);
     }
+
+    public void turnOffQueue() {
+        queuePlaying = false;
+        changeQueueButtonText();
+    }
+
+    @Override
+    public void run()
+    {
+        while(true)
+        {
+            try{
+                sleep(200);
+            }catch (InterruptedException e)
+            {
+                System.err.println("Media Queue wait time was interrupted.");
+            }
+            catch (IllegalMonitorStateException e)
+            {
+                System.err.println("Queue thread Entered illegal state.");
+            }
+            if(dataList.isEmpty())
+            {
+                turnOffQueue();
+            }
+            else if(queuePlaying && !vApplication.isLoading() && !vApplication.inUse() && !vApplication.isPlaying())
+            {
+                SongEntry temp = dataList.get(0);
+                dataList.remove(0);
+                queueCount = dataList.size();
+                updateJList();
+                try{
+                    vApplication.load(temp.getSongDirectory());
+                } catch(MediaAlreadyLoadedException e){
+                    vApplication.setSeek(new Duration(0));
+                    vApplication.togglePlayState();
+                }
+            }
+        }
+    }
+
+
 }

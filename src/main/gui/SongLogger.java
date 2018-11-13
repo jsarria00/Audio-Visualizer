@@ -101,6 +101,7 @@ public class SongLogger extends VisualizerOption {
             inHitBox = checkSelection(r, x_y_pressed[0], x_y_pressed[1], x, y);
             try {
                 if (inHitBox) {
+                    vApplication.turnOffQueue();
                     vApplication.load(log.get(songIndex).getSongDirectory());
                 }
                 songIndex--;

@@ -12,6 +12,8 @@ public class VisualizerApplication implements Runnable {
     private boolean isPlaying = false;
     private SongLog songLog;
     private boolean debug;
+    private MediaQueuer queuer;
+    private Thread queueThread;
 
 
     /**
@@ -20,10 +22,12 @@ public class VisualizerApplication implements Runnable {
      */
     public VisualizerApplication(boolean debug)
     {
-        new MediaQueuer();
+        queuer = new MediaQueuer(this);
         this.debug = debug;
         songLog = new SongLog();
         player = new VisualizerMediaPlayerHolder(debug, songLog);
+        queueThread = new Thread(queuer);
+        queueThread.start();
     }
 
     public double getEndTime()
@@ -61,6 +65,11 @@ public class VisualizerApplication implements Runnable {
        isPlaying = player.isPlaying();
     }
 
+    public void turnOffQueue()
+    {
+        queuer.turnOffQueue();
+    }
+
     /**
      * Endlessly feeds the Application thread to get a new set of instructions via String input.
      */
@@ -75,7 +84,7 @@ public class VisualizerApplication implements Runnable {
             } catch(InterruptedException e) {
                 System.out.println("Main thread sleep was interrupted");
             }
-            while(VisualizerMediaPlayerHolder.inUse() || VisualizerMediaPlayerHolder.isLoading()) {
+            while(inUse() || isLoading()) {
 
                 try {
                     sleep(200);
@@ -86,6 +95,14 @@ public class VisualizerApplication implements Runnable {
                 }
             }
         }
+    }
+
+    public boolean isLoading() {
+        return VisualizerMediaPlayerHolder.isLoading();
+    }
+
+    public boolean inUse() {
+        return VisualizerMediaPlayerHolder.inUse();
     }
 
     /**

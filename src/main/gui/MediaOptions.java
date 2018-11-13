@@ -86,6 +86,7 @@ public class MediaOptions extends VisualizerOption{
     }
 
     private void loadFile() {
+        vApplication.turnOffQueue();
         JFileChooser selector = new JFileChooser();
         selector.setFileFilter(new FileNameExtensionFilter(".mp3", "mp3"));
         File f = new File(MEDIA_DIRECTORY);
