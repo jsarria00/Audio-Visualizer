@@ -1,5 +1,6 @@
 package gui;
 
+import javafx.util.Duration;
 import util.MediaAlreadyLoadedException;
 import util.VisualizerApplication;
 
@@ -9,6 +10,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import static gui.UIKeys.*;
 
@@ -79,23 +81,27 @@ public class MediaOptions extends VisualizerOption{
         inHitBox = checkSelection(fileSelectButton, x_y_pressed[0], x_y_pressed[1], x, y);
         if(inHitBox)
         {
-            JFileChooser selector = new JFileChooser();
-            selector.setFileFilter(new FileNameExtensionFilter(".mp3", "mp3"));
-            File f = new File(MEDIA_DIRECTORY);
-            selector.setCurrentDirectory(f);
-            int option = selector.showOpenDialog(null);
-            if (option == JFileChooser.APPROVE_OPTION) {
-                String fileDir = selector.getSelectedFile().toString();
-                System.out.println(fileDir + " was the selected path and file \nRequesting Visualizer Application to load file" );
-                try {
+            loadFile();
+        }
+    }
+
+    private void loadFile() {
+        JFileChooser selector = new JFileChooser();
+        selector.setFileFilter(new FileNameExtensionFilter(".mp3", "mp3"));
+        File f = new File(MEDIA_DIRECTORY);
+        selector.setCurrentDirectory(f);
+        int option = selector.showOpenDialog(null);
+        if (option == JFileChooser.APPROVE_OPTION) {
+            String fileDir = selector.getSelectedFile().toString();
+            System.out.println(fileDir + " was the selected path and file \nRequesting Visualizer Application to load file" );
+            try {
                     vApplication.load(fileDir);
                     isPlaying = false;
-                }
-                catch(MediaAlreadyLoadedException e)
-                {
-                    errorMessageTime = 1000;
-                    System.err.println("Media was already loaded, aborting request.");
-                }
+            }
+            catch(MediaAlreadyLoadedException e)
+            {
+                errorMessageTime = 1000;
+                System.err.println("Media was already loaded, aborting request.");
             }
         }
     }
@@ -165,6 +171,7 @@ public class MediaOptions extends VisualizerOption{
         else
             drawPicture(g2, fileSelectButton , uiImages.get(fileSelectDefault));
     }
+
 
     @Override
     public void draw(Graphics2D g2, Rectangle enclosure)

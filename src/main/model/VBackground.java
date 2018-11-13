@@ -184,6 +184,6 @@ public class VBackground extends VShape implements VShapeable {
         g2.fill(enclosing);
         g2.setColor(new Color(255,255,255, flashVisibility));
         g2.fill(enclosing);
-        System.out.println(rectangleAverage);
+        //System.out.println(rectangleAverage);
     }
 }

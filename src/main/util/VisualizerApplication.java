@@ -1,5 +1,6 @@
 package util;
 
+import gui.MediaQueuer;
 import javafx.scene.media.AudioSpectrumListener;
 import javafx.util.Duration;
 
@@ -19,6 +20,7 @@ public class VisualizerApplication implements Runnable {
      */
     public VisualizerApplication(boolean debug)
     {
+        new MediaQueuer();
         this.debug = debug;
         songLog = new SongLog();
         player = new VisualizerMediaPlayerHolder(debug, songLog);
