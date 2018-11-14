@@ -46,6 +46,7 @@ public class VisualizerComponent extends JComponent implements Selectable {
         vAudioRectangles = new VAudioRectangles();
         sL = new SongLogger(vApplication);
         mO = new MediaOptions(vApplication);
+        wO = new WindowOptions(vApplication);
         waitTimeRemaining = 0;
         mouseHideWaitTime = TIME_UNTILL_HIDDEN;
         sliderClicked = false;
@@ -287,6 +288,7 @@ public class VisualizerComponent extends JComponent implements Selectable {
 
         sL.draw(g2, historyLogEnclosing);
         mO.draw(g2, mediaOptionsEnclosing);
+        wO.draw(g2, windowOptionsEnclosing);
         //DEBUG
 //        int rectWidth = this.getWidth()/60;
 //        int x = 0;

@@ -178,7 +178,7 @@ public class MediaOptions extends VisualizerOption{
         }
         playButton = new Rectangle((int)(enclosure.getX()+enclosure.getWidth()/2), (int)enclosure.getY(), MEDIA_OPTION_SIZE, MEDIA_OPTION_SIZE);
         fileSelectButton = new Rectangle((int)(enclosure.getWidth()- MEDIA_OPTION_SIZE), (int)(enclosure.getY()), MEDIA_OPTION_SIZE, MEDIA_OPTION_SIZE);
-        queueWindowButton = new Rectangle((int)(fileSelectButton.getX() - MEDIA_OPTION_SIZE), (int)(enclosure.getY()), MEDIA_OPTION_SIZE, MEDIA_OPTION_SIZE);
+        queueWindowButton = new Rectangle((int)(fileSelectButton.getX() - MEDIA_OPTION_SIZE-OPTION_SPACING), (int)(enclosure.getY()), MEDIA_OPTION_SIZE, MEDIA_OPTION_SIZE);
         if(isPlaying)
         {
             drawPauseButton(g2);
@@ -188,5 +188,6 @@ public class MediaOptions extends VisualizerOption{
             drawPlayButton(g2);
         }
         drawFileSelectButton(g2);
+        g2.draw(queueWindowButton);
     }
 }
