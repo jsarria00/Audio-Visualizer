@@ -55,11 +55,21 @@ public abstract class VisualizerOption implements Selectable{
 
     public abstract void timedEvent();
 
-    public abstract void clickedEvent(int x, int y);
+    public void clickedEvent(int x, int y)
+    {
+        clicked = true;
+        x_y_pressed[0] = x;
+        x_y_pressed[1] = y;
+
+    }
+
+    public void hoverEvent(int x, int y){
+        x_y_position[0] = x;
+        x_y_position[1] = y;
+    }
 
     public abstract void releasedEvent(int x, int y);
 
-    public abstract void hoverEvent(int x, int y);
 
 
     public abstract void draw(Graphics2D g2, Rectangle enclosing);

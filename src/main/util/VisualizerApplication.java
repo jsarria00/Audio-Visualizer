@@ -70,6 +70,11 @@ public class VisualizerApplication implements Runnable {
         queuer.turnOffQueue();
     }
 
+    public void toggleVisibility()
+    {
+        queuer.toggleVisibility();
+    }
+
     /**
      * Endlessly feeds the Application thread to get a new set of instructions via String input.
      */

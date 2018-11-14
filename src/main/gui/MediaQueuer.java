@@ -173,7 +173,7 @@ public class MediaQueuer implements Runnable, Selectable{
             }
             catch (IllegalMonitorStateException e)
             {
-                System.err.println("Queue thread Entered illegal state.");
+                System.err.println("Queue thread entered illegal state.");
             }
             if(dataList.isEmpty())
             {
@@ -194,6 +194,4 @@ public class MediaQueuer implements Runnable, Selectable{
             }
         }
     }
-
-
 }
