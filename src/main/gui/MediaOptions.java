@@ -1,5 +1,6 @@
 package gui;
 
+import javafx.util.Duration;
 import util.MediaAlreadyLoadedException;
 import util.VisualizerApplication;
 
@@ -9,6 +10,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import static gui.UIKeys.*;
 
@@ -17,6 +19,7 @@ public class MediaOptions extends VisualizerOption{
     private boolean isPlaying;
     private Rectangle playButton;
     private Rectangle fileSelectButton;
+    private Rectangle queueWindowButton;
     private int errorMessageTime;
 
 
@@ -54,14 +57,6 @@ public class MediaOptions extends VisualizerOption{
     }
 
     @Override
-    public void clickedEvent(int x, int y)
-    {
-        clicked = true;
-        x_y_pressed[0] = x;
-        x_y_pressed[1] = y;
-    }
-
-    @Override
     public void releasedEvent(int x, int y)
     {
         x_y_position[0] = x;
@@ -79,32 +74,38 @@ public class MediaOptions extends VisualizerOption{
         inHitBox = checkSelection(fileSelectButton, x_y_pressed[0], x_y_pressed[1], x, y);
         if(inHitBox)
         {
-            JFileChooser selector = new JFileChooser();
-            selector.setFileFilter(new FileNameExtensionFilter(".mp3", "mp3"));
-            File f = new File(MEDIA_DIRECTORY);
-            selector.setCurrentDirectory(f);
-            int option = selector.showOpenDialog(null);
-            if (option == JFileChooser.APPROVE_OPTION) {
-                String fileDir = selector.getSelectedFile().toString();
-                System.out.println(fileDir + " was the selected path and file \nRequesting Visualizer Application to load file" );
-                try {
+            loadFile();
+        }
+        inHitBox = checkSelection(queueWindowButton, x_y_pressed[0], x_y_pressed[1], x, y);
+        if(inHitBox)
+        {
+            vApplication.toggleVisibility();
+        }
+    }
+
+    private void loadFile() {
+        vApplication.turnOffQueue();
+        JFileChooser selector = new JFileChooser();
+        selector.setFileFilter(new FileNameExtensionFilter(".mp3", "mp3"));
+        File f = new File(MEDIA_DIRECTORY);
+        selector.setCurrentDirectory(f);
+        int option = selector.showOpenDialog(null);
+        if (option == JFileChooser.APPROVE_OPTION) {
+            String fileDir = selector.getSelectedFile().toString();
+            System.out.println(fileDir + " was the selected path and file \nRequesting Visualizer Application to load file" );
+            try {
                     vApplication.load(fileDir);
                     isPlaying = false;
-                }
-                catch(MediaAlreadyLoadedException e)
-                {
-                    errorMessageTime = 1000;
-                    System.err.println("Media was already loaded, aborting request.");
-                }
+            }
+            catch(MediaAlreadyLoadedException e)
+            {
+                errorMessageTime = 1000;
+                System.err.println("Media was already loaded, aborting request.");
             }
         }
     }
 
-    @Override
-    public void hoverEvent(int x, int y){
-        x_y_position[0] = x;
-        x_y_position[1] = y;
-    }
+
 
     private void drawPauseButton(Graphics2D g2)
     {
@@ -166,6 +167,7 @@ public class MediaOptions extends VisualizerOption{
             drawPicture(g2, fileSelectButton , uiImages.get(fileSelectDefault));
     }
 
+
     @Override
     public void draw(Graphics2D g2, Rectangle enclosure)
     {
@@ -176,6 +178,7 @@ public class MediaOptions extends VisualizerOption{
         }
         playButton = new Rectangle((int)(enclosure.getX()+enclosure.getWidth()/2), (int)enclosure.getY(), MEDIA_OPTION_SIZE, MEDIA_OPTION_SIZE);
         fileSelectButton = new Rectangle((int)(enclosure.getWidth()- MEDIA_OPTION_SIZE), (int)(enclosure.getY()), MEDIA_OPTION_SIZE, MEDIA_OPTION_SIZE);
+        queueWindowButton = new Rectangle((int)(fileSelectButton.getX() - MEDIA_OPTION_SIZE), (int)(enclosure.getY()), MEDIA_OPTION_SIZE, MEDIA_OPTION_SIZE);
         if(isPlaying)
         {
             drawPauseButton(g2);

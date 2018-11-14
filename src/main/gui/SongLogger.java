@@ -71,14 +71,7 @@ public class SongLogger extends VisualizerOption {
     }
 
 
-    @Override
-    public void clickedEvent(int x, int y)
-    {
-        clicked = true;
-        x_y_pressed[0] = x;
-        x_y_pressed[1] = y;
 
-    }
 
     @Override
     public void releasedEvent(int x, int y)
@@ -101,7 +94,9 @@ public class SongLogger extends VisualizerOption {
             inHitBox = checkSelection(r, x_y_pressed[0], x_y_pressed[1], x, y);
             try {
                 if (inHitBox) {
+                    vApplication.turnOffQueue();
                     vApplication.load(log.get(songIndex).getSongDirectory());
+                    break;
                 }
                 songIndex--;
             } catch(MediaAlreadyLoadedException e)
@@ -111,13 +106,6 @@ public class SongLogger extends VisualizerOption {
             }
         }
 
-    }
-
-    @Override
-    public void hoverEvent(int x, int y)
-    {
-        x_y_position[0] = x;
-        x_y_position[1] = y;
     }
 
     private void drawOpenButton(Graphics2D g2)
