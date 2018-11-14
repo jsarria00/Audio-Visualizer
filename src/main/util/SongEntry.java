@@ -6,6 +6,8 @@ import java.util.Objects;
 public class SongEntry implements Serializable {
     private String songName;
     private String songDirectory;
+    private final String WINDOWS_PROGRAM_DIR = "src\\main\\media";
+    private final String UNIX_PROGRAM_DIR = "src/main/media";
 
     /**
      * Default Constructor, takes file directory and saves the directory and extracts the fileName
@@ -14,6 +16,10 @@ public class SongEntry implements Serializable {
     public SongEntry(String songDirectory)
     {
         this.songDirectory = songDirectory;
+        if(this.songDirectory.contains(WINDOWS_PROGRAM_DIR) || this.songDirectory.contains(UNIX_PROGRAM_DIR))
+        {
+            programDirectoryTrim();
+        }
         int sDLength = songDirectory.length();
         int counter = sDLength-1;
         while(counter >= 0)
@@ -29,6 +35,17 @@ public class SongEntry implements Serializable {
                 songName = songDirectory;
             }
             counter--;
+        }
+    }
+
+    public void programDirectoryTrim() {
+
+        if(this.songDirectory.contains(WINDOWS_PROGRAM_DIR)) {
+            this.songDirectory = songDirectory.substring(songDirectory.indexOf(WINDOWS_PROGRAM_DIR), songDirectory.length());
+        }
+        if(this.songDirectory.contains(UNIX_PROGRAM_DIR))
+        {
+            this.songDirectory = songDirectory.substring(songDirectory.indexOf(UNIX_PROGRAM_DIR), songDirectory.length());
         }
     }
 
