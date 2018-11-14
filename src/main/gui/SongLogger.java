@@ -177,6 +177,7 @@ public class SongLogger extends VisualizerOption {
     @Override
     public void draw(Graphics2D g2, Rectangle enclosure)
     {
+        g2.setFont(new Font("TimesRoman", Font.BOLD, 20));
         if(errorMessageTime > 0)
         {
             g2.setColor(new Color(100,0,0));
@@ -189,7 +190,6 @@ public class SongLogger extends VisualizerOption {
 
         //Draw enclosure depending on mouse condition
         g2.setColor(new Color(0,0,0));
-        g2.setFont(new Font("TimesRoman", Font.BOLD, 20));
 
         g2.setColor(new Color(195, 195, 195));
         g2.fill(panelRectangle);
