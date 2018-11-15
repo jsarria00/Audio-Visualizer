@@ -163,6 +163,7 @@ public class VisualizerComponent extends JComponent implements Selectable {
 
     public void clickedSlider()
     {
+        vApplication.sliderClicked();
         sliderClicked = true;
         if(vApplication.isPlaying())
         {
@@ -173,6 +174,7 @@ public class VisualizerComponent extends JComponent implements Selectable {
 
     public void releasedSlider()
     {
+        vApplication.sliderReleased();
         if(wasPlaying)
         {
             wasPlaying = false;

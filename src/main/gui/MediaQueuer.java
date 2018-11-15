@@ -29,6 +29,7 @@ public class MediaQueuer implements Runnable, Selectable{
     private JButton toggleQueue;
     boolean visibility;
     boolean queuePlaying;
+    boolean debounceSlider;
     private final String NOT_PLAYING = "Not playing";
     private final String PLAYING = "Playing queue";
 
@@ -65,6 +66,7 @@ public class MediaQueuer implements Runnable, Selectable{
         toggleQueue = new JButton(NOT_PLAYING);
         toggleQueue.addActionListener(e->{toggleQueueStatus();});
         queuePlaying = false;
+        debounceSlider = false;
 
         //ButtonHolder
         buttonHolder.add(addToQueue);
@@ -160,6 +162,16 @@ public class MediaQueuer implements Runnable, Selectable{
         changeQueueButtonText();
     }
 
+    public void sliderClicked()
+    {
+        debounceSlider = true;
+    }
+
+    public void sliderReleased()
+    {
+        debounceSlider = false;
+    }
+
     @Override
     public void run()
     {
@@ -179,7 +191,7 @@ public class MediaQueuer implements Runnable, Selectable{
             {
                 turnOffQueue();
             }
-            else if(queuePlaying && !vApplication.isLoading() && !vApplication.inUse() && !vApplication.isPlaying())
+            else if(queuePlaying && !vApplication.isLoading() && !vApplication.inUse() && !vApplication.isPlaying() && !debounceSlider)
             {
                 SongEntry temp = dataList.get(0);
                 dataList.remove(0);

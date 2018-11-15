@@ -18,10 +18,10 @@ public class VisualizerApplication implements Runnable {
 
     /**
      * Default constructor, which requires a boolean to check if it will start the VisualizerApplication in debug mode or not
+     *
      * @param debug boolean value that determine if debug mode turned on.
      */
-    public VisualizerApplication(boolean debug)
-    {
+    public VisualizerApplication(boolean debug) {
         queuer = new MediaQueuer(this);
         this.debug = debug;
         songLog = new SongLog();
@@ -30,6 +30,14 @@ public class VisualizerApplication implements Runnable {
         queueThread.start();
     }
 
+    public void sliderClicked(){
+        queuer.sliderClicked();
+    }
+
+    public void sliderReleased()
+    {
+        queuer.sliderReleased();
+    }
     public double getEndTime()
     {
         return player.getEndTime();
