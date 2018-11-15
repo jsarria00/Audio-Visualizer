@@ -50,7 +50,7 @@ public class Visualizer {
         JSlider slider = new JSlider(0,100,0);
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
-        visualizerComponent = new VisualizerComponent(player, frame);
+        visualizerComponent = new VisualizerComponent(player, frame, panel);
         visualizerComponent.setPreferredSize(new Dimension(visualizerComponent.getWidth(), (visualizerComponent.getHeight()) - 75));
         panel.add(visualizerComponent, BorderLayout.PAGE_START);
         panel.add(slider, BorderLayout.PAGE_END);

@@ -1,7 +1,9 @@
 package gui;
 
+import model.VisualizerComponent;
 import util.VisualizerApplication;
 
+import javax.swing.*;
 import java.awt.*;
 
 public class WindowOptions extends VisualizerOption implements Selectable{
@@ -11,7 +13,6 @@ public class WindowOptions extends VisualizerOption implements Selectable{
     public WindowOptions(VisualizerApplication visualizerApplication)
     {
         super(visualizerApplication);
-
     }
 
     @Override
