@@ -38,6 +38,22 @@ public class VisualizerApplication implements Runnable {
     {
         queuer.sliderReleased();
     }
+
+    public void volUp()
+    {
+        player.volUp();
+    }
+
+    public void volDown()
+    {
+        player.volDown();
+    }
+
+    public int getVolume()
+    {
+        return player.getVolume();
+    }
+
     public double getEndTime()
     {
         return player.getEndTime();

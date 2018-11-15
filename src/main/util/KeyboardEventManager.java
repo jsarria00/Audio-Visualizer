@@ -19,7 +19,13 @@ public class KeyboardEventManager implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        System.out.println(e.getKeyChar());
+        if(e.getKeyCode() == KeyEvent.VK_UP) {
+            vC.volUp();
+        }
+        if(e.getKeyCode() == KeyEvent.VK_DOWN)
+        {
+            vC.volDown();
+        }
         if(e.getKeyChar() ==  'h' || e.getKeyChar() == 'H')
         {
 

@@ -35,6 +35,8 @@ public class VisualizerMediaPlayerHolder implements Runnable
     private static boolean firstLoad;
     private static MediaPlayer mediaPlayer;
     private static Media song;
+
+    private int volume;
     private String songName;
     private String songDir;
     private String inputStr;
@@ -58,6 +60,7 @@ public class VisualizerMediaPlayerHolder implements Runnable
         hasInitialized = false;
         isValidating = false;
         firstLoad = log.getSongList().size() > 0;
+        volume = 100;
     }
 
     private void validateLog()
@@ -79,6 +82,35 @@ public class VisualizerMediaPlayerHolder implements Runnable
             }
         }
         isValidating = false;
+    }
+
+    public void volUp()
+    {
+        if(volume <100)
+        {
+            volume++;
+        }
+        if(mediaPlayer !=null)
+        {
+            mediaPlayer.setVolume(volume/100.0);
+        }
+    }
+
+    public void volDown()
+    {
+        if(volume >0)
+        {
+            volume--;
+        }
+        if(mediaPlayer !=null)
+        {
+            mediaPlayer.setVolume(volume/100.0);
+        }
+    }
+
+    public int getVolume()
+    {
+        return volume;
     }
 
     /**
@@ -166,6 +198,7 @@ public class VisualizerMediaPlayerHolder implements Runnable
                 //Waiting done through a listener.
                 isLoading = true;
                 mediaPlayer.setOnReady(() -> {
+                    mediaPlayer.setVolume(volume/100.0);
                     songDir = attempt;
                     mediaPlayer.setAudioSpectrumNumBands(80);
                     SongEntry newestSong = new SongEntry(attempt);

@@ -20,10 +20,11 @@ public class VisualizerComponent extends JComponent implements Selectable {
     private int screenY;
     private int waitTimeRemaining;
     private int mouseHideWaitTime;
+    private boolean uiHidden;
     private boolean wasPlaying;
     private boolean sliderClicked;
     private boolean mouseHidden;
-    private boolean uiHidden;
+    private int volMessageVisibility = 0;
     private VisualizerApplication vApplication;
     private SongLogger sL;
     private MediaOptions mO;
@@ -236,6 +237,10 @@ public class VisualizerComponent extends JComponent implements Selectable {
 
     public void timedActions()
     {
+        if(volMessageVisibility > 0)
+        {
+            volMessageVisibility--;
+        }
         if(waitTimeRemaining > 0) {
             waitTimeRemaining--;
         }
@@ -295,6 +300,23 @@ public class VisualizerComponent extends JComponent implements Selectable {
         vBg.visualize(integerMagnitudes);
     }
 
+    private void triggerVolMessage()
+    {
+        volMessageVisibility = 255;
+    }
+
+    public void volUp()
+    {
+        triggerVolMessage();
+        vApplication.volUp();
+    }
+
+    public void volDown()
+    {
+        triggerVolMessage();
+        vApplication.volDown();
+    }
+
     @Override
     public void paintComponent(Graphics g)
     {
@@ -315,6 +337,8 @@ public class VisualizerComponent extends JComponent implements Selectable {
             sL.draw(g2, historyLogEnclosing);
             mO.draw(g2, mediaOptionsEnclosing);
             wO.draw(g2, windowOptionsEnclosing);
+            g2.setColor(new Color(0,0,0, volMessageVisibility));
+            g2.drawString("Vol: " + vApplication.getVolume(), (int)mediaOptionsEnclosing.getX(), (int)mediaOptionsEnclosing.getY() - OPTION_SPACING);
         }
         //DEBUG
 //        int rectWidth = this.getWidth()/60;
