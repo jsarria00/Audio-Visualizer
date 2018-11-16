@@ -34,8 +34,8 @@ public class Visualizer {
     {
         //System.out.println("Creating a frame with XxY size.");//for debug
         JFrame frame = new JFrame();
-        frame.setMinimumSize(new Dimension(800, 600));
-        frame.setSize(1920,1080);
+        frame.setMinimumSize(new Dimension(1000, 800));
+        frame.setSize(1000,800);
         frame.setTitle("Audio Visualizer");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         return frame;
