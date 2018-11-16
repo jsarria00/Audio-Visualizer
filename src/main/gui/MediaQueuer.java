@@ -2,6 +2,7 @@ package gui;
 
 import javafx.util.Duration;
 import util.MediaAlreadyLoadedException;
+import util.QueueTransitionManager;
 import util.SongEntry;
 import util.VisualizerApplication;
 
@@ -30,8 +31,13 @@ public class MediaQueuer implements Runnable, Selectable{
     boolean visibility;
     boolean queuePlaying;
     boolean debounceSlider;
+    boolean transitioning;
+    private final int TRANSITION_TIME = 7500;
+    private final int MINIMUM_TO_TRANSITION = 3000;
     private final String NOT_PLAYING = "Not playing";
     private final String PLAYING = "Playing queue";
+
+    private QueueTransitionManager qTM;
 
     public MediaQueuer(VisualizerApplication vApplication)
     {
@@ -67,6 +73,8 @@ public class MediaQueuer implements Runnable, Selectable{
         toggleQueue.addActionListener(e->{toggleQueueStatus();});
         queuePlaying = false;
         debounceSlider = false;
+        transitioning = false;
+        qTM = new QueueTransitionManager(this.vApplication, TRANSITION_TIME);
 
         //ButtonHolder
         buttonHolder.add(addToQueue);
@@ -88,7 +96,6 @@ public class MediaQueuer implements Runnable, Selectable{
         });
         queueWindow.setVisible(visibility);
     }
-
 
     public void updateJList()
     {
@@ -191,7 +198,15 @@ public class MediaQueuer implements Runnable, Selectable{
             {
                 turnOffQueue();
             }
-            else if(queuePlaying && !vApplication.isLoading() && !vApplication.inUse() && !vApplication.isPlaying() && !debounceSlider)
+            else if(queuePlaying && !vApplication.getTransitionState() && (vApplication.getEndTime() - vApplication.getCurrentTime() < TRANSITION_TIME) && (vApplication.getEndTime() - vApplication.getCurrentTime() > MINIMUM_TO_TRANSITION))
+            {
+                SongEntry temp = dataList.get(0);
+                dataList.remove(0);
+                queueCount = dataList.size();
+                updateJList();
+                qTM.transition(temp.getSongDirectory());
+            }
+            else if(queuePlaying && !vApplication.isLoading() && !vApplication.inUse() && !vApplication.isPlaying() && !debounceSlider && !vApplication.getTransitionState())
             {
                 SongEntry temp = dataList.get(0);
                 dataList.remove(0);

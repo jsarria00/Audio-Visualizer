@@ -337,6 +337,9 @@ public class VisualizerComponent extends JComponent implements Selectable {
             sL.draw(g2, historyLogEnclosing);
             mO.draw(g2, mediaOptionsEnclosing);
             wO.draw(g2, windowOptionsEnclosing);
+            if(vApplication.getTransitionState()) {
+                g2.drawString("Transitioning: MediaPlayer Controls locked.",(int)mediaOptionsEnclosing.getX(), (int)mediaOptionsEnclosing.getY() - OPTION_SPACING*3);
+            }
             g2.setColor(new Color(0,0,0, volMessageVisibility));
             g2.drawString("Vol: " + vApplication.getVolume(), (int)mediaOptionsEnclosing.getX(), (int)mediaOptionsEnclosing.getY() - OPTION_SPACING);
         }

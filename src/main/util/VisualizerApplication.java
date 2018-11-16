@@ -30,6 +30,26 @@ public class VisualizerApplication implements Runnable {
         queueThread.start();
     }
 
+    public void transition(String attempt)
+    {
+        player.transition(attempt);
+    }
+
+    public void endTransition()
+    {
+        player.endTransition();
+    }
+
+    public void manageVol()
+    {
+        player.manageVol();
+    }
+
+    public boolean getTransitionState()
+    {
+        return player.getTransitionState();
+    }
+
     public void sliderClicked(){
         queuer.sliderClicked();
     }
