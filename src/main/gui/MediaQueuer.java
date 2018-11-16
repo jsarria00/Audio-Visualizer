@@ -198,7 +198,7 @@ public class MediaQueuer implements Runnable, Selectable{
             {
                 turnOffQueue();
             }
-            else if(queuePlaying && !vApplication.getTransitionState() && (vApplication.getEndTime() - vApplication.getCurrentTime() < TRANSITION_TIME) && (vApplication.getEndTime() - vApplication.getCurrentTime() > MINIMUM_TO_TRANSITION))
+            else if(queuePlaying && !vApplication.getTransitionState() && (vApplication.getEndTime() - vApplication.getCurrentTime() < TRANSITION_TIME) && (vApplication.getEndTime() - vApplication.getCurrentTime() > MINIMUM_TO_TRANSITION) && vApplication.isPlaying())
             {
                 SongEntry temp = dataList.get(0);
                 dataList.remove(0);
