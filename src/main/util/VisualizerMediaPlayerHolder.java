@@ -35,6 +35,8 @@ public class VisualizerMediaPlayerHolder implements Runnable
     private static boolean firstLoad;
     private static MediaPlayer mediaPlayer;
     private static Media song;
+
+    private int volume;
     private String songName;
     private String songDir;
     private String inputStr;
@@ -42,6 +44,11 @@ public class VisualizerMediaPlayerHolder implements Runnable
     private SongLog log;
     private AudioSpectrumListener audioSpectrumListener;
 
+    //Transition vars
+    private MediaPlayer transitionPlayer;
+    private boolean transitioning;
+    private int transitionVol;
+    private int currentTransitionVol;
     /**
      * Constructor that sets up a scanner for use, initial bool values, and a non-null string.
      */
@@ -58,6 +65,7 @@ public class VisualizerMediaPlayerHolder implements Runnable
         hasInitialized = false;
         isValidating = false;
         firstLoad = log.getSongList().size() > 0;
+        volume = 100;
     }
 
     private void validateLog()
@@ -81,6 +89,120 @@ public class VisualizerMediaPlayerHolder implements Runnable
         isValidating = false;
     }
 
+    public void volUp()
+    {
+        if(!transitioning) {
+            if (volume < 100) {
+                volume++;
+            }
+            if (mediaPlayer != null) {
+                mediaPlayer.setVolume(volume / 100.0);
+            }
+        }
+    }
+
+    public void volDown()
+    {
+        if(!transitioning) {
+            if (volume > 0) {
+                volume--;
+            }
+            if (mediaPlayer != null) {
+                mediaPlayer.setVolume(volume / 100.0);
+            }
+        }
+    }
+
+    private void loadTransition(String attempt)
+    {
+        try {
+            // This local variable will throw an exception without interrupting the current playback if no file is found
+            Media tempPointer = new Media(new File(attempt).toURI().toString());
+            song = tempPointer;
+            //System.out.println("TIME: " + song.getDuration());
+            transitionPlayer = new MediaPlayer(song);
+            hasInitialized = true;
+            //Waiting done through a listener.
+            isLoading = true;
+            transitionPlayer.setOnReady(() -> {
+                mediaPlayer.setAudioSpectrumListener(null);
+                transitionPlayer.setVolume(0);
+                songDir = attempt;
+                transitionPlayer.setAudioSpectrumNumBands(80);
+                SongEntry newestSong = new SongEntry(attempt);
+                songName = newestSong.getSongName();
+                log.addToLog(newestSong);
+                System.out.println("File loaded!");
+                isLoading = false;
+                transitionPlayer.play();
+                transitionPlayer.setAudioSpectrumListener(audioSpectrumListener);
+
+            });
+            //For now -Note scanner hogs the thread therefore
+            transitionPlayer.setOnEndOfMedia(() -> {
+                //Pausing then setting the media back to 0 instead of using stop -> stop causes the Duration to be NULL until media starts playing again
+                if(transitionPlayer != null) {
+                    transitionPlayer.seek(new Duration(0));
+                    isPlaying = false;
+                    transitionPlayer.pause();
+                } else{
+                    mediaPlayer.seek(new Duration(0));//FOR THE TRANSITION PLAYER, RIGHT AT THE MOMENT THE TRANSITION ENDS IT WILL BE REKNOWN AS THE NEW MAIN MEDIA PLAYER
+                    isPlaying = false;
+                    mediaPlayer.pause();
+                }
+            });
+        } catch (MediaException e) {
+
+            System.err.println("Media file \"" + new SongEntry(attempt).getSongName() + "\" does not exist");
+        } finally {
+            validateLog();
+        }
+    }
+
+    public void manageVol()
+    {
+        if(transitionPlayer != null)
+        {
+            if(currentTransitionVol < transitionVol) {
+                currentTransitionVol++;
+                mediaPlayer.setVolume((volume - currentTransitionVol)/100.0);
+                transitionPlayer.setVolume((currentTransitionVol)/100.0);
+            }
+        }
+    }
+
+    public void transition(String attempt)
+    {
+        transitioning = true;
+        transitionVol = volume;
+        currentTransitionVol = 0;
+        loadTransition(attempt);
+        mediaPlayer.setOnEndOfMedia(()->{});
+
+    }
+
+    public void endTransition()
+    {
+        System.out.println("Ending Transition");
+        if(transitionPlayer !=null)
+        {
+            mediaPlayer.pause();
+            mediaPlayer = null;
+            mediaPlayer = transitionPlayer;
+            transitionPlayer = null;
+        }
+        transitioning = false;
+    }
+
+    public int getVolume()
+    {
+        return volume;
+    }
+
+    public boolean getTransitionState()
+    {
+        return transitioning;
+    }
     /**
      * Trims all the spaces before and after the the first and last characters respectively, limits the spaces between characters to 1,
      * sets it to lower case to make commands non-case sensitive
@@ -127,9 +249,10 @@ public class VisualizerMediaPlayerHolder implements Runnable
 
     public void setSeek(Duration requestedTime)
     {
-        if(mediaPlayer !=null)
-        {
-            mediaPlayer.seek(requestedTime);
+        if(!transitioning) {
+            if (mediaPlayer != null) {
+                mediaPlayer.seek(requestedTime);
+            }
         }
     }
 
@@ -153,41 +276,45 @@ public class VisualizerMediaPlayerHolder implements Runnable
      * @param attempt a file directory in a string
      */
     public void load(String attempt) throws MediaAlreadyLoadedException {
-        if(!isLoading && !isValidating) {
-            try {
-                checkLoaded(attempt);
-                // This local variable will throw an exception without interrupting the current playback if no file is found
-                Media tempPointer = new Media(new File(attempt).toURI().toString());
-                deInitialize();
-                song = tempPointer;
-                //System.out.println("TIME: " + song.getDuration());
-                mediaPlayer = new MediaPlayer(song);
-                hasInitialized = true;
-                //Waiting done through a listener.
-                isLoading = true;
-                mediaPlayer.setOnReady(() -> {
-                    songDir = attempt;
-                    mediaPlayer.setAudioSpectrumNumBands(80);
-                    SongEntry newestSong = new SongEntry(attempt);
-                    songName = newestSong.getSongName();
-                    log.addToLog(newestSong);
-                    System.out.println("File loaded!");
-                    isLoading = false;
-                    play();
+        if(!transitioning) {
+            if (!isLoading && !isValidating) {
+                try {
+                    checkLoaded(attempt);
+                    // This local variable will throw an exception without interrupting the current playback if no file is found
+                    Media tempPointer = new Media(new File(attempt).toURI().toString());
+                    deInitialize();
+                    song = tempPointer;
+                    //System.out.println("TIME: " + song.getDuration());
+                    mediaPlayer = new MediaPlayer(song);
+                    hasInitialized = true;
+                    //Waiting done through a listener.
+                    isLoading = true;
+                    mediaPlayer.setOnReady(() -> {
+                        mediaPlayer.setAudioSpectrumListener(audioSpectrumListener);
+                        mediaPlayer.setVolume(volume / 100.0);
+                        songDir = attempt;
+                        mediaPlayer.setAudioSpectrumNumBands(80);
+                        SongEntry newestSong = new SongEntry(attempt);
+                        songName = newestSong.getSongName();
+                        log.addToLog(newestSong);
+                        System.out.println("File loaded!");
+                        isLoading = false;
+                        play();
 
-                });
-                //For now -Note scanner hogs the thread therefore
-                mediaPlayer.setOnEndOfMedia(() -> {
-                    //Pausing then setting the media back to 0 instead of using stop -> stop causes the Duration to be NULL until media starts playing again
-                    mediaPlayer.seek(new Duration(0));
-                    isPlaying = false;
-                    mediaPlayer.pause();
-                });
-            } catch (MediaException e) {
+                    });
+                    //For now -Note scanner hogs the thread therefore
+                    mediaPlayer.setOnEndOfMedia(() -> {
+                        //Pausing then setting the media back to 0 instead of using stop -> stop causes the Duration to be NULL until media starts playing again
+                        mediaPlayer.seek(new Duration(0));
+                        isPlaying = false;
+                        mediaPlayer.pause();
+                    });
+                } catch (MediaException e) {
 
-                System.err.println("Media file \"" + new SongEntry(attempt).getSongName() + "\" does not exist");
-            } finally {
-                validateLog();
+                    System.err.println("Media file \"" + new SongEntry(attempt).getSongName() + "\" does not exist");
+                } finally {
+                    validateLog();
+                }
             }
         }
     }
@@ -213,6 +340,7 @@ public class VisualizerMediaPlayerHolder implements Runnable
             //Waiting done through a listener.
             isLoading = true;
             mediaPlayer.setOnReady(() -> {
+                mediaPlayer.setAudioSpectrumListener(audioSpectrumListener);
                 mediaPlayer.setAudioSpectrumNumBands(80);
                 songDir = songList.get(size-1).getSongDirectory();
                 songName = songList.get(size-1).getSongName();
@@ -254,15 +382,16 @@ public class VisualizerMediaPlayerHolder implements Runnable
      * sets the MediaPlayer class to PLAYING state.
      */
     public void play() {
-        if (!hasInitialized) {
-            System.err.println("There is no song loaded; please load a song before playing."); //Exception throw idea
-        } else if (isPlaying) {
-            System.out.println("Song is already playing");
-        } else {
-            mediaPlayer.setAudioSpectrumListener(audioSpectrumListener);
-            mediaPlayer.play();
-            isPlaying = true;
-            System.out.println("\"" + songName + "\" is now playing.");
+        if(!transitioning) {
+            if (!hasInitialized) {
+                System.err.println("There is no song loaded; please load a song before playing."); //Exception throw idea
+            } else if (isPlaying) {
+                System.out.println("Song is already playing");
+            } else {
+                mediaPlayer.play();
+                isPlaying = true;
+                System.out.println("\"" + songName + "\" is now playing.");
+            }
         }
     }
 
@@ -270,16 +399,16 @@ public class VisualizerMediaPlayerHolder implements Runnable
      * Sets the media player class to a PAUSED state
      */
     public void pause() {
-        if(!hasInitialized) {
-            System.err.println("There is no song loaded; please load a song before attempting to pause"); //Exception throw idea
-        }
-        else if(!isPlaying) {
-            System.out.println("Song is already paused");
-        }
-        else {
-            mediaPlayer.pause();
-            isPlaying = false;
-            System.out.println("Song paused.");
+        if(!transitioning) {
+            if (!hasInitialized) {
+                System.err.println("There is no song loaded; please load a song before attempting to pause"); //Exception throw idea
+            } else if (!isPlaying) {
+                System.out.println("Song is already paused");
+            } else {
+                mediaPlayer.pause();
+                isPlaying = false;
+                System.out.println("Song paused.");
+            }
         }
     }
 

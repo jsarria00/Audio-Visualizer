@@ -1,6 +1,7 @@
-# Personal Project - Audio visualizer
+# Personal Project - Audio Visualizer
+Developed by: Javier Sarria Bastidas
 
-File version: 1.00
+File version: 1.10
 
 The audio visualizer is a user interactive program. On start the user has the choice to load a .mp3 file into the program, and their audio file will start to visualize once loaded.
 When loading a file, a history log will keep track of unique song names, and displayed them in the order they were recently loaded in where a max of 10 will display in the log. 
@@ -14,3 +15,10 @@ Once the song ends, the visualization will end, and the song will be set to the 
 
 It is recommended to have a dedicated GPU to take advantage of the openGL, where GPU threads will render the image and CPU will be free to process the application. 
 A 1080p resolution is preferable, but a 720p resolution is also viable.
+
+A song queuer is available. The queuer will automatically transition through selected songs. 
+A transistion will occur where the songs will fade between eachother when the current song has reached 7.5(+/- 0.2seconds) seconds remaining if and only if there are more than 3 seconds remaining. 
+A second monitor/screen is recommended for managing the queue off screen. 
+During the transistion, the GUI will remain functional, but the MediaPlayer 
+
+The UI can be hidden with the 'h' key. MediaPlayer volume can be managed with the up and down arrow keys.

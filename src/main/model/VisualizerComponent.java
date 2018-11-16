@@ -20,25 +20,30 @@ public class VisualizerComponent extends JComponent implements Selectable {
     private int screenY;
     private int waitTimeRemaining;
     private int mouseHideWaitTime;
+    private boolean uiHidden;
     private boolean wasPlaying;
     private boolean sliderClicked;
     private boolean mouseHidden;
+    private int volMessageVisibility = 0;
     private VisualizerApplication vApplication;
     private SongLogger sL;
     private MediaOptions mO;
     private WindowOptions wO;
     private Boolean canSelect;
     private JFrame heldBy;
+    private JPanel componentHolder;
     private JSlider slider;
     private AudioSpectrumListener audioSpectrumListener;
     private static final int NUM_AUDIO_RECTANGLES = 60;
     private MouseMotionEventManager mouseMotionManager;
     private CanvasMouseEventManager canvasMouseManager;
+    private KeyboardEventManager keyboardEventManager;
 
-    public VisualizerComponent(VisualizerApplication vApplication , JFrame heldBy)
+    public VisualizerComponent(VisualizerApplication vApplication , JFrame heldBy, JPanel componentHolder)
     {
         this.vApplication = vApplication;
         this.heldBy = heldBy;
+        this.componentHolder = componentHolder;
         audioSpectrumListener = new VisualizerAudioSpectrumListener(this);
         vApplication.setAudioSpectrumListener(audioSpectrumListener);
         vS = new VSquare();
@@ -46,16 +51,34 @@ public class VisualizerComponent extends JComponent implements Selectable {
         vAudioRectangles = new VAudioRectangles();
         sL = new SongLogger(vApplication);
         mO = new MediaOptions(vApplication);
+        wO = new WindowOptions(vApplication);
         waitTimeRemaining = 0;
         mouseHideWaitTime = TIME_UNTILL_HIDDEN;
         sliderClicked = false;
         wasPlaying = false;
         mouseHidden = false;
+        uiHidden = false;
         mouseMotionManager = new MouseMotionEventManager();
         mouseMotionManager.setVisualizerComponent(this);
         canvasMouseManager = new CanvasMouseEventManager();
         canvasMouseManager.setVisualizerComponent(this);
+        keyboardEventManager = new KeyboardEventManager(this);
+        this.addKeyListener(keyboardEventManager);
+        this.setFocusable(true);
+    }
 
+    public void toggleUI()
+    {
+        if(!sliderClicked) {
+            uiHidden = !uiHidden;
+            if (uiHidden) {
+                componentHolder.remove(slider);
+                componentHolder.revalidate();
+            } else {
+                componentHolder.add(slider, BorderLayout.PAGE_END);
+                componentHolder.revalidate();
+            }
+        }
     }
 
     public void setCanvasMouseManager(CanvasMouseEventManager canvasMouseManager) {
@@ -141,6 +164,7 @@ public class VisualizerComponent extends JComponent implements Selectable {
 
     public void clickedSlider()
     {
+        vApplication.sliderClicked();
         sliderClicked = true;
         if(vApplication.isPlaying())
         {
@@ -151,6 +175,7 @@ public class VisualizerComponent extends JComponent implements Selectable {
 
     public void releasedSlider()
     {
+        vApplication.sliderReleased();
         if(wasPlaying)
         {
             wasPlaying = false;
@@ -165,6 +190,8 @@ public class VisualizerComponent extends JComponent implements Selectable {
     {
         this.slider = slider;
         slider.addMouseListener(new SliderMouseEventManager(this));
+        //Unfortunately when the slider is clicked the keyboard will permanently focus it, therefore remove the "focusability"
+        slider.setFocusable(false);
     }
 
     public void updateSlider()
@@ -210,6 +237,10 @@ public class VisualizerComponent extends JComponent implements Selectable {
 
     public void timedActions()
     {
+        if(volMessageVisibility > 0)
+        {
+            volMessageVisibility--;
+        }
         if(waitTimeRemaining > 0) {
             waitTimeRemaining--;
         }
@@ -269,6 +300,23 @@ public class VisualizerComponent extends JComponent implements Selectable {
         vBg.visualize(integerMagnitudes);
     }
 
+    private void triggerVolMessage()
+    {
+        volMessageVisibility = 255;
+    }
+
+    public void volUp()
+    {
+        triggerVolMessage();
+        vApplication.volUp();
+    }
+
+    public void volDown()
+    {
+        triggerVolMessage();
+        vApplication.volDown();
+    }
+
     @Override
     public void paintComponent(Graphics g)
     {
@@ -285,8 +333,16 @@ public class VisualizerComponent extends JComponent implements Selectable {
         Rectangle windowOptionsEnclosing = new Rectangle(this.screenX - (2*WINDOW_OPTION_SIZE_X), 0, 2*WINDOW_OPTION_SIZE_X, WINDOW_OPTION_SIZE_Y);
         Rectangle historyLogEnclosing = new Rectangle(this.screenX - SONG_LOG_SIZE_X, WINDOW_OPTION_SIZE_Y+OPTION_SPACING, SONG_LOG_SIZE_X, this.screenY -WINDOW_OPTION_SIZE_Y - 2*OPTION_SPACING);
 
-        sL.draw(g2, historyLogEnclosing);
-        mO.draw(g2, mediaOptionsEnclosing);
+        if(!uiHidden) {
+            sL.draw(g2, historyLogEnclosing);
+            mO.draw(g2, mediaOptionsEnclosing);
+            wO.draw(g2, windowOptionsEnclosing);
+            if(vApplication.getTransitionState()) {
+                g2.drawString("Transitioning: MediaPlayer Controls locked.",(int)mediaOptionsEnclosing.getX(), (int)mediaOptionsEnclosing.getY() - OPTION_SPACING*3);
+            }
+            g2.setColor(new Color(0,0,0, volMessageVisibility));
+            g2.drawString("Vol: " + vApplication.getVolume(), (int)mediaOptionsEnclosing.getX(), (int)mediaOptionsEnclosing.getY() - OPTION_SPACING);
+        }
         //DEBUG
 //        int rectWidth = this.getWidth()/60;
 //        int x = 0;

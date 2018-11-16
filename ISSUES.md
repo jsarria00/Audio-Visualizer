@@ -83,6 +83,8 @@ Click and hold the timeline
 Queue should be empty, last queued song is loaded instead. 
 
 
-Status: Not Fixed
+Status: Fixed
 
-Comment:
+Comment: The media queue ensures that a song isn't loaded if the VisualizerMediaplayerHolder is loading, is in use or if a song is playing. 
+The queue didn't take into account a condition where the song can pause due to user interaction with the slider. 
+Therefore a debounding state was added for the slider to prevent skipping the song when the user attempts to "seek"
