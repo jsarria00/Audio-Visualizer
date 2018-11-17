@@ -53,7 +53,7 @@ public class VisualizerComponent extends JComponent implements Selectable {
         mO = new MediaOptions(vApplication);
         wO = new WindowOptions(vApplication, heldBy);
         waitTimeRemaining = 0;
-        mouseHideWaitTime = TIME_UNTILL_HIDDEN;
+        mouseHideWaitTime = TIME_UNTIL_HIDDEN;
         sliderClicked = false;
         wasPlaying = false;
         mouseHidden = false;
@@ -212,7 +212,7 @@ public class VisualizerComponent extends JComponent implements Selectable {
 
     private void unHideMouse()
     {
-        mouseHideWaitTime = TIME_UNTILL_HIDDEN;
+        mouseHideWaitTime = TIME_UNTIL_HIDDEN;
         if(mouseHidden)
         {
             mouseHidden = false;
@@ -306,6 +306,15 @@ public class VisualizerComponent extends JComponent implements Selectable {
     private void triggerVolMessage()
     {
         volMessageVisibility = 255;
+    }
+
+    public void togglePause()
+    {
+
+        if(!vApplication.getTransitionState())
+        {
+            vApplication.togglePlayState();
+        }
     }
 
     public void volUp()

@@ -26,9 +26,12 @@ public class KeyboardEventManager implements KeyListener {
         {
             vC.volDown();
         }
+        if(e.getKeyCode() == KeyEvent.VK_SPACE)
+        {
+            vC.togglePause();
+        }
         if(e.getKeyChar() ==  'h' || e.getKeyChar() == 'H')
         {
-
             vC.toggleUI();
         }
     }

@@ -6,7 +6,7 @@ public interface Selectable {
     //
     String MEDIA_DIRECTORY = "src/main/media";
     //MouseEvents
-    int TIME_UNTILL_HIDDEN = 300;
+    int TIME_UNTIL_HIDDEN = 300;
     int TIME_DELAY = 10; //50milliseconds
     int NUMBER_OF_DIMENSIONS = 2;
     //Spacing between buttons
