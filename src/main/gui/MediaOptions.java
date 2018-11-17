@@ -1,5 +1,7 @@
 package gui;
 
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaException;
 import javafx.util.Duration;
 import util.MediaAlreadyLoadedException;
 import util.VisualizerApplication;
@@ -91,16 +93,20 @@ public class MediaOptions extends VisualizerOption{
         selector.setCurrentDirectory(f);
         int option = selector.showOpenDialog(null);
         if (option == JFileChooser.APPROVE_OPTION) {
-            String fileDir = selector.getSelectedFile().toString();
-            System.out.println(fileDir + " was the selected path and file \nRequesting Visualizer Application to load file" );
             try {
+                String fileDir = selector.getSelectedFile().toString();
+                Media testIfExists = new Media(new File(fileDir).toURI().toString());
+                System.out.println(fileDir + " was the selected path and file \nRequesting Visualizer Application to load file");
+                try {
                     vApplication.load(fileDir);
                     isPlaying = false;
-            }
-            catch(MediaAlreadyLoadedException e)
+                } catch (MediaAlreadyLoadedException e) {
+                    errorMessageTime = 1000;
+                    System.err.println("Media was already loaded, aborting request.");
+                }
+            } catch (MediaException e)
             {
-                errorMessageTime = 1000;
-                System.err.println("Media was already loaded, aborting request.");
+                System.err.println("That media doesn't exist!");
             }
         }
     }

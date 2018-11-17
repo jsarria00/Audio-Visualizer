@@ -1,5 +1,7 @@
 package gui;
 
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaException;
 import javafx.util.Duration;
 import util.MediaAlreadyLoadedException;
 import util.QueueTransitionManager;
@@ -12,6 +14,7 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -140,18 +143,22 @@ public class MediaQueuer implements Runnable, Selectable{
         int option = selector.showOpenDialog(null);
         if (option == JFileChooser.APPROVE_OPTION) {
             String fileDir = selector.getSelectedFile().toString();
-            SongEntry holder = new SongEntry(fileDir);
-            if(sessionQueueHistory.contains(holder))
-            {
-                holder.appendSongName(appendableAlreadyQueued);
+            try {
+                Media testIfExists = new Media(new File(fileDir).toURI().toString());//
+                SongEntry holder = new SongEntry(fileDir);
+                if (sessionQueueHistory.contains(holder)) {
+                    holder.appendSongName(appendableAlreadyQueued);
+                } else {
+                    sessionQueueHistory.add(holder);
+                }
+                dataList.add(holder);
+                queueCount = dataList.size();
+                updateJList();
             }
-            else
+            catch(MediaException e)
             {
-                sessionQueueHistory.add(holder);
+                System.err.println("That media doesn't exist!");
             }
-            dataList.add(holder);
-            queueCount = dataList.size();
-            updateJList();
         }
     }
 
