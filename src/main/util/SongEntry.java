@@ -62,6 +62,11 @@ public class SongEntry implements Serializable {
         return Objects.hash(songName);
     }
 
+    public void appendSongName(String appending)
+    {
+        songName = songName + appending;
+    }
+
     /**
      * Returns the name of the song with its extension
      * @return String with name of the file
