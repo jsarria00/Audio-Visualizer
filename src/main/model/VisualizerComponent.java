@@ -51,7 +51,7 @@ public class VisualizerComponent extends JComponent implements Selectable {
         vAudioRectangles = new VAudioRectangles();
         sL = new SongLogger(vApplication);
         mO = new MediaOptions(vApplication);
-        wO = new WindowOptions(vApplication);
+        wO = new WindowOptions(vApplication, heldBy);
         waitTimeRemaining = 0;
         mouseHideWaitTime = TIME_UNTILL_HIDDEN;
         sliderClicked = false;
@@ -267,8 +267,9 @@ public class VisualizerComponent extends JComponent implements Selectable {
         if(waitTimeRemaining <= 0) {
             waitTimeRemaining = TIME_DELAY;
             canSelect = true;
-            sL.clickedEvent(x, y);
+            sL.clickedEvent(x,y);
             mO.clickedEvent(x,y);
+            wO.clickedEvent(x,y);
         }
         unHideMouse();
     }
@@ -279,6 +280,7 @@ public class VisualizerComponent extends JComponent implements Selectable {
             canSelect = false;
             sL.releasedEvent(x, y);
             mO.releasedEvent(x,y);
+            wO.releasedEvent(x,y);
         }
     }
 
@@ -286,6 +288,7 @@ public class VisualizerComponent extends JComponent implements Selectable {
     {
         sL.hoverEvent(x, y);
         mO.hoverEvent(x,y);
+        wO.hoverEvent(x,y);
         unHideMouse();
     }
 

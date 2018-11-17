@@ -5,10 +5,10 @@ import javax.swing.Timer;
 
 public class QueueTransitionManager {
 
-    VisualizerApplication vApplication;
-    TransitionTimer tT;
-    Timer t;
-    private static int miliseconds;
+    private VisualizerApplication vApplication;
+    private TransitionTimer tT;
+    private Timer t;
+    private int miliseconds;
 
 
     public QueueTransitionManager(VisualizerApplication vApplication, int transitionTime)

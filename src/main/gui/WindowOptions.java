@@ -7,12 +7,19 @@ import javax.swing.*;
 import java.awt.*;
 
 public class WindowOptions extends VisualizerOption implements Selectable{
-    Rectangle xButton;
-    Rectangle windowSizeButton;
+    private Rectangle xButton;
+    private Rectangle windowSizeButton;
+    private JFrame heldBy;
+    private boolean inFullscreen;
+    int x_screen;
+    int y_screen;
 
-    public WindowOptions(VisualizerApplication visualizerApplication)
+
+    public WindowOptions(VisualizerApplication visualizerApplication, JFrame heldBy)
     {
         super(visualizerApplication);
+        this.heldBy = heldBy;
+        inFullscreen = true;
     }
 
     @Override
@@ -20,9 +27,43 @@ public class WindowOptions extends VisualizerOption implements Selectable{
 
     }
 
+    public void toggleFullScreen()
+    {
+        System.out.println("Toggling fullscreen.");
+        if(inFullscreen)
+        {
+            inFullscreen = false;
+            x_screen = heldBy.getX();
+            y_screen = heldBy.getY();
+            heldBy.dispose();
+            heldBy.setSize(x_screen,y_screen); // User can move window and it will automatically resize to a smaller one.
+            heldBy.setUndecorated(false);
+            heldBy.revalidate();
+            heldBy.setVisible(true);
+        }
+        else
+        {
+            inFullscreen = true;
+            heldBy.dispose();
+            heldBy.setExtendedState(JFrame.MAXIMIZED_BOTH);
+            heldBy.setUndecorated(true);
+            heldBy.revalidate();
+            heldBy.setVisible(true);
+        }
+    }
     @Override
     public void releasedEvent(int x, int y) {
-
+        boolean inHitBox = checkCollision(windowSizeButton, x, y);
+        if(inHitBox)
+        {
+            toggleFullScreen();
+        }
+        inHitBox = checkCollision(xButton, x, y);
+        if(inHitBox)
+        {
+            System.out.println("Closing Visualizer via GUI");
+            System.exit(0);
+        }
     }
 
     @Override

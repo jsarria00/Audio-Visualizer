@@ -147,11 +147,11 @@ public class VisualizerApplication implements Runnable {
     }
 
     public boolean isLoading() {
-        return VisualizerMediaPlayerHolder.isLoading();
+        return player.isLoading();
     }
 
     public boolean inUse() {
-        return VisualizerMediaPlayerHolder.inUse();
+        return player.inUse();
     }
 
     /**

@@ -18,6 +18,7 @@ public class SongLogger extends VisualizerOption {
     private Rectangle openButton;
     private ArrayList<Rectangle> songsLogged;
     private int errorMessageTime;
+    private final int MAX_DISPLAYABLE_LENGTH = 47;
 
 
     public SongLogger(VisualizerApplication vApplication)
@@ -152,25 +153,35 @@ public class SongLogger extends VisualizerOption {
                 if(clicked) {
                     if(checkCollision(songButton, x_y_pressed[0], x_y_pressed[1])) {
                         drawPicture(g2, songButton, uiImages.get(logItemSelected));
-                        g2.drawString(sE.getSongName(), (int)(songButton.getX()+OPTION_SPACING*2), (int)(songButton.getY()+songButton.getHeight()/2 + OPTION_SPACING));
+                        drawLogString(g2, sE, songButton);
                     }
                     else
                     {
                         drawPicture(g2, songButton, uiImages.get(logItemDefault));
-                        g2.drawString(sE.getSongName(), (int)(songButton.getX()+OPTION_SPACING*2), (int)(songButton.getY()+songButton.getHeight()/2 + OPTION_SPACING));
+                        drawLogString(g2, sE, songButton);
                     }
                 }
                 else if(checkCollision(songButton, x_y_position[0], x_y_position[1])) {
                     drawPicture(g2, songButton, uiImages.get(logItemHover));
-                    g2.drawString(sE.getSongName(), (int)(songButton.getX()+OPTION_SPACING*2), (int)(songButton.getY()+songButton.getHeight()/2 + OPTION_SPACING));
+                    drawLogString(g2, sE, songButton);
                 }
                 else
                 {
                     drawPicture(g2, songButton, uiImages.get(logItemDefault));
-                    g2.drawString(sE.getSongName(), (int)(songButton.getX()+OPTION_SPACING*2), (int)(songButton.getY()+songButton.getHeight()/2 + OPTION_SPACING));
+                    drawLogString(g2, sE, songButton);
                 }
 
             }
+        }
+    }
+
+    private void drawLogString(Graphics2D g2, SongEntry sE, Rectangle songButton) {
+        if(sE.getSongName().length() > MAX_DISPLAYABLE_LENGTH) {
+            g2.drawString(sE.getSongName().substring(0,MAX_DISPLAYABLE_LENGTH) + "...", (int) (songButton.getX() + OPTION_SPACING * 2), (int) (songButton.getY() + songButton.getHeight() / 2 + OPTION_SPACING));
+        }
+        else
+        {
+            g2.drawString(sE.getSongName(), (int) (songButton.getX() + OPTION_SPACING * 2), (int) (songButton.getY() + songButton.getHeight() / 2 + OPTION_SPACING));
         }
     }
 

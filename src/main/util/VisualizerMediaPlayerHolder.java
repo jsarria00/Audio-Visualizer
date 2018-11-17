@@ -18,23 +18,23 @@ import java.util.Scanner;
 public class VisualizerMediaPlayerHolder implements Runnable
 {
     //These will be implemented in an interface
-    private static final String HELP = "help";
-    private static final String LOAD = "load";
-    private static final String PLAY = "play";
-    private static final String PAUSE = "pause";
-    private static final String QUIT = "quit";
-    private static final String DIRECTORY = "src/main/media/";
+    private final String HELP = "help";
+    private final String LOAD = "load";
+    private final String PLAY = "play";
+    private final String PAUSE = "pause";
+    private final String QUIT = "quit";
+    private final String DIRECTORY = "src/main/media/";
 
-    private static boolean debug;
-    private static boolean isActive;
-    private static boolean firstStart;
-    private static boolean isPlaying;
-    private static boolean isLoading;
-    private static boolean isValidating;
-    private static boolean hasInitialized;
-    private static boolean firstLoad;
-    private static MediaPlayer mediaPlayer;
-    private static Media song;
+    private boolean debug;
+    private boolean isActive;
+    private boolean firstStart;
+    private boolean isPlaying;
+    private boolean isLoading;
+    private boolean isValidating;
+    private boolean hasInitialized;
+    private boolean firstLoad;
+    private MediaPlayer mediaPlayer;
+    private Media song;
 
     private int volume;
     private String songName;
@@ -209,7 +209,7 @@ public class VisualizerMediaPlayerHolder implements Runnable
      * @param a String command via user input
      * @return String with extra whitespace removed, and set to lower
      */
-    private static String normalize(String a) {
+    private String normalize(String a) {
         //Create a new string to hold a String without leading, extra() and trailing blanks
         String normalized = a.trim();
         normalized = normalized.replaceAll("( )+", " ");
@@ -459,17 +459,17 @@ public class VisualizerMediaPlayerHolder implements Runnable
      * Shows if the VisualizerMediaPlayerHolder
      * @return a Boolean which shows if the class is currently being threaded.
      */
-    public static boolean inUse()
+    public boolean inUse()
     {
         return isActive;
     }
 
-    public static boolean isLoading()
+    public  boolean isLoading()
     {
         return isLoading;
     }
 
-    public static boolean isPlaying(){ return isPlaying; }
+    public boolean isPlaying(){ return isPlaying; }
 
     public void setAudioSpectrumListener(AudioSpectrumListener audioSpectrumListener)
     {
