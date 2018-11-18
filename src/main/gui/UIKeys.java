@@ -17,5 +17,8 @@ public enum UIKeys {
     pauseHover,
     fileSelectDefault,
     fileSelectSelected,
-    fileSelectHover
+    fileSelectHover,
+    qDefault,
+    qHover,
+    qSelected
 }

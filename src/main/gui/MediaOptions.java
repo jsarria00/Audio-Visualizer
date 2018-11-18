@@ -41,6 +41,13 @@ public class MediaOptions extends VisualizerOption{
             uiImages.put(fileSelectDefault, ImageIO.read(this.getClass().getResource("/resources/fileSelect_Default.png")));
             uiImages.put(fileSelectSelected, ImageIO.read(this.getClass().getResource("/resources/fileSelect_Selected.png")));
             uiImages.put(fileSelectHover, ImageIO.read(this.getClass().getResource("/resources/fileSelect_Hover.png")));
+
+            uiImages.put(qDefault, ImageIO.read(this.getClass().getResource("/resources/qDefault.png")));
+            uiImages.put(qSelected, ImageIO.read(this.getClass().getResource("/resources/qSelected.png")));
+            uiImages.put(qHover, ImageIO.read(this.getClass().getResource("/resources/qHover.png")));
+
+
+
         }
         catch(IOException e)
         {
@@ -173,6 +180,23 @@ public class MediaOptions extends VisualizerOption{
             drawPicture(g2, fileSelectButton , uiImages.get(fileSelectDefault));
     }
 
+    private void qButton(Graphics2D g2)
+    {
+        if(clicked)
+        {
+            if(checkCollision(queueWindowButton, x_y_pressed[0], x_y_pressed[1]) ) {
+                drawPicture(g2, queueWindowButton, uiImages.get(qSelected));
+            }
+            else
+                drawPicture(g2, queueWindowButton , uiImages.get(qDefault));
+        }
+        else if(checkCollision(queueWindowButton, x_y_position[0], x_y_position[1]))
+        {
+            drawPicture(g2, queueWindowButton, uiImages.get(qHover));
+        }
+        else
+            drawPicture(g2, queueWindowButton , uiImages.get(qDefault));
+    }
 
     @Override
     public void draw(Graphics2D g2, Rectangle enclosure)
@@ -194,6 +218,6 @@ public class MediaOptions extends VisualizerOption{
             drawPlayButton(g2);
         }
         drawFileSelectButton(g2);
-        g2.draw(queueWindowButton);
+        qButton(g2);
     }
 }
