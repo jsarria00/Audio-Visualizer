@@ -24,6 +24,7 @@ public class VisualizerComponent extends JComponent implements Selectable {
     private boolean wasPlaying;
     private boolean sliderClicked;
     private boolean mouseHidden;
+    private boolean wasTransitioning;
     private int volMessageVisibility = 0;
     private VisualizerApplication vApplication;
     private SongLogger sL;
@@ -58,6 +59,7 @@ public class VisualizerComponent extends JComponent implements Selectable {
         wasPlaying = false;
         mouseHidden = false;
         uiHidden = false;
+        wasTransitioning = false;
         mouseMotionManager = new MouseMotionEventManager();
         mouseMotionManager.setVisualizerComponent(this);
         canvasMouseManager = new CanvasMouseEventManager();
@@ -164,26 +166,36 @@ public class VisualizerComponent extends JComponent implements Selectable {
 
     public void clickedSlider()
     {
-        vApplication.sliderClicked();
-        sliderClicked = true;
-        if(vApplication.isPlaying())
+        if(!vApplication.getTransitionState()) {
+            vApplication.sliderClicked();
+            sliderClicked = true;
+            if (vApplication.isPlaying()) {
+                wasPlaying = true;
+                vApplication.togglePlayState();
+            }
+        }
+        else
         {
-            wasPlaying = true;
-            vApplication.togglePlayState();
+            wasTransitioning = true;
         }
     }
 
     public void releasedSlider()
     {
-        vApplication.sliderReleased();
-        if(wasPlaying)
-        {
-            wasPlaying = false;
-            vApplication.togglePlayState();
+        if(!wasTransitioning) {
+            vApplication.sliderReleased();
+            if (wasPlaying) {
+                wasPlaying = false;
+                vApplication.togglePlayState();
+            }
+            Duration selectedTime = new Duration(slider.getValue());
+            vApplication.setSeek(selectedTime);
+            sliderClicked = false;
         }
-        Duration selectedTime = new Duration(slider.getValue());
-        vApplication.setSeek(selectedTime);
-        sliderClicked = false;
+        else
+        {
+            wasTransitioning = false;
+        }
     }
 
     public void setSlider(JSlider slider)
