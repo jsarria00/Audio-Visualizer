@@ -1,5 +1,7 @@
 package gui;
 
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaException;
 import javafx.util.Duration;
 import util.MediaAlreadyLoadedException;
 import util.QueueTransitionManager;
@@ -12,7 +14,10 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import static java.lang.Thread.sleep;
 
@@ -21,6 +26,7 @@ public class MediaQueuer implements Runnable, Selectable{
     private VisualizerApplication vApplication;
     private JFrame queueWindow;
     private ArrayList<SongEntry> dataList;
+    private Set<SongEntry> sessionQueueHistory;
     private JList queue;
     private JSplitPane panelHolder;
     private JPanel buttonHolder;
@@ -36,6 +42,7 @@ public class MediaQueuer implements Runnable, Selectable{
     private final int MINIMUM_TO_TRANSITION = 3000;
     private final String NOT_PLAYING = "Not playing";
     private final String PLAYING = "Playing queue";
+    private final String appendableAlreadyQueued = " (This was already queued)";
 
     private QueueTransitionManager qTM;
 
@@ -43,6 +50,7 @@ public class MediaQueuer implements Runnable, Selectable{
     {
         this.vApplication = vApplication;
         dataList = new ArrayList<>();
+        sessionQueueHistory = new HashSet<>();
         queueCount = 0;
         visibility = true;
         queueWindow = new JFrame();
@@ -132,12 +140,26 @@ public class MediaQueuer implements Runnable, Selectable{
         selector.setFileFilter(new FileNameExtensionFilter(".mp3", "mp3"));
         File f = new File(MEDIA_DIRECTORY);
         selector.setCurrentDirectory(f);
+        selector.setAcceptAllFileFilterUsed(false);
         int option = selector.showOpenDialog(null);
         if (option == JFileChooser.APPROVE_OPTION) {
             String fileDir = selector.getSelectedFile().toString();
-            dataList.add(new SongEntry(fileDir));
-            queueCount = dataList.size();
-            updateJList();
+            try {
+                Media testIfExists = new Media(new File(fileDir).toURI().toString());//
+                SongEntry holder = new SongEntry(fileDir);
+                if (sessionQueueHistory.contains(holder)) {
+                    holder.appendSongName(appendableAlreadyQueued);
+                } else {
+                    sessionQueueHistory.add(holder);
+                }
+                dataList.add(holder);
+                queueCount = dataList.size();
+                updateJList();
+            }
+            catch(MediaException e)
+            {
+                System.err.println("That media doesn't exist!");
+            }
         }
     }
 
@@ -198,7 +220,7 @@ public class MediaQueuer implements Runnable, Selectable{
             {
                 turnOffQueue();
             }
-            else if(queuePlaying && !vApplication.getTransitionState() && (vApplication.getEndTime() - vApplication.getCurrentTime() < TRANSITION_TIME) && (vApplication.getEndTime() - vApplication.getCurrentTime() > MINIMUM_TO_TRANSITION))
+            else if(queuePlaying && !vApplication.getTransitionState() && (vApplication.getEndTime() - vApplication.getCurrentTime() < TRANSITION_TIME) && (vApplication.getEndTime() - vApplication.getCurrentTime() > MINIMUM_TO_TRANSITION) && vApplication.isPlaying())
             {
                 SongEntry temp = dataList.get(0);
                 dataList.remove(0);

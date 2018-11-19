@@ -24,6 +24,7 @@ public class VisualizerComponent extends JComponent implements Selectable {
     private boolean wasPlaying;
     private boolean sliderClicked;
     private boolean mouseHidden;
+    private boolean wasTransitioning;
     private int volMessageVisibility = 0;
     private VisualizerApplication vApplication;
     private SongLogger sL;
@@ -51,13 +52,14 @@ public class VisualizerComponent extends JComponent implements Selectable {
         vAudioRectangles = new VAudioRectangles();
         sL = new SongLogger(vApplication);
         mO = new MediaOptions(vApplication);
-        wO = new WindowOptions(vApplication);
+        wO = new WindowOptions(vApplication, heldBy);
         waitTimeRemaining = 0;
-        mouseHideWaitTime = TIME_UNTILL_HIDDEN;
+        mouseHideWaitTime = TIME_UNTIL_HIDDEN;
         sliderClicked = false;
         wasPlaying = false;
         mouseHidden = false;
         uiHidden = false;
+        wasTransitioning = false;
         mouseMotionManager = new MouseMotionEventManager();
         mouseMotionManager.setVisualizerComponent(this);
         canvasMouseManager = new CanvasMouseEventManager();
@@ -164,26 +166,36 @@ public class VisualizerComponent extends JComponent implements Selectable {
 
     public void clickedSlider()
     {
-        vApplication.sliderClicked();
-        sliderClicked = true;
-        if(vApplication.isPlaying())
+        if(!vApplication.getTransitionState()) {
+            vApplication.sliderClicked();
+            sliderClicked = true;
+            if (vApplication.isPlaying()) {
+                wasPlaying = true;
+                vApplication.togglePlayState();
+            }
+        }
+        else
         {
-            wasPlaying = true;
-            vApplication.togglePlayState();
+            wasTransitioning = true;
         }
     }
 
     public void releasedSlider()
     {
-        vApplication.sliderReleased();
-        if(wasPlaying)
-        {
-            wasPlaying = false;
-            vApplication.togglePlayState();
+        if(!wasTransitioning) {
+            vApplication.sliderReleased();
+            if (wasPlaying) {
+                wasPlaying = false;
+                vApplication.togglePlayState();
+            }
+            Duration selectedTime = new Duration(slider.getValue());
+            vApplication.setSeek(selectedTime);
+            sliderClicked = false;
         }
-        Duration selectedTime = new Duration(slider.getValue());
-        vApplication.setSeek(selectedTime);
-        sliderClicked = false;
+        else
+        {
+            wasTransitioning = false;
+        }
     }
 
     public void setSlider(JSlider slider)
@@ -212,7 +224,7 @@ public class VisualizerComponent extends JComponent implements Selectable {
 
     private void unHideMouse()
     {
-        mouseHideWaitTime = TIME_UNTILL_HIDDEN;
+        mouseHideWaitTime = TIME_UNTIL_HIDDEN;
         if(mouseHidden)
         {
             mouseHidden = false;
@@ -267,8 +279,9 @@ public class VisualizerComponent extends JComponent implements Selectable {
         if(waitTimeRemaining <= 0) {
             waitTimeRemaining = TIME_DELAY;
             canSelect = true;
-            sL.clickedEvent(x, y);
+            sL.clickedEvent(x,y);
             mO.clickedEvent(x,y);
+            wO.clickedEvent(x,y);
         }
         unHideMouse();
     }
@@ -279,6 +292,7 @@ public class VisualizerComponent extends JComponent implements Selectable {
             canSelect = false;
             sL.releasedEvent(x, y);
             mO.releasedEvent(x,y);
+            wO.releasedEvent(x,y);
         }
     }
 
@@ -286,6 +300,7 @@ public class VisualizerComponent extends JComponent implements Selectable {
     {
         sL.hoverEvent(x, y);
         mO.hoverEvent(x,y);
+        wO.hoverEvent(x,y);
         unHideMouse();
     }
 
@@ -303,6 +318,15 @@ public class VisualizerComponent extends JComponent implements Selectable {
     private void triggerVolMessage()
     {
         volMessageVisibility = 255;
+    }
+
+    public void togglePause()
+    {
+
+        if(!vApplication.getTransitionState())
+        {
+            vApplication.togglePlayState();
+        }
     }
 
     public void volUp()

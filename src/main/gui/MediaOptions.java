@@ -1,6 +1,7 @@
 package gui;
 
-import javafx.util.Duration;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaException;
 import util.MediaAlreadyLoadedException;
 import util.VisualizerApplication;
 
@@ -10,7 +11,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import static gui.UIKeys.*;
 
@@ -39,6 +39,13 @@ public class MediaOptions extends VisualizerOption{
             uiImages.put(fileSelectDefault, ImageIO.read(this.getClass().getResource("/resources/fileSelect_Default.png")));
             uiImages.put(fileSelectSelected, ImageIO.read(this.getClass().getResource("/resources/fileSelect_Selected.png")));
             uiImages.put(fileSelectHover, ImageIO.read(this.getClass().getResource("/resources/fileSelect_Hover.png")));
+
+            uiImages.put(qDefault, ImageIO.read(this.getClass().getResource("/resources/qDefault.png")));
+            uiImages.put(qSelected, ImageIO.read(this.getClass().getResource("/resources/qSelected.png")));
+            uiImages.put(qHover, ImageIO.read(this.getClass().getResource("/resources/qHover.png")));
+
+
+
         }
         catch(IOException e)
         {
@@ -87,20 +94,25 @@ public class MediaOptions extends VisualizerOption{
         vApplication.turnOffQueue();
         JFileChooser selector = new JFileChooser();
         selector.setFileFilter(new FileNameExtensionFilter(".mp3", "mp3"));
+        selector.setAcceptAllFileFilterUsed(false);
         File f = new File(MEDIA_DIRECTORY);
         selector.setCurrentDirectory(f);
         int option = selector.showOpenDialog(null);
         if (option == JFileChooser.APPROVE_OPTION) {
-            String fileDir = selector.getSelectedFile().toString();
-            System.out.println(fileDir + " was the selected path and file \nRequesting Visualizer Application to load file" );
             try {
+                String fileDir = selector.getSelectedFile().toString();
+                Media testIfExists = new Media(new File(fileDir).toURI().toString());
+                System.out.println(fileDir + " was the selected path and file \nRequesting Visualizer Application to load file");
+                try {
                     vApplication.load(fileDir);
                     isPlaying = false;
-            }
-            catch(MediaAlreadyLoadedException e)
+                } catch (MediaAlreadyLoadedException e) {
+                    errorMessageTime = 1000;
+                    System.err.println("Media was already loaded, aborting request.");
+                }
+            } catch (MediaException e)
             {
-                errorMessageTime = 1000;
-                System.err.println("Media was already loaded, aborting request.");
+                System.err.println("That media doesn't exist!");
             }
         }
     }
@@ -167,6 +179,23 @@ public class MediaOptions extends VisualizerOption{
             drawPicture(g2, fileSelectButton , uiImages.get(fileSelectDefault));
     }
 
+    private void qButton(Graphics2D g2)
+    {
+        if(clicked)
+        {
+            if(checkCollision(queueWindowButton, x_y_pressed[0], x_y_pressed[1]) ) {
+                drawPicture(g2, queueWindowButton, uiImages.get(qSelected));
+            }
+            else
+                drawPicture(g2, queueWindowButton , uiImages.get(qDefault));
+        }
+        else if(checkCollision(queueWindowButton, x_y_position[0], x_y_position[1]))
+        {
+            drawPicture(g2, queueWindowButton, uiImages.get(qHover));
+        }
+        else
+            drawPicture(g2, queueWindowButton , uiImages.get(qDefault));
+    }
 
     @Override
     public void draw(Graphics2D g2, Rectangle enclosure)
@@ -188,6 +217,6 @@ public class MediaOptions extends VisualizerOption{
             drawPlayButton(g2);
         }
         drawFileSelectButton(g2);
-        g2.draw(queueWindowButton);
+        qButton(g2);
     }
 }

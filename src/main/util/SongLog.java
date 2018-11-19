@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class SongLog implements Saveable, Loadable{
     private static final int MAX_CAPACITY = 10;
     private static final String FILE_NAME = "SongLog.ser";
-    private static ArrayList<SongEntry> songList;
+    private ArrayList<SongEntry> songList;
 
     /**
      * Default Constructor.

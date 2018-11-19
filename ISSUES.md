@@ -88,3 +88,147 @@ Status: Fixed
 Comment: The media queue ensures that a song isn't loaded if the VisualizerMediaplayerHolder is loading, is in use or if a song is playing. 
 The queue didn't take into account a condition where the song can pause due to user interaction with the slider. 
 Therefore a debounding state was added for the slider to prevent skipping the song when the user attempts to "seek"
+
+
+
+
+
+
+
+
+Title: Queue will empty itself if attempting to seek at another point of the current song.
+ 
+ID:4
+
+Platform: Windows 10; April 2018 Update
+
+Discovered by: Javier Sarria
+
+Discovered on: November 16th 2018
+
+File Version: 1.10
+
+Description: Transistion will occur if MediaQueue is started while song is paused at less than 7 seconds but more than 3 seconds remaining. This will skip the first queued song, and jump to the following song
+
+Steps to Reproduce: Load any song standardly.
+
+Move to the the appoximate transitioning interval and keep song unpaused.
+
+Start the queue, song will start and the media player will remain in paused state.
+
+Once transition ends, the currently loaded song will be skipped for next in queue, if the queue is on.
+
+
+Status: Fixed
+
+Comment: The transition state did not enforce that it should only function if the mediaplayer is "playing". 
+The transition will now occur only while a song from the queue is playing.
+
+
+
+
+
+
+
+Title: Weird behaviour when accepting load window with any text
+ 
+ID:5
+
+Platform: Windows 10; April 2018 Update
+
+Discovered by: Arilda Lau
+
+Discovered on: November 16th 2018
+
+File Version: 1.10
+
+Description: When using the Queue, if you type anything into the File Name box it will accept it.
+When it reaches that point in the queue, the media player will try to load it, and stay as playing.
+
+Steps to reproduce:
+
+Load a song into the queue.
+
+Open the queue load, and type words into the box.
+
+Queue will accept it.
+
+Let the song transistion.
+
+
+
+Status: Fixed
+
+Comment: There was no condition to check the files using the load dialog, this would fail to load a new mediaplayer, and the end transition would swap the "main" mediaplayer to a null value. 
+If the user attempted to continue to use the "pause" option, a null pointer exception would be thrown. 
+The transistion state locks the system so that it can keep the visualizer in an "initialized" state as two MediaPlayer objects exist within the 7.5 second transistion state. 
+This causes a null mediaplayer to exist while the program is "initialized". A dummy Media object is now put in place to throw an exception in case the file does not exist, and therefore preventing the load attempt from happening.
+
+
+
+
+
+
+
+
+
+Title: OpenGL restricting GPU parallel processing to a single display. 
+ 
+ID:6
+
+Platform: Windows 10; April 2018 Update
+
+Discovered by: Javier Sarria
+
+Discovered on: November 18th 2018
+
+File Version: 1.10
+
+Description: When launching the program, it will function and work on the System's default display. With added functionality to minimize and move the frame that draws the visualizer. 
+It was noticed that openGL restricts GPU processing on "Display 0". Ignoring the openGL option, the parallel processing will work on all displays.
+
+Steps to reproduce:
+
+Start the program.
+
+Minimize the program, and drag frame to a second display.
+
+Preformance will degrade until it's brought back to main display.
+
+Status:Not Fixed
+
+Comment: So far the only fix is to create two different builds of the Jar file, one that includes OpenGL and one that does not. 
+This does not seem viabale as it creates versioning on types of Hardware configuration, rather than on OS types.
+Completely disabling the option will cause hardware that has a processor with integrated graphics to use that rather than the best dedicated GPU.
+
+
+
+
+
+
+Title: Holding Timeline during transition and releasing after transistion will cause a queue skip. 
+ 
+ID:6
+
+Platform: Windows 10; April 2018 Update
+
+Discovered by: Javier Sarria
+
+Discovered on: November 18th 2018
+
+File Version: 1.10
+
+Description: Holding the timeline during transition, and then releasing after it ends will cause queue skip.
+
+Steps to Reproduce:Load 3 songs into the queue system.
+
+Start queue, and then drag timeline to near end of song.
+
+When song starts to transition, click and hold the slider. 
+
+When transistion ends release the slider, song will "pause" and skip the the second song, and start playing the third.
+
+
+Status:Fixed
+
+Comment: Added a "wasTransitioning" state to VisualizerComponent to enforce a "two-Step" interaction restriction on the slider.

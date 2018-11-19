@@ -8,14 +8,14 @@ import java.util.Random;
 public class VBackground extends VShape implements VShapeable {
 
 
-    private static int dRed;
-    private static int dGreen;
-    private static int dBlue;
-    private static int redDirection;
-    private static int greenDirection;
-    private static int blueDirection;
-    private static int colorChangeCounter;
-    private static int colorIncrementCounter;
+    private int dRed;
+    private int dGreen;
+    private int dBlue;
+    private int redDirection;
+    private int greenDirection;
+    private int blueDirection;
+    private int colorChangeCounter;
+    private int colorIncrementCounter;
     private int max;
     private int decreaseMaxCounter;
     private int flashCooldownRemaining;
@@ -123,6 +123,11 @@ public class VBackground extends VShape implements VShapeable {
     {
         resetVisualizeData();
         animateColorToSleep();
+        //Resets the flash even when it goes to sleep, cooldown remains
+        if(flashVisibility > 0)
+        {
+            flashVisibility-=2;
+        }
         color = new Color(currentColor[0], currentColor[1], currentColor[2]);
         if(rectangleAverage > AUDIO_RECTANGLE_MINIMUM_HEIGHT)
         {
