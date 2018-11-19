@@ -140,6 +140,7 @@ public class MediaQueuer implements Runnable, Selectable{
         selector.setFileFilter(new FileNameExtensionFilter(".mp3", "mp3"));
         File f = new File(MEDIA_DIRECTORY);
         selector.setCurrentDirectory(f);
+        selector.setAcceptAllFileFilterUsed(false);
         int option = selector.showOpenDialog(null);
         if (option == JFileChooser.APPROVE_OPTION) {
             String fileDir = selector.getSelectedFile().toString();

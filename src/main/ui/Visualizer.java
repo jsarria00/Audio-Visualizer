@@ -67,7 +67,7 @@ public class Visualizer {
 
     public static void main(String[] args)
     {
-        //System.setProperty("sun.java2d.opengl", "true");
+        System.setProperty("sun.java2d.opengl", "true");
         boolean debug = false;
         //lineArguments bool setter
         for(int i=0; i<args.length; i++)

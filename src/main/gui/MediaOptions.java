@@ -2,7 +2,6 @@ package gui;
 
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaException;
-import javafx.util.Duration;
 import util.MediaAlreadyLoadedException;
 import util.VisualizerApplication;
 
@@ -12,7 +11,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import static gui.UIKeys.*;
 
@@ -96,6 +94,7 @@ public class MediaOptions extends VisualizerOption{
         vApplication.turnOffQueue();
         JFileChooser selector = new JFileChooser();
         selector.setFileFilter(new FileNameExtensionFilter(".mp3", "mp3"));
+        selector.setAcceptAllFileFilterUsed(false);
         File f = new File(MEDIA_DIRECTORY);
         selector.setCurrentDirectory(f);
         int option = selector.showOpenDialog(null);

@@ -123,6 +123,11 @@ public class VBackground extends VShape implements VShapeable {
     {
         resetVisualizeData();
         animateColorToSleep();
+        //Resets the flash even when it goes to sleep, cooldown remains
+        if(flashVisibility > 0)
+        {
+            flashVisibility-=2;
+        }
         color = new Color(currentColor[0], currentColor[1], currentColor[2]);
         if(rectangleAverage > AUDIO_RECTANGLE_MINIMUM_HEIGHT)
         {
