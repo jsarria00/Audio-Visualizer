@@ -54,6 +54,7 @@ public class MediaQueuer implements Runnable, Selectable{
         queueCount = 0;
         visibility = true;
         queueWindow = new JFrame();
+        queueWindow.setIconImage(new ImageIcon(getClass().getResource("/resources/logo.png")).getImage());
         queueWindow.setTitle("Song Queue");
         queueWindow.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         queue = new JList(new DefaultListModel());

@@ -1,6 +1,7 @@
 package ui;
 
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 //To play an audio file
 //CustomClasses
@@ -9,6 +10,8 @@ import model.VisualizerComponent;
 import util.*;
 
 import java.awt.*;
+
+import static com.sun.javafx.scene.control.skin.Utils.getResource;
 //import java.awt.image.BufferedImage;
 //import java.awt.Point;
 

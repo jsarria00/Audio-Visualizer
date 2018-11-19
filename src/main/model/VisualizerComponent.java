@@ -45,6 +45,7 @@ public class VisualizerComponent extends JComponent implements Selectable {
         this.vApplication = vApplication;
         this.heldBy = heldBy;
         this.componentHolder = componentHolder;
+        this.heldBy.setIconImage(new ImageIcon(getClass().getResource("/resources/logo.png")).getImage());
         audioSpectrumListener = new VisualizerAudioSpectrumListener(this);
         vApplication.setAudioSpectrumListener(audioSpectrumListener);
         vS = new VSquare();
