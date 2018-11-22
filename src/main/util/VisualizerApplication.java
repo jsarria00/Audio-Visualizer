@@ -7,6 +7,10 @@ import javafx.util.Duration;
 
 import static java.lang.Thread.sleep;
 
+/**
+ * A class responsible for initiating the Application Thread of VisualizerMediaPlayerHolder
+ * The Class is responsible as a communication interface for the MediaQueuer, VisualizerComponent with some of its children, and the VisualizerMediaPlayerHolder
+ */
 public class VisualizerApplication implements Runnable {
     private VisualizerMediaPlayerHolder player;
     private boolean isPlaying = false;
@@ -30,64 +34,107 @@ public class VisualizerApplication implements Runnable {
         queueThread.start();
     }
 
+    /**
+     * initiates a transition with a new .mp3 file
+     * @param attempt directory string of the .mp3 file
+     */
     public void transition(String attempt)
     {
         player.transition(attempt);
     }
 
+    /**
+     * Informs the VisualizerMediaPlayerHolder that the transition has ended
+     */
     public void endTransition()
     {
         player.endTransition();
     }
 
+    /**
+     * requests the VisualizerMediaPlayerHolder to manage its transition volume
+     */
     public void manageVol()
     {
         player.manageVol();
     }
 
+    /**
+     * gets the transition state of the VisualizerMediaPlayerHolder
+     * @return boolean
+     */
     public boolean getTransitionState()
     {
         return player.getTransitionState();
     }
 
+    /**
+     * Informs the MediaQueuer that the slider was clicked
+     */
     public void sliderClicked(){
         queuer.sliderClicked();
     }
 
+    /**
+     * Informs the MediaQueuer that the slider was released
+     */
     public void sliderReleased()
     {
         queuer.sliderReleased();
     }
 
+    /**
+     * requests the VisualizerMediaPlayerHolder to raise its volume
+     */
     public void volUp()
     {
         player.volUp();
     }
 
+    /**
+     * requests the VisualizerMediaPlayerHolder to lower its volume
+     */
     public void volDown()
     {
         player.volDown();
     }
 
+    /**
+     * gets the current of the VisualizerMediaPlayerHolder
+     * @return int
+     */
     public int getVolume()
     {
         return player.getVolume();
     }
 
+    /**
+     * gets the total duration of the current load player in VisualizerMediaPlayerHolder as a double
+     * @return double
+     */
     public double getEndTime()
     {
         return player.getEndTime();
     }
 
+    /**
+     * gets the current duration as a double of the VisualizerMediaPlayerHolder MediaPlayer
+     * @return double
+     */
     public double getCurrentTime()
     {
         return player.getCurrentTime();
     }
 
+    /**
+     * Transfers a requested Duration to the VisualizerMediaPlayerHolder
+     * @param requestedTime Duration requested from a time interval
+     */
     public void setSeek(Duration requestedTime)
     {
         player.setSeek(requestedTime);
     }
+
     /**
      * Prepares a Runnable class to function with the Java VisualizerApplication platform in threading
      * @param r Class that implements the Runnable interface
@@ -97,6 +144,9 @@ public class VisualizerApplication implements Runnable {
         com.sun.javafx.application.PlatformImpl.startup(r);
     }
 
+    /**
+     * Changes the play state of the MediaPlayerHolder to its opposite state, and then updates the VisualizerApplication with the MediaPlayer's play state.
+     */
     public void togglePlayState()
     {
         if(isPlaying)
@@ -109,11 +159,17 @@ public class VisualizerApplication implements Runnable {
        isPlaying = player.isPlaying();
     }
 
+    /**
+     * Makes the JFrame turn off its queue
+     */
     public void turnOffQueue()
     {
         queuer.turnOffQueue();
     }
 
+    /**
+     *Makes the MediaQueuer hide/show its JFrame
+     */
     public void toggleVisibility()
     {
         queuer.toggleVisibility();
@@ -146,10 +202,18 @@ public class VisualizerApplication implements Runnable {
         }
     }
 
+    /**
+     * checks if the MediaPlayerHolder is busy with a loading task
+     * @return boolean
+     */
     public boolean isLoading() {
         return player.isLoading();
     }
 
+    /**
+     * checks if the MediaPlayerHolder is busy with a task via terminal input( -debug argument)
+     * @return boolean
+     */
     public boolean inUse() {
         return player.inUse();
     }

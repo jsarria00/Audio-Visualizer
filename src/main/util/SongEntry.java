@@ -3,6 +3,9 @@ package util;
 import java.io.Serializable;
 import java.util.Objects;
 
+/**
+ * Stores a Directory and extracts the song name depending on the position of the last slash depending on the OS
+ */
 public class SongEntry implements Serializable {
     private String songName;
     private String songDirectory;
@@ -38,6 +41,9 @@ public class SongEntry implements Serializable {
         }
     }
 
+    /**
+     * Trims the ParentDirectory into a ChildDirectory to allow the Jar application directory to move the directory that holds it without data loss.
+     */
     public void programDirectoryTrim() {
 
         if(this.songDirectory.contains(WINDOWS_PROGRAM_DIR)) {
@@ -57,11 +63,16 @@ public class SongEntry implements Serializable {
         return Objects.equals(songName, songEntry.songName);
     }
 
+
     @Override
     public int hashCode() {
         return Objects.hash(songName);
     }
 
+    /**
+     * Appends a string to a SongName
+     * @param appending
+     */
     public void appendSongName(String appending)
     {
         songName = songName + appending;

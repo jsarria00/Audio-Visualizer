@@ -49,6 +49,7 @@ public class VisualizerMediaPlayerHolder implements Runnable
     private boolean transitioning;
     private int transitionVol;
     private int currentTransitionVol;
+
     /**
      * Constructor that sets up a scanner for use, initial bool values, and a non-null string.
      */
@@ -68,6 +69,9 @@ public class VisualizerMediaPlayerHolder implements Runnable
         volume = 100;
     }
 
+    /**
+     * validates the the SongLog to ensure only files that exist in the same directory are in the log.
+     */
     private void validateLog()
     {
         isValidating = true;
@@ -89,6 +93,9 @@ public class VisualizerMediaPlayerHolder implements Runnable
         isValidating = false;
     }
 
+    /**
+     * Toggles the volume up as long as it's less than 100
+     */
     public void volUp()
     {
         if(!transitioning) {
@@ -101,6 +108,9 @@ public class VisualizerMediaPlayerHolder implements Runnable
         }
     }
 
+    /**
+     * toggles the volume down as long as it's greater than 0
+     */
     public void volDown()
     {
         if(!transitioning) {
@@ -113,6 +123,10 @@ public class VisualizerMediaPlayerHolder implements Runnable
         }
     }
 
+    /**
+     * Loads a transitionPlayer with a .mp3 file
+     * @param attempt directory string containing .mp3 file
+     */
     private void loadTransition(String attempt)
     {
         try {
@@ -159,6 +173,9 @@ public class VisualizerMediaPlayerHolder implements Runnable
         }
     }
 
+    /**
+     * Increments the current transition volume by one, while the old MediaPlayer will be set to volume-transitionVolume, and the transitioning player will be set to transitionVolume.
+     */
     public void manageVol()
     {
         if(transitionPlayer != null)
@@ -171,6 +188,10 @@ public class VisualizerMediaPlayerHolder implements Runnable
         }
     }
 
+    /**
+     * Turns on the transition state, and removes the previous Lambda expression from the main MediaPlayer, and loads a Transition MediaPlayer with a directory requested via Queue
+     * @param attempt directory of .mp3 file
+     */
     public void transition(String attempt)
     {
         transitioning = true;
@@ -181,6 +202,9 @@ public class VisualizerMediaPlayerHolder implements Runnable
 
     }
 
+    /**
+     * Replaces and the old MediaPlayer with the Transition MediaPlayer, and removes the transition state
+     */
     public void endTransition()
     {
         System.out.println("Ending Transition");
@@ -194,6 +218,10 @@ public class VisualizerMediaPlayerHolder implements Runnable
         transitioning = false;
     }
 
+    /**
+     * Returns the integer value of the MediaPlayerHolder's volume distribution for all MediaPlayers
+     * @return integer
+     */
     public int getVolume()
     {
         return volume;
@@ -230,6 +258,10 @@ public class VisualizerMediaPlayerHolder implements Runnable
         hasInitialized = false;
     }
 
+    /**
+     *
+     * @return MediaPlayer's currentTime double value of the file loaded.
+     */
     public double getEndTime()
     {
         if(mediaPlayer != null) {
@@ -238,6 +270,10 @@ public class VisualizerMediaPlayerHolder implements Runnable
         return 0;
     }
 
+    /**
+     * Returns the existing media player's current position of loaded .mp3 file
+     * @return MediaPlayer's currentTime double value of the file loaded.
+     */
     public double getCurrentTime()
     {
         if(mediaPlayer != null)
@@ -247,6 +283,10 @@ public class VisualizerMediaPlayerHolder implements Runnable
         return 0;
     }
 
+    /**
+     * Sets the the position of the the duration of the current file
+     * @param requestedTime duration requested by the user
+     */
     public void setSeek(Duration requestedTime)
     {
         if(!transitioning) {
@@ -260,6 +300,11 @@ public class VisualizerMediaPlayerHolder implements Runnable
     //Requires: File directory attempt not equivalent to currently loaded file
     //Modifies: This
     //Effects: MediaPlayer loads a unique media file
+    /**
+     *Throws an exception if the same file is attempted to be reloaded
+     * @param attempt directory string containing the .mp3 file
+     * @throws MediaAlreadyLoadedException if the directory attempt is identical to the songDir stored in this class
+     */
     private void checkLoaded(String attempt) throws MediaAlreadyLoadedException
     {
         int size = log.getSongList().size();

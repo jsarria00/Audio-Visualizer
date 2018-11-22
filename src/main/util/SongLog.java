@@ -3,6 +3,9 @@ package util;
 import java.io.*;
 import java.util.ArrayList;
 
+/**
+ * a Saveable and Loadable class that Holds and Manages an ArrayList of SongEntries
+ */
 public class SongLog implements Saveable, Loadable{
     private static final int MAX_CAPACITY = 10;
     private static final String FILE_NAME = "SongLog.ser";
@@ -68,6 +71,9 @@ public class SongLog implements Saveable, Loadable{
         }
     }
 
+    /**
+     * Saves the SongLog after a validation process
+     */
     public void validateSerialFile()
     {
         save(FILE_NAME);

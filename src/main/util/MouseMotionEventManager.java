@@ -6,6 +6,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.util.Objects;
 
+/**
+ * MouseMotion ActionListener that interacts with the VisualizerComponent as the mouse moves along the component.
+ */
 public class MouseMotionEventManager implements MouseMotionListener {
 
     private int xMouse;
@@ -17,6 +20,10 @@ public class MouseMotionEventManager implements MouseMotionListener {
     {
     }
 
+    /**
+     * Sets a data relationship between this and a VisualizerComponent, and removes any previous existing relationship
+     * @param vC
+     */
     public void setVisualizerComponent(VisualizerComponent vC)
     {
         if(this.vC == null || !this.vC.equals(vC))
@@ -29,6 +36,9 @@ public class MouseMotionEventManager implements MouseMotionListener {
         }
     }
 
+    /**
+     * removes the Data Relationship between this and the VisualizerComponent
+     */
     public void removeVisualizerComponent()
     {
         if(this.vC != null)
@@ -58,6 +68,11 @@ public class MouseMotionEventManager implements MouseMotionListener {
     {
     }
 
+
+    /**
+     * Sends information related to the motion event to the VisualizerComponent
+     * @param e
+     */
     @Override
     public void mouseMoved(MouseEvent e)
     {
