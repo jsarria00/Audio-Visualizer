@@ -232,3 +232,27 @@ When transistion ends release the slider, song will "pause" and skip the the sec
 Status:Fixed
 
 Comment: Added a "wasTransitioning" state to VisualizerComponent to enforce a "two-Step" interaction restriction on the slider.
+
+
+Title: UNIX based file loading no functioning anymore
+
+ID:7
+
+Platform: Ubuntu 18.10
+
+Discovered by: Javier Sarria
+
+Discovered on: February 3rd 2019
+
+File Version: 1.2x
+
+Description: This bug had risen through halted testing on UNIX OS. When loading an MP3 file, the file is found and an exception is thrown immediately
+(where if no file is found, the exception will delay itself until it is certain the file does not exist). Anticipated fix, migrate project from java environment 8 to environment 11.
+This bug will be corrected before continued development of other projects that modularize of this one.
+
+Steps to Reproduce: Load the Jar by Calling java -jar AudioVisualizer.jar in linux. Attempting to load the file will certainly fail.
+
+
+Status:Not Fixed
+
+Comment:

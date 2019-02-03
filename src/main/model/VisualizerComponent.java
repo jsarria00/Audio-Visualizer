@@ -36,6 +36,9 @@ public class VisualizerComponent extends JComponent implements Selectable {
     private JSlider slider;
     private AudioSpectrumListener audioSpectrumListener;
     private static final int NUM_AUDIO_RECTANGLES = 60;
+    private static final int HRS_IN_MILLIS = 3600000;
+    private static final int MINS_IN_MILLIS = 60000;
+    private static final int SEC_IN_MILLIS = 1000;
     private MouseMotionEventManager mouseMotionManager;
     private CanvasMouseEventManager canvasMouseManager;
     private KeyboardEventManager keyboardEventManager;
@@ -342,6 +345,31 @@ public class VisualizerComponent extends JComponent implements Selectable {
         vApplication.volDown();
     }
 
+    //Creates a String with the base being seconds, into a time format eg 5mins 20 seconds is 5:20
+    private String formTimeFormat(int j)
+    {
+        String timeFormat = "";
+        int hrs = j/HRS_IN_MILLIS;
+
+        if(hrs > 0)
+        {
+            timeFormat += Integer.toString(hrs) + ':';
+        }
+        int mins =  (j%HRS_IN_MILLIS)/MINS_IN_MILLIS;
+        timeFormat += Integer.toString(mins)+':';
+        int secs = (j%MINS_IN_MILLIS)/SEC_IN_MILLIS;
+        if(secs < 10)
+        {
+            timeFormat += '0';
+        }
+        timeFormat += Integer.toString(secs);
+        return timeFormat;
+    }
+
+    private String getTimeStamp()
+    {
+        return formTimeFormat(slider.getValue()) + '/' + formTimeFormat(slider.getMaximum());
+    }
     @Override
     public void paintComponent(Graphics g)
     {
@@ -362,6 +390,7 @@ public class VisualizerComponent extends JComponent implements Selectable {
             sL.draw(g2, historyLogEnclosing);
             mO.draw(g2, mediaOptionsEnclosing);
             wO.draw(g2, windowOptionsEnclosing);
+            g2.drawString("Time: " + getTimeStamp(), (int)mediaOptionsEnclosing.getX(),(int)mediaOptionsEnclosing.getY() - OPTION_SPACING*5);
             if(vApplication.getTransitionState()) {
                 g2.drawString("Transitioning: MediaPlayer Controls locked.",(int)mediaOptionsEnclosing.getX(), (int)mediaOptionsEnclosing.getY() - OPTION_SPACING*3);
             }
