@@ -19,6 +19,6 @@ A version with OpenGL will be available for systems that have a processor with i
 A song queuer is available. The queuer will automatically transition through selected songs. 
 A transistion will occur where the songs will fade between eachother when the current song has reached 7.5(+/- 0.2seconds) seconds remaining if and only if there are more than 3 seconds remaining. 
 A second monitor/screen is recommended for managing the queue off screen. 
-During the transistion, the GUI will remain functional, but the MediaPlayer 
+During the transistion, the GUI will remain functional, but the MediaPlayer will lock controls like setting time, and volume.
 
 The UI can be hidden with the 'h' key. MediaPlayer volume can be managed with the up and down arrow keys.
