@@ -3,6 +3,11 @@ package gui;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaException;
 import javafx.util.Duration;
+
+import javax.swing.border.Border;
+import javax.swing.plaf.basic.BasicSplitPaneDivider;
+import javax.swing.plaf.basic.BasicSplitPaneUI;
+import sun.plugin2.util.ColorUtil;
 import util.MediaAlreadyLoadedException;
 import util.QueueTransitionManager;
 import util.SongEntry;
@@ -57,7 +62,24 @@ public class MediaQueuer implements Runnable, Selectable{
         queueWindow.setIconImage(new ImageIcon(getClass().getResource("/resources/logo.png")).getImage());
         queueWindow.setTitle("Song Queue");
         queueWindow.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        //Queue
         queue = new JList(new DefaultListModel());
+        Color textColor = new Color(169, 183, 198);
+        queue.setCellRenderer(new DefaultListCellRenderer()
+        {
+            @Override
+            public Component getListCellRendererComponent(JList list, Object value, int index,
+                                                          boolean isSelected, boolean cellHasFocus) {
+                Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                setBackground(textColor);
+
+                return c;
+            }
+        });
+        Color background = new Color(43, 43, 43);
+        queue.setBackground(background);
+        //queue.
+
         queue.setFixedCellHeight(20);
         queue.setFixedCellWidth(350);
 
@@ -65,10 +87,37 @@ public class MediaQueuer implements Runnable, Selectable{
         panelHolder = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
         panelHolder.setDividerLocation(320);
         panelHolder.setEnabled(false);
+        panelHolder.setOpaque(true);
+        panelHolder.setBackground(background);
+        //Set colour of dividers
+        //Color splitColor = new Color(89, 91, 93, 10);
+//        panelHolder.setUI(new BasicSplitPaneUI() {
+//            public BasicSplitPaneDivider createDefaultDivider() {
+//                return new BasicSplitPaneDivider(this) {
+//                    public void setBorder(Border b) {
+//                    }
+//
+//                    @Override
+//                    public void paint(Graphics g) {
+//                        Color c1 = new Color(64, 66, 68);
+//                        Color c2 = new Color(35, 39, 41);
+//                        GradientPaint greyToBlack = new GradientPaint(50, 50, c1,
+//                                300, 100, c2);
+//                        Graphics2D g2 = (Graphics2D) g;
+//                        g2.setPaint(greyToBlack);
+//                        g2.fillRect(0, 0, getSize().width, getSize().height);
+//                        super.paint(g2);
+//                    }
+//                };
+//            }
+//        });
+//
         buttonHolder = new JPanel();
         //Buttons
-
+        Color buttonColor = new Color(49, 51, 53);
         addToQueue = new JButton("Add");
+        buttonHolder.setOpaque(true);
+        buttonHolder.setBackground(buttonColor);
         addToQueue.addActionListener(e->{addToQueue();});
 
         removeFromQueue = new JButton("Remove");
