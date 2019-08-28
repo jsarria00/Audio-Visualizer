@@ -2,9 +2,9 @@ package util;
 
 import model.VisualizerComponent;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.Timer;
 
 public class VisualizerTimer implements ActionListener {
     private VisualizerComponent component;

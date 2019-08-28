@@ -1,17 +1,15 @@
 package ui;
 
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
-//To play an audio file
-//CustomClasses
-
 import model.VisualizerComponent;
-import util.*;
+import util.VisualizerApplication;
+import util.VisualizerTimer;
 
+import javax.swing.*;
 import java.awt.*;
 
-import static com.sun.javafx.scene.control.skin.Utils.getResource;
+//To play an audio file
+//CustomClasses
 //import java.awt.image.BufferedImage;
 //import java.awt.Point;
 
@@ -20,7 +18,7 @@ import static com.sun.javafx.scene.control.skin.Utils.getResource;
 
 /**
  * A class that creates a JFrame, and a VisualizerMediaPlayerHolder and prepares them for use.
- * @author Javier Sarria Bastidas
+ * @author Greyfi
  * @version W2
  */
 public class Visualizer {

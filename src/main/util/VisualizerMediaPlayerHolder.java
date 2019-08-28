@@ -12,7 +12,7 @@ import java.util.Scanner;
 
 /**
  * A class that manages a MediaPlayer object, while this class is run through the Java.VisualizerApplication thread
- * @author Javier Sarria Bastidas
+ * @author Greyfire
  * @version W2
  */
 public class VisualizerMediaPlayerHolder implements Runnable
